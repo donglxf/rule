@@ -1,4 +1,4 @@
-package com.ht.dispatch.ui.config;
+package com.ht.rule.ui.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

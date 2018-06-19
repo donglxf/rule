@@ -22,5 +22,5 @@ ht.config.ui:
   gatewayUrl: http://172.16.200.110:30111/
   changePwdUrl: http://172.16.200.110:30131/html/user/changePwdOther.html
   userInfoUpdate: http://172.16.200.110:30131/html/user/userInfoOther.html
-  ruleServiceUrl: /rule/service/
-  ruleDroolsUrl: /rule/drools/
+  ruleServiceUrl: rule/config/
+  ruleDroolsUrl: rule/drools/

@@ -547,11 +547,11 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config'], function (exports)
          * 导入页面打开
          */
         openImport:function (type) {
-            var url = "/dispatch/ui/src/html/decision/import_entity.html";
+            var url = "/src/html/decision/import_entity.html";
             if(type == 1){
 
             }else{
-                url = "/dispatch/ui/src/html/decision/import_action.html";
+                url = "/src/html/decision/import_action.html";
             }
             //打开导入面板
             $.get(url,function(html){
@@ -586,11 +586,11 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config'], function (exports)
          * 导入页面打开,导入评分卡和决策
          */
         openImportDecision:function (type) {
-            var url = "/dispatch/ui/src/html/decision/import_scene.html";
+            var url = "/src/html/decision/import_scene.html";
             if(type == 1){
 
             }else{
-                url = "/dispatch/ui/src/html/decision/import_grade.html";
+                url = "/src/html/decision/import_grade.html";
             }
             //打开导入面板
             $.get(url,function(html){

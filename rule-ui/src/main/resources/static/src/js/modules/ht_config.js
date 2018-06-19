@@ -10,7 +10,7 @@ layui.define(['config'],function (exports) {
     } catch (e) {
         console.log(e);
     }
-    var ruleServicePathUrl = ruleServiceUrl;
+    var ruleServicePathUrl = basePath + ruleServiceUrl;
 
     var ruleServicePath = {
         basePath: ruleServicePathUrl,
@@ -75,15 +75,16 @@ layui.define(['config'],function (exports) {
 
     };
     exports('ht_config', {
-        app: "DP"
+        app: "RULE"
         , basePath: basePath + rule + "/"
         , loadMenuUrl: basePath + rule + "/auth/loadMenu"
         , loadBtnAndTabUrl: basePath + rule + "/auth/loadBtnAndTab"
         , loginUrl: basePath + "uaa/auth/login"
         , refreshTokenUrl: basePath + "uaa/auth/token"
-        , centerServicePath:"/service/center/" //
         , ruleServicePath: ruleServicePath // 规则服务
-        ,dispatchServicePath:dispatchServicePath//派单服务
-        ,dev:true
+         ,ruleDroolsUrl:basePath + ruleDroolsUrl//派单服务
+
+        , changePwdUrl : changePwdUrl
+        , userInfoUpdate: userInfoUpdate
     });
 });

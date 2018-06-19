@@ -2,7 +2,7 @@
 var preUrl = "/dispatch/service/droolsLog/";
 var p_logId = 0;
 layui.config({
-    base: '/dispatch/ui/src/js/modules/' //假设这是你存放拓展模块的根目录
+    base: '/src/js/modules/' //假设这是你存放拓展模块的根目录
 }).extend({ //设定模块别名
     myutil: 'common' //如果 mymod.js 是在根目录，也可以不用设定别名
 
@@ -225,7 +225,7 @@ layui.use(['table', 'form','laydate','util','myutil'], function () {
                 maxmin : true,
                 shadeClose : false, // 点击遮罩关闭层
                 area : [ '730px', '460px' ],
-                content : '/dispatch/ui/supervision/log/view',
+                content : '/supervision/log/view',
                 btn : [ '关闭'],
                 btnAlign : 'c',
                 zIndex: layer.zIndex, //重点1

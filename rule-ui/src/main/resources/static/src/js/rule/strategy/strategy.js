@@ -2,7 +2,7 @@
 
 var versionIds=0,bindIndex=0;
 layui.config({
-    base: '/dispatch/ui/src/js/modules/' //假设这是你存放拓展模块的根目录
+    base: '/src/js/modules/' //假设这是你存放拓展模块的根目录
 }).extend({ //设定模块别名
     myutil:'common',
 });
@@ -143,7 +143,7 @@ layui.use(['table', 'form','laydate','myutil'], function () {
             type: 2,
             shade: false,
             title: "",
-            content: "/dispatch/ui/strategy/manualTest",
+            content: "/strategy/manualTest",
             zIndex: layer.zIndex, //重点1
             success: function (layero, index) {
                 var body = layer.getChildFrame('body',index);//建立父子联系
@@ -182,7 +182,7 @@ layui.use(['table', 'form','laydate','myutil'], function () {
                     type: 2,
                     shade: false,
                     title: "",
-                    content: "/dispatch/ui/strategy/autoTest",
+                    content: "/strategy/autoTest",
                     zIndex: layer.zIndex, //重点1
                     success: function (layero, index) {
                         var body = layer.getChildFrame('body',index);//建立父子联系
@@ -213,7 +213,7 @@ layui.use(['table', 'form','laydate','myutil'], function () {
         console.log(sceneId+","+versionId);
         $.get(config.ruleServicePath.basePath+"variableBind/getVariableBind?versionId=" + versionId, function(data) {
             var result = data.data;
-            $.get('/dispatch/ui/ruleBind/index/edit', null, function(form) {
+            $.get('/ruleBind/index/edit', null, function(form) {
                 layer.open({
                     type : 1,
                     title : '变量绑定',

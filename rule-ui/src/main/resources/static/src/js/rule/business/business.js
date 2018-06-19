@@ -5,7 +5,7 @@ var layer,entityTable,itemTable,table,active,itemActive;
 var businessSystemlId ;
 var topIndexId ;
 layui.config({
-    base: '/dispatch/ui/src/js/modules/' //假设这是你存放拓展模块的根目录
+    base: '/src/js/modules/' //假设这是你存放拓展模块的根目录
 }).extend({ //设定模块别名
     myutil: 'common' //如果 mymod.js 是在根目录，也可以不用设定别名
 });
@@ -202,7 +202,7 @@ layui.use(['table','form','laytpl','myutil'], function(){
     };
     //新增
     $("#sys_btn_add").on('click',function () {
-        $.get('/dispatch/ui/src/html/business_sys/business_sys_edit.html', null, function (form) {
+        $.get('/src/html/business_sys/business_sys_edit.html', null, function (form) {
             topIndexId =  layer.open({
                 type :1,
                 title : '新增',
@@ -228,7 +228,7 @@ layui.use(['table','form','laytpl','myutil'], function(){
     function  edit(id) {
         $.get(preUrl+"getInfoById?id="+id,function (data) {
             var result = data.data;
-            $.get('/dispatch/ui/src/html/business_sys/business_sys_edit.html', null, function (form) {
+            $.get('/src/html/business_sys/business_sys_edit.html', null, function (form) {
                 topIndexId =  layer.open({
                     type :1,
                     title : '修改',
@@ -260,7 +260,7 @@ layui.use(['table','form','laytpl','myutil'], function(){
             layer.msg("必须选择一个数据对象哦");
         }
 
-        $.get('/dispatch/ui/src/html/business/edit.html', null, function (form) {
+        $.get('/src/html/business/edit.html', null, function (form) {
             topIndexId =   layer.open({
                 type :1,
                 title : '新增',
@@ -285,7 +285,7 @@ layui.use(['table','form','laytpl','myutil'], function(){
     function  editItem(id) {
         $.get(preItemUrl+"getInfoById?id="+id,function (data) {
             var result = data.data;
-            $.get('/dispatch/ui/src/html/business/edit.html', function (form) {
+            $.get('/src/html/business/edit.html', function (form) {
                 topIndexId =  layer.open({
                     type :1,
                     title : '修改',

@@ -7,7 +7,7 @@
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间         版本号             描述
  */
-package com.ht.dispatch.ui.config;
+package com.ht.rule.ui.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Date 2018/2/8 9:12
  */
 @RestController
-@RequestMapping("/plugins/layui/extend/modules")
+@RequestMapping("/src/js/modules")
 public class GatewayRiskURLHelper {
 
     @Value("${ht.config.ui.baseUrl}")

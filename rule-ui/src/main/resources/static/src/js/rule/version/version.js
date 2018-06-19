@@ -119,7 +119,7 @@ var sceneId,sceneType,$ ;
 var layerTopIndex;
 var baseUrl;
 layui.config({
-    base: '/dispatch/ui/src/js/modules/' //假设这是你存放拓展模块的根目录
+    base: '/src/js/modules/' //假设这是你存放拓展模块的根目录
 }).extend({ //设定模块别名
     sceneUtil: 'decision', //如果 mymod.js 是在根目录，也可以不用设定别名
     myutil:'common',
@@ -310,9 +310,9 @@ layui.use(['table','form','laytpl','sceneUtil','myutil'], function() {
      * @param sceneId
      */
     function ruleDefind(sceneId,type){
-        var url = "/dispatch/ui/src/html/decision/gradeCard_edit.html";
+        var url = "/src/html/decision/gradeCard_edit.html";
         if(type == 1){
-            url = "/dispatch/ui/src/html/decision/scene_edit.html";
+            url = "/src/html/decision/scene_edit.html";
         }
         sceneType = type;
         layer.open({
@@ -475,7 +475,7 @@ layui.use(['table','form','laytpl','sceneUtil','myutil'], function() {
             shade: false,
             title: "",
             area: ['85%', '100%'],
-            content: "/dispatch/ui/src/html/strategy/manualTest.html",
+            content: "/src/html/strategy/manualTest.html",
             //   zIndex: layer.zIndex, //重点1
             success: function (layero, index) {
                 var body = layer.getChildFrame('body',index);//建立父子联系

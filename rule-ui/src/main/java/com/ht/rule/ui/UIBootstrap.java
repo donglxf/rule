@@ -1,4 +1,4 @@
-package com.ht.dispatch.ui;
+package com.ht.rule.ui;
 
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;

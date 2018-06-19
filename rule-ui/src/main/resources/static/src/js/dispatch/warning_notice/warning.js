@@ -4,7 +4,7 @@
 var layer,entityTable,table,active,itemActive;
 var topIndexId ;
 layui.config({
-    base: '/dispatch/ui/src/js/modules/' //假设这是你存放拓展模块的根目录
+    base: '/src/js/modules/' //假设这是你存放拓展模块的根目录
 }).extend({ //设定模块别名
     myutil: 'common' //如果 mymod.js 是在根目录，也可以不用设定别名
 });
@@ -132,7 +132,7 @@ layui.use(['table','form','laytpl','myutil'], function(){
     });
     //新增
     $("#sys_btn_add").on('click',function () {
-        $.get('/dispatch/ui/src/html/warning_notice/edit.html', null, function (form) {
+        $.get('/src/html/warning_notice/edit.html', null, function (form) {
             topIndexId =  layer.open({
                 type :1,
                 title : '新增',
@@ -158,7 +158,7 @@ layui.use(['table','form','laytpl','myutil'], function(){
     function  edit(id) {
         $.get(preUrl+"getInfoById?id="+id,function (data) {
             var result = data.data;
-            $.get('/dispatch/ui/src/html/warning_notice/edit.html', null, function (form) {
+            $.get('/src/html/warning_notice/edit.html', null, function (form) {
                 topIndexId =  layer.open({
                     type :1,
                     title : '修改',

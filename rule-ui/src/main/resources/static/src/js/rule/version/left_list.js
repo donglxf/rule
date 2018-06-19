@@ -1,7 +1,7 @@
 
 var  scene = {
     baseUrl: "/dispatch/service/sceneInfo/",
-    uiUrl :"/dispatch/ui/dispatch/decision/scene/gradeCardEdit",
+    uiUrl :"/dispatch/decision/scene/gradeCardEdit",
     entity: "sceneInfo",
     tableId: "sceneInfoTable",
     toolbarId: "#toolbar",
@@ -197,7 +197,7 @@ layui.use(['table','form','laytpl'], function() {
             rule_div = $("#table").html();
             var result = {sceneId:id,ruleDiv:rule_div};
             layer.close(index);
-            save("/dispatch/ui/dispatch/decision/version/edit", result);
+            save("/dispatch/decision/version/edit", result);
            // layer.msg('的确很重要', {icon: 1});
 
         }, function(){

@@ -247,7 +247,7 @@ layui.define(['element', 'table', 'nprogress', 'tab', 'navbar', 'onelevel', 'lay
                 //navbar加载方式二，设置远程地址加载
                 navbar.set({
                     remote: {
-                        url: '/dispatch/ui/datas/menu.json'
+                        url: '/datas/menu.json'
                     }
                 }).render(function(data) {
                     tab.tabAdd(data);

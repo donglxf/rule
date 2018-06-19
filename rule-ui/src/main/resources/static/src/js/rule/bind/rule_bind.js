@@ -2,7 +2,7 @@
 var layer, entityTable, itemTable, table, active, itemActive;
 var versionId;
 layui.config({
-    base: '/dispatch/ui/src/js/modules/' //假设这是你存放拓展模块的根目录
+    base: '/src/js/modules/' //假设这是你存放拓展模块的根目录
 }).extend({ //设定模块别名
     myutil: 'common' //如果 mymod.js 是在根目录，也可以不用设定别名
 });
@@ -185,7 +185,7 @@ layui.use([ 'table', 'form' ], function() {
     function edit(sceneId,versionId) {
         $.get(preUrl + "getVariableBind?sceneId=" + versionId, function(data) {
             var result = data.data;
-            $.get('/dispatch/ui/ruleBind/index/edit', null, function(form) {
+            $.get('/ruleBind/index/edit', null, function(form) {
                 layer.open({
                     type : 1,
                     title : '修改',

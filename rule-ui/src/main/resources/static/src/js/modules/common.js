@@ -84,6 +84,7 @@ layui.define(['layer','laytpl','form','ht_ajax','ht_config'], function(exports) 
                 name:'businessId',
                 id:'businessId'
             },
+
             init_url:  layui.ht_config.ruleServicePath.businessSystem.base+'getAll',
             init_html: function () {
                 return     '      <div class="layui-input-inline">\n' +
