@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.mapper.SceneItemRelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.SceneItemRel">
+        <id column="id" property="id" />
+        <result column="scene_id" property="sceneId" />
+        <result column="entity_item_id" property="entityItemId" />
+        <result column="sort" property="sort" />
+        <result column="cre_time" property="creTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, scene_id AS sceneId, entity_item_id AS entityItemId, sort, cre_time AS creTime, entity_id AS entityId
+    </sql>
+    <sql id="Base_Table_List">
+    id,
+	r.scene_id AS sceneId,
+	entity_item_id AS itemId,
+	i.item_name AS itemName,
+	sort,
+	e.entity_name AS entityName,
+	e.entity_id AS entityId
+    </sql>
+    <select id="findItemTables" resultType="com.ht.rule.common.api.vo.RuleItemTable">
+        SELECT  <include refid="Base_Table_List"></include>
+        FROM rule_scene_item_rel r LEFT JOIN rule_scene_info s
+        on s.scene_id = r.scene_id
+        LEFT JOIN rule_entity_item_info i
+        on i.item_id = r.entity_item_id
+        LEFT JOIN rule_entity_info e
+        on e.entity_id = i.entity_id
+        WHERE r.scene_id = #{sceneId}
+        order by r.sort
+    </select>
+
+
+</mapper>

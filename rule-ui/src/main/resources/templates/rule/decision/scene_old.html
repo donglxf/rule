@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="/dispatch/ui/plugins/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/dispatch/ui/plugins/font-awesome/css/font-awesome.min.css" media="all" />
+
+    <link rel="stylesheet" href="/dispatch/ui/plugins/font-awesome/css/font-awesome.min.css" media="all" />
+    <link href="/dispatch/ui/plugins/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="/dispatch/ui/plugins/editable/css/bootstrap-editable.css" rel="stylesheet" />
+    <style>
+        .layui-table td, .layui-table th {
+            text-align: center;
+        }
+        .layui-table-cell {
+            height: 32px;
+            line-height:32px;
+        }
+        #table tr th {
+            min-width: 220px;
+        }
+        #table .con{
+            color: #1e9fff;
+        }
+        #table .val{
+            color: #ffb122;
+        }
+        #table .actionType{
+            color: #1e9fff;
+        }
+        #table .actionVal{
+            color: red;
+            font-weight: bold;
+        }
+        .layui-table .select {
+            background-color: #d2d2d2;
+        }
+        .del {display: none}
+        .layui-table td, .layui-table th {
+            position: relative;
+            min-height: 20px;
+            line-height: 20px;
+            font-size: 14px;
+            padding: 8px 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="admin-main">
+    <div class="layui-row" style="margin-top: 10px;">
+
+        <div class="layui-col-md4">
+            <fieldset class="layui-elem-field">
+                <legend class="lay-legend">决策管理</legend>
+                <div class="layui-field-box">
+                    <form  class="layui-form layui-form-pane" onsubmit="javascript:return false;">
+                        <div class="layui-form-item" style="margin-bottom:0px;">
+                            <div class="layui-input-inline">
+                                <input type="text"  placeholder="过滤条件查询"   onchange="active.reload();" class="layui-input" id="scene_key_ser">
+                            </div>
+                            <button type="button" onclick="active.reload()" id="btn_query"  class="layui-btn layui-btn-primary layui-btn">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </button>
+
+                            <button class="layui-btn  layui-btn-small" id="scene_btn_add">
+                                <i class="layui-icon">&#xe654;</i>新增
+                            </button>
+                        </div>
+                    </form>
+                    <table id="sceneInfoTable" lay-filter="sceneInfoTable"></table>
+
+                </div>
+            </fieldset>
+
+
+        </div>
+        <div class="layui-col-md8" style="overflow-x: auto;overflow: visible;" >
+            <fieldset class="layui-elem-field">
+                <legend>规则编辑</legend>
+                <div class="layui-field-box" style="min-height: 350px;">
+                    <div class="layui-row" >
+                        <div class="layui-col-xs3">
+                            <div class="layui-btn-group">
+                                <button class="layui-btn layui-btn import-entity"><i class="layui-icon">&#xe635;</i>导入变量库
+                                </button>
+                                <button class="layui-btn  layui-btn import-action"><i class="layui-icon">&#xe64d;</i>动作库
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-xs4">
+                            <div class="layui-form-item">
+                                <button class="layui-btn layui-btn " onclick="addCol();" id="contion_btn_add">
+                                    <i class="layui-icon">&#xe654;</i>新增条件
+                                </button>
+                                <button class="layui-btn layui-btn " onclick="addActionCol()" id="action_btn_add">
+                                    <i class="layui-icon">&#xe654;</i>新增动作
+                                </button>
+                                <button class="layui-btn layui-btn-normal " onclick="sub();">
+                                    <i class="layui-icon">&#xe609;</i>保存
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="layui-table"   id="table">
+                        <colgroup>
+                            <col width="150">
+                            <col width="150">
+                            <col width="80px">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th class="contion ">
+                                <a href="#" class="entityC" data-value="" id="entityC">对象</a>.
+                                <a href="#" class="itemC" id="itemC">变量</a>
+                                <a href="javascript:void(0); " class="del" onclick="deleteCol(this)"> <i
+                                        class="layui-icon">&#xe640;</i></a>
+                            </th>
+                            <th class="th-action  "><span>动作</span>
+                                <a href="javascript:void(0); " class="del" onclick="deleteCol(this)"> <i
+                                        class="layui-icon">&#xe640;</i></a>
+                            </th>
+                            <th class="" >操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <a href="#" data-value="" class="con">条件</a>&nbsp;
+                                <a href="#" class="val">值</a>
+                            </td>
+                            <td>
+                                <a href="#" data-value="" class="actionType">动作类型</a>&nbsp;
+                                <a href="#" class="actionVal">值</a>
+                            </td>
+                            <td>
+                                <div class="layui-btn-group">
+                                    <!--<button class="layui-btn layui-btn-primary layui-btn-sm saveRow" onclick="hb();"><i
+                                            class="layui-icon">&#xe618;</i></button>-->
+                                    <button class="layui-btn layui-btn-primary layui-btn-sm addRow" onclick="addRow(this)"><i
+                                            class="layui-icon">&#xe654;</i></button>
+                                    <button class="layui-btn layui-btn-primary layui-btn-sm deleteRow" onclick="deleteRow(this)"><i
+                                            class="layui-icon">&#xe640;</i></button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+            <!-- <fieldset class="layui-elem-field site-demo-button" style="padding: 10px; background: rgba(240,240,240,0.1);">
+              <div class="layui-row">  -->
+
+
+        </div>
+        <!--  </fieldset>-->
+
+
+    </div>
+</div>
+
+<script id="tableTp" type="text/html">
+    <colgroup>
+        {{#  layui.each(d.itemTables, function(index, item){    }}
+        <col width="150">
+        {{#  });  }}
+        <col width="80px">
+    </colgroup>
+    <thead>
+    <tr>
+        {{#  layui.each(d.itemTables, function(index, item){    }}
+        <th class="contion ">
+
+            <a href="#" class="entityC" data-value="{{item.entityId}}" >{{item.entityName}}</a>.
+            <a href="#" class="itemC" data-value="{{item.itemId}}" >{{item.itemName}}</a>
+            <a href="javascript:void(0); " class="del" onclick="deleteCol(this)"> <i
+                    class="layui-icon">&#xe640;</i></a>
+        </th>
+        {{#  });  }}
+        {{#  for (var i=0;i<d.actionCounts;i++) {  }}
+        <th class="th-action  ">
+            <span>动作</span>
+            <a href="javascript:void(0); " class="del" onclick="deleteCol(this)"> <i
+                    class="layui-icon">&#xe640;</i></a></th>
+        {{#  }  }}
+        <th class="" >操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#  layui.each(d.rules, function(index, rule){    }}
+    <tr>
+        {{#  layui.each(rule.cons, function(i, con){    }}
+        <td>
+            <a href="#" data-value="{{con.ysf}}" class="con">{{con.ysfText}}</a>&nbsp;
+            <a href="#" data-value="{{con.val}}" class="val">{{con.val}}</a>
+        </td>
+        {{#  });  }}
+        {{#  layui.each(rule.actionRels, function(j, action ){    }}
+        <td>
+            <a href="#" data-value="{{action.actionInfo.actionId}}" class="actionType">{{action.actionInfo.actionName}}</a>&nbsp;
+            {{#  layui.each(action.actionInfo.paramValueInfoList, function(m, actionVal){ }}
+            <a href="#" class="actionVal" data-value="{{actionVal.paramValue}}"  actionParamId = "{{actionVal.actionParamId}}">{{actionVal.paramValue}}</a>
+            {{# }); }}
+        </td>
+        {{#  });  }}
+        <td>
+            <div class="layui-btn-group">
+                <!--<button class="layui-btn layui-btn-primary layui-btn-sm saveRow" onclick="hb();"><i
+                        class="layui-icon">&#xe618;</i></button>-->
+                <button class="layui-btn layui-btn-primary layui-btn-sm addRow" onclick="addRow(this)"><i
+                        class="layui-icon">&#xe654;</i></button>
+                <button class="layui-btn layui-btn-primary layui-btn-sm deleteRow" onclick="deleteRow(this)"><i
+                        class="layui-icon">&#xe640;</i></button>
+            </div>
+        </td>
+    </tr>
+
+    {{#  });  }}
+
+    </tbody>
+
+</script>
+<!--操作-->
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-group">
+    <button class="layui-btn layui-btn-primary layui-btn-sm" lay-event="edit" >
+        <i class="layui-icon">&#xe642;</i>
+    </button>
+    <button class="layui-btn  layui-btn-primary layui-btn-sm" lay-event="del">
+        <i class="layui-icon">&#xe640;</i>
+    </button>
+        <button class="layui-btn  layui-btn-primary layui-btn-sm" title="发布" lay-event="push">
+            <i class="layui-icon">&#xe609;</i>
+        </button>
+    </div>
+</script>
+<div style="display: none;" id="tpl">
+    <table>
+        <colgroup>
+            <col width="150">
+            <col width="150">
+        </colgroup>
+        <tr>
+            <th class="contion">
+                <a href="#" class="entityC"  >对象</a>.
+                <a href="#" class="itemC"  >变量</a>
+                <a href="javascript:void(0); "  class="del" onclick="deleteCol(this)" > <i class="layui-icon">&#xe640;</i></a>
+            </th>
+            <th class="th-action">
+                <span>动作</span>
+                <a href="javascript:void(0); " class="del" onclick="deleteCol(this)"> <i
+                        class="layui-icon">&#xe640;</i></a>
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <a href="#" class="con"  >条件</a>&nbsp;
+                <a href="#" class="val" >值</a>
+            </td>
+            <td class="td-action">
+                <a href="#" data-value="" class="actionType">动作类型</a>&nbsp;
+                <a href="#" class="actionVal">值</a>
+            </td>
+        </tr>
+    </table>
+
+
+</div>
+
+</body>
+
+<script src="/dispatch/ui/plugins/layui/layui.js"></script>
+<script src="/dispatch/ui/src/js/dispatch/scene/list.js"></script>
+
+<script src="/dispatch/ui/plugins/jquery-1.9.1.min.js"></script>
+<script src="/dispatch/ui/plugins/bootstrap/bootstrap.js"></script>
+<script src="/dispatch/ui/plugins/editable/js/bootstrap-editable.js"></script>
+
+<!--<script src="/dispatch/ui/src/js/dispatch/decision/edit.js"></script>-->
+<!--<script src="/dispatch/ui/src/js/dispatch/scene/edit.js"></script>-->
+</html>

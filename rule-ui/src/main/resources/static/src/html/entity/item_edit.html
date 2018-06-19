@@ -1,0 +1,130 @@
+
+<ins class="adsbygoogle" style="display:inline-block;" data-ad-client="ca-pub-6111334333458862" data-ad-slot="3820120620"></ins>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 5px;">
+    <legend>对象字段信息</legend>
+</fieldset>
+<form class="layui-form myform" action="">
+    <input type="hidden" name="entityId" class="other" >
+    <input type="hidden" name="itemId" isId=true >
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">字段名:
+            <span style="color: red;">＊</span>
+        </label>
+        <div class="layui-input-block">
+            <input type="text" name="itemName" required  lay-verify-max="32" lay-verify="required" placeholder="请输入字段名" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">唯一标识:
+            <span class="my-required">＊</span>
+        </label>
+        <div class="layui-input-block">
+            <input type="text" id="ttt" value="" name="itemIdentify"  lay-verify-max="32" required identifyType="2" lay-verify="required|identify" placeholder="请输入唯一标识" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">数据类型
+            <span class="my-required">＊</span>
+        </label>
+        <div class="layui-input-inline">
+            <select name="dataType" required  lay-verify="required" id="dataId"lay-filter="type" >
+                <option value="">请选择</option>
+                <option value="STRING">字符串</option>
+                <option value="INTEGER" >整型</option>
+                <option value="BOOLEAN">布尔类型</option>
+                <option value="DOUBLE">数字类型</option>
+                <option value="CONSTANT">常量类型</option>
+            </select>
+        </div>
+
+    </div>
+
+    <div class="layui-form-item" id="constantDiv" style="display: none">
+        <label class="layui-form-label">常量选择
+            <span class="my-required">＊</span>
+        </label>
+        <div class="layui-input-inline">
+            <select name="constantId" id="constantId" lay-verify="constant" lay-filter="constant">
+                <option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">描述:
+        </label>
+        <div class="layui-input-block">
+            <input type="text" name="itemDesc"  lay-verify-max="32"   lay-verify="" placeholder="请输入描述" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item" style="display: none;">
+        <div class="layui-input-block">
+
+            <button class="layui-btn"  lay-submit lay-filter="formDemo">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script id="constantTp" type="text/html">
+    <option value="">请选择</option>
+    {{#  layui.each(d.list, function(index, item){    }}
+    <option value="{{item.conId}}"
+            {{#  if(d.v == item.conId) { }}
+            selected=""
+            {{# } }}
+    >{{item.conName}}</option>
+    {{#  });  }}
+
+</script>
+<script>
+
+    layui.use(['form','myutil'], function(){
+        var form = layui.form;
+        var app = layui.app,
+            layerTips = layui.layer,
+            $ = layui.jquery;
+        var common = layui.myutil;
+        var baseUrl = common.config.ruleServicePath.basePath;
+        form.verify({
+            /**
+             * 常量是否选择
+             */
+            constant: function(value, item){ //value：表单的值、item：表单的DOM对象
+                var dataId = $("#dataId").val();
+                if(dataId == 'CONSTANT'){
+                    if($("#constantId").val() == '' || $("#constantId").val() == undefined ){
+                        return "常量选择不能为空";
+                    }
+                }
+            }
+        });
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            $.ajax({
+                cache : true,
+                type : "POST",
+                url : baseUrl+'entityItemInfo/edit',
+                data : data.field,// 你的formid
+                async : false,
+                error : function(request) {
+                    alert("Connection error");
+                },
+                success : function(da) {
+                    if (da.code == 0) {
+                        layerTips.msg('保存数据成功');
+                        //这里以搜索为例
+                        //  var index = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                        // layer.closeAll();
+                        itemActive.reload();
+                        layerTips.close(topIndexId);
+                    } else {
+                        layer.msg(data.msg);
+                    }
+                }
+            });
+            return false;
+        });
+        form.render();
+    });
+</script>

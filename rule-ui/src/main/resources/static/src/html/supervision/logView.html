@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>table模块快速使用</title>
+	<link rel="stylesheet" href="/rule/ui/plugins/layui/css/layui.css"
+		  media="all">
+	<link rel="stylesheet"
+		  href="/rule/ui/plugins/font-awesome/css/font-awesome.min.css"
+		  media="all" />
+</head>
+<form class="layui-form" action="">
+	<table id="demo"></table>
+</form>
+<script src="/rule/ui/plugins/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/rule/ui/src/js/modules/' //假设这是你存放拓展模块的根目录
+    }).extend({ //设定模块别名
+        myutil: 'common' //如果 mymod.js 是在根目录，也可以不用设定别名
+
+    });
+    //Demo
+    layui.use(['table', 'form','myutil'], function(){
+        var form = layui.form;
+        var app = layui.app,
+            layerTips = layui.layer,
+            $ = layui.jquery,entityTable=layui.table;
+
+		var url='/drools/droolsProcessLog/getById?logId='+parent.p_logId;
+
+        entityTable.render({
+            elem: '#demo'
+            ,height: 500
+            ,cellMinWidth: 80
+            ,url: url
+            ,id:'demos'
+            ,cols: [[ // 表头
+                {
+                    field: 'id',
+                    event: 'setItem',
+                    title: 'id'
+                }, {
+                    field: 'droolsLogid',
+                    event: 'setItem',
+                    title: '日志id'
+                }, {
+                    field: 'executeRulename',
+                    title: '命中规则',
+                    fixed: 'right'
+                }]]
+        });
+
+        form.render();
+    });
+</script>
+</html>
+</body>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.mapper.ActionParamInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.ActionParamInfo">
+        <id column="action_param_id" property="actionParamId" />
+        <result column="action_id" property="actionId" />
+        <result column="action_param_name" property="actionParamName" />
+        <result column="action_param_desc" property="actionParamDesc" />
+        <result column="param_identify" property="paramIdentify" />
+        <result column="is_effect" property="isEffect" />
+        <result column="cre_user_id" property="creUserId" />
+        <result column="cre_time" property="creTime" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        action_param_id AS actionParamId, action_id AS actionId, action_param_name AS actionParamName, action_param_desc AS actionParamDesc, param_identify AS paramIdentify, is_effect AS isEffect, cre_user_id AS creUserId, cre_time AS creTime, remark
+    </sql>
+
+    <sql id="BaseFindParamSql">
+        t.action_param_id,
+        t.action_id,
+        t.action_param_name,
+        t.action_param_desc,
+        t.param_identify,
+        t.is_effect,
+        t.cre_user_id,
+        t.cre_time,
+        t.remark
+    </sql>
+    <select id="findBaseRuleActionParamInfoList" parameterType="com.ht.rule.common.api.entity.ActionParamInfo"
+            resultType="com.ht.rule.common.api.entity.ActionParamInfo">
+
+        SELECT DISTINCT
+        <include refid="BaseFindParamSql"></include>
+        FROM
+        rule_action_param_info t
+        WHERE
+        1 = 1
+        <if test="actionId != null">
+            AND t.action_id = #{actionId}
+        </if>
+
+    </select>
+    <select id="findRuleActionParamByActionId" resultType="com.ht.rule.common.api.entity.ActionParamInfo">
+        SELECT DISTINCT
+        <include refid="BaseFindParamSql"></include>
+        from
+        rule_action_param_info t
+        where
+        1 = 1
+        and t.is_effect = 1
+        and t.action_id = #{actionId}
+    </select>
+
+</mapper>

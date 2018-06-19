@@ -1,0 +1,61 @@
+<fieldset class="layui-elem-field" style="margin-top: 10px;margin: 5px;">
+    <legend class="lay-legend">变量导入</legend>
+    <div class="layui-field-box">
+        <form class="layui-form layui-form-pane" onsubmit="javascript:return false;">
+            <div class="layui-form-item">
+
+                <div class="layui-input-inline">
+                    <select name="quiz1" lay-search="" id="entitSelectId" lay-verify="required">
+                        <option value="">直接选择或搜索选择</option>
+                    </select>
+
+                </div>
+                <button type="button" onclick="sceneUtil.addEntitys()" id="btn_query" class="layui-btn">
+                    <i class="layui-icon">&#xe654; 添加</i>
+                </button>
+            </div>
+        </form>
+        <ul class="layui-form layui-form-pane" id="entityUiDiv">
+
+           <!-- <li>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">对象名</label>
+                    <div class="layui-input-inline">
+                        <input type="password" name="password" readonly="readonly" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        <a class="layui-icon" title="删除" href="javascript:void(0)" style="font-size: 18px">&#xe640;</a>
+                    </div>
+                </div>
+            </li>-->
+        </ul>
+    </div>
+</fieldset>
+
+<script id="tableTps" type="text/html">>
+<option value="">直接选择或搜索选择</option>
+{{#  layui.each(d.list, function(index, item){    }}
+<option value="{{item.value}}" >
+    {{item.text}}
+</option>
+{{#  });  }}
+</script>
+<script>
+  /*  layui.use(['table','form','laytpl'], function() {
+        var laytpl = layui.laytpl;
+        var form = layui.form;
+        $.get("/dispatch/service/entityInfo/getEntitysByScene?sceneId="+sceneId,function(data){
+            var result = {list : data.data
+            }
+            var getTpl = tableTps.innerHTML
+                ,view = document.getElementById('entitSelectId');
+            laytpl(getTpl).render(result, function(html){
+                view.innerHTML = html;
+            });
+            form.render('select');
+        },'json');
+    })
+*/
+
+</script>

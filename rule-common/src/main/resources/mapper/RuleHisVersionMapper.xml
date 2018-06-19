@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.mapper.RuleHisVersionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.RuleHisVersion">
+        <id column="ID" property="id"/>
+        <result column="SENCE_VERSION_ID" property="senceVersionId"/>
+        <result column="RULE_NAME" property="ruleName"/>
+        <result column="RULE_DESC" property="ruleDesc"/>
+        <result column="IS_EFFECT" property="isEffect"/>
+        <result column="CREATE_USER" property="createUser"/>
+        <result column="CREATE_TIME" property="createTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id AS id, sence_version_id AS senceVersionid, rule_name AS ruleName, rule_desc AS ruleDesc, is_effect AS isEffect, create_user AS createUser, create_time AS createTime
+    </sql>
+    <sql id="Column_List">
+        id AS id, sence_version_id AS senceVersionid, rule_name AS ruleName, rule_desc AS ruleDesc, is_effect AS isEffect, create_user AS createUser, create_time AS createTime,executeRule
+    </sql>
+
+    <select id="getRuleValidationResult" resultType="com.ht.rule.common.api.vo.RuleHisVersionVo" parameterType="map">
+        select <include refid="Column_List"/>
+          ,case isnull(d.executeRule)  when 1 then '1' when 0 then '0'  end  as validationResult from rule_his_version ver left join
+(select b.execute_rulename as executeRule  from rule_test_drools_log a inner join rule_test_drools_detail_log b on a.id = b.DROOLS_LOGID  where a.id = #{id}) d
+on ver.rule_name = d.executeRule
+where ver.sence_version_id = #{senceVersionId}
+    </select>
+
+    <select id="getRuleBatchValidationResult" resultType="java.util.Map" parameterType="map">
+      select  rl.in_paramter,rb.variable_code,rb.variable_name from rule_test_drools_log rl inner join rule_variable_bind rb on rl.sence_versionid=rb.sence_version_id
+          where rl.id=#{id} and rl.sence_versionid=#{senceVersionId}
+    </select>
+
+    <select id="getHisVersionListByVidName" resultType="com.ht.rule.common.api.entity.RuleHisVersion" parameterType="map">
+        select  <include refid="Base_Column_List"/> from rule_his_version rl where sence_version_id=#{versionId} and
+        rule_name in
+        <foreach item="ruleName" collection="ruleNames" separator="," open="(" close=")" index="">
+            #{ruleName}
+        </foreach>
+    </select>
+
+
+</mapper>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>table模块快速使用</title>
+	<link rel="stylesheet" href="/dispatch/ui/plugins/layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="/dispatch/ui/plugins/font-awesome/css/font-awesome.min.css" media="all" />
+</head>
+<body>
+
+	<div class="layui-row layui-col-space12" style="margin-top: 10px;margin-left: auto ">
+
+		<div class="layui-col-md2">
+			<input type="text" name="modelName" id="modelName"  required  placeholder="请输入决策名称" autocomplete="off"
+				   class="layui-input">
+		</div>
+
+		<div class="layui-form layui-col-md1">
+
+			<select id="isBusinessType" class="layui-select" name="businessType" lay-verify="">
+				<option value="">选择决策类型</option>
+				<option value="1">决策表</option>
+				<option value="2">评分卡</option>
+			</select>
+		</div>
+
+		<div class="layui-form layui-col-md1">
+			<label  id="business_ser"></label>
+		</div>
+		<div class="layui-col-md1">
+			<button class="layui-btn" data-type="reload" onclick="active.reload()">查 询</button>
+		</div>
+	</div>
+
+
+	<script src="/dispatch/ui/plugins/layui/layui.js"></script>
+	<script src="/dispatch/ui/src/js/dispatch/rule_util.js"></script>
+	<script src="/dispatch/ui/src/js/dispatch/strategy/strategy.js"></script>
+
+	<table id="demo" lay-filter="entityTable"></table>
+	<script type="text/html" id="businessType">
+	{{#  if(d.senceType == 1){ }}
+		<div>决策表</div>
+	{{# } else if(d.senceType == 2){ }}
+		<div>评分卡</div>
+	{{# } }}
+</script>
+	<script type="text/html" id="businessLine">
+	{{#  if(d.businessLine == 1){ }}
+		<div>房速贷</div>
+	{{# } else if(d.businessLine == 2){ }}
+		<div>现金贷</div>
+	{{# } }}
+</script>
+
+
+<!--	<script type="text/html" id="checkboxTpl">
+    &lt;!&ndash; 这里的 checked 的状态只是演示 &ndash;&gt;
+    <input type="checkbox" name="isEffect" value="{{d.isEffect}}" title="锁定" lay-filter="lockDemo" {{ d.isEffect == 0 ? 'checked' : '' }}>
+</script>-->
+	<!--操作-->
+<script type="text/html" id="isBindVar">
+		{{#  if(d.isBindVar == 1){ }}
+		<div>已绑定</div>
+		{{# } else{ }}
+		<div  style="color: red;">未绑定</div>
+		{{# } }}
+</script>
+
+	<script type="text/html" id="testStatus">
+		{{#  if(d.testStatus == 1){ }}
+		<div>通过</div>
+		{{# } else if(d.testStatus == 2){  }}
+		<div  style="color: red;">未通过</div>
+		{{# } else{ }}
+		<div>待验证</div>
+		{{# } }}
+</script>
+	<!--操作-->
+<script type="text/html" id="item_bar">
+	<a class="layui-btn layui-btn-xs" lay-event="manual_verification">手动验证</a>
+	<!--<a class="layui-btn layui-btn-xs" lay-event="auto_verification">自动测试</a>-->
+	<!--<a class="layui-btn layui-btn-xs" lay-event="variable_bind">变量绑定</a>-->
+
+</script>
+<script>
+    //Demo
+    layui.use(['table','form'], function(){
+        var form = layui.form;
+        var app = layui.app, $ = layui.jquery;
+
+//        $.ajax({
+//            type: "get",
+//            url: preBindUrl+"getAll",
+//            dataType: "json",
+//            success: function (data) {
+//                var da=data.data;
+//                var html="<select id=\"isBusinessLine\" class=\"layui-select\" name=\"businessType\" lay-verify=\"\">\n<option value=\"\">选择业务线</option>";
+//                for (var i=0;i<da.length;i++){
+//                    html+="<option value=\""+da[i].businessId+"\">"+da[i].businessName+"</option>\n";
+//                }
+//                html+="</select>";
+//                $("#business_ser").html(html);
+//                form.render('select');
+//            }
+//        });
+		form.render('select');
+
+        form.on('select(droolsVariable)', function(data){
+        	var ht=$('.layui-form-select .layui-this').last().html();
+        	$("#variableName").val(ht);
+        	$("#bindColumn").val(data.value);
+        	console.log(ht);
+        	  //console.log(data); //得到select原始DOM对象
+        	  //console.log(data.elem); //得到select原始DOM对象
+        	  //console.log(data.value); //得到被选中的值
+        	  //console.log(data.othis); //得到美化后的DOM对象
+        	});
+        
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+           $.ajax({
+                cache : true,
+                type : "POST",
+                url : '/dispatch/service/variableBind/edit',
+//                data : data.field,// 你的formid
+			   data:JSON.stringify(data.field),
+                async : false,
+                error : function(request) {
+                    alert("Connection error");
+                },
+                success : function(da) {
+                    if (da.code == 0) {
+                        layer.msg('保存数据成功');
+                       active.reload();
+                    } else {
+                       layer.msg(data.msg);
+                    }
+                }
+            });
+            return false;
+        });
+        form.render('select');
+        form.render();
+    });
+</script>
+</body>
+</html>

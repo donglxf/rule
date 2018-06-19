@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.mapper.SceneEntityRelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.SceneEntityRel">
+        <id column="scene_entity_rel_id" property="sceneEntityRelId" />
+        <result column="scene_id" property="sceneId" />
+        <result column="entity_id" property="entityId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        scene_entity_rel_id AS sceneEntityRelId, scene_id AS sceneId, entity_id AS entityId
+    </sql>
+
+    <select id="findBaseRuleSceneEntityRelInfoList" parameterType="com.ht.rule.common.api.entity.SceneEntityRel"
+            resultType="com.ht.rule.common.api.entity.SceneEntityRel">
+
+        SELECT DISTINCT
+        t.scene_entity_rel_id,
+        t.scene_id,
+        t.entity_id
+        from
+        rule_scene_entity_rel t
+        where
+        1 = 1
+        <if test="sceneId != null">
+            AND t.scene_id = #{sceneId}
+        </if>
+
+    </select>
+
+    <select id="findBaseRuleEntityListByScene" parameterType="com.ht.rule.common.api.entity.SceneInfo"
+            resultType="com.ht.rule.common.api.entity.EntityInfo">
+        select distinct
+        e.entity_id,
+        e.entity_name,
+        e.entity_desc,
+        e.entity_identify,
+        e.pkg_name,
+        e.cre_user_id,
+        e.cre_time,
+        e.is_effect,
+        e.remark
+        from
+        rule_entity_info e
+        inner join rule_scene_entity_rel ser on e.entity_id = ser.entity_id
+        inner join rule_scene_info s on s.scene_id = ser.scene_id
+        where
+        1 = 1
+        and e.is_effect = 1
+        and s.is_effect = 1
+        <if test="sceneIdentify != null">
+            AND s.scene_identify = #{sceneIdentify}
+        </if>
+        <if test="sceneId != null">
+            AND s.scene_id = #{sceneId}
+        </if>
+
+    </select>
+    <select id="findEntityIdsBySceneId" resultType="java.lang.String">
+        SELECT
+            GROUP_CONCAT(entity_id)
+        FROM
+            `rule_scene_entity_rel`
+        WHERE
+            scene_id =#{sceneId}
+    </select>
+
+</mapper>

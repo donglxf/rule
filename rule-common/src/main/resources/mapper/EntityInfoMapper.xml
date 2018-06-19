@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.mapper.EntityInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.EntityInfo">
+        <id column="entity_id" property="entityId" />
+        <result column="entity_name" property="entityName" />
+        <result column="entity_desc" property="entityDesc" />
+        <result column="entity_identify" property="entityIdentify" />
+        <result column="pkg_name" property="pkgName" />
+        <result column="cre_user_id" property="creUserId" />
+        <result column="cre_time" property="creTime" />
+        <result column="is_effect" property="isEffect" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <resultMap type="com.ht.rule.common.api.entity.EntityInfo" id="entityItemMan">
+        <id column="entity_id" property="entityId" />
+        <result column="entity_name" property="entityName" />
+        <result column="entity_desc" property="entityDesc" />
+        <result column="entity_identify" property="entityIdentify" />
+        <result column="pkg_name" property="pkgName" />
+        <result column="cre_user_id" property="creUserId" />
+        <result column="cre_time" property="creTime" />
+        <result column="is_effect" property="isEffect" />
+        <result column="remark" property="remark" />
+        <result column="type" property="type" />
+        <!-- 一对多查询 -->
+        <collection property="items"  ofType="com.ht.rule.common.api.entity.EntityItemInfo">
+            <!-- id:唯一标识
+                    property：要将订单明细的唯一标识映射到com.mybatis.entity.OrderDetail的那个属性
+                -->
+            <id column="item_id" property="itemId" />
+
+            <id column="data_type" property="dataType" />
+            <result column="entity_id" property="entityId" />
+            <result column="item_name" property="itemName" />
+            <result column="item_identify" property="itemIdentify" />
+            <result column="item_desc" property="itemDesc" />
+            <result column="cre_user_id" property="creUserId" />
+            <result column="cre_time" property="creTime" />
+            <result column="is_effect" property="isEffect" />
+            <result column="remark" property="remark" />
+            <result column="constant_id" property="constantId" />
+
+        </collection>
+
+    </resultMap>
+
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        entity_id AS entityId, entity_name AS entityName, entity_desc AS entityDesc, entity_identify AS entityIdentify, pkg_name AS pkgName, cre_user_id AS creUserId, cre_time AS creTime, is_effect AS isEffect, remark
+    </sql>
+
+    <sql id="BaseFindColumnSql">
+        t.entity_id,
+        t.entity_name,
+        t.entity_desc,
+        t.entity_identify,
+        t.pkg_name,
+        t.cre_user_id,
+        t.cre_time,
+        t.is_effect,
+        t.remark
+    </sql>
+
+    <sql id="BaseFindColumnSqlMan">
+        t.entity_id,
+        t.entity_name,
+        t.entity_desc,
+        t.entity_identify,
+        t.pkg_name,
+        t.cre_user_id,
+        t.cre_time,
+        t.is_effect,
+        t.remark,
+        t.type,
+        i.data_type,
+        i.item_id,
+        i.entity_id,
+        i.item_name,
+        i.item_identify,
+        i.item_desc,i.constant_id
+    </sql>
+
+    <select id="findBaseRuleEntityInfoList" parameterType="com.ht.rule.common.api.entity.EntityInfo"
+            resultType="com.ht.rule.common.api.entity.EntityInfo">
+        SELECT DISTINCT
+        <include refid="BaseFindColumnSql"></include>
+        FROM
+        rule_entity_info t
+        WHERE 1=1
+    </select>
+    <select id="findBaseRuleEntityInfoById" resultType="com.ht.rule.common.api.entity.EntityInfo">
+        SELECT DISTINCT
+        <include refid="BaseFindColumnSql"></include>
+        from
+        rule_entity_info t
+        where 1=1
+        and t.entity_id = #{id}
+    </select>
+    <select id="findRuleEntityIn" resultMap="entityItemMan" >
+
+        SELECT DISTINCT
+        <include refid="BaseFindColumnSqlMan"></include>
+        from
+        rule_entity_info t left join rule_entity_item_info i
+        on t.entity_id = i.entity_id
+        where 1=1
+        and t.entity_id in
+        (${ids})
+    </select>
+    <select id="findRuleEntityAll" resultMap="entityItemMan" >
+        SELECT DISTINCT
+        <include refid="BaseFindColumnSqlMan"></include>
+        FROM
+        rule_entity_info t LEFT JOIN rule_entity_item_info i
+        ON t.entity_id = i.entity_id
+        WHERE 1 = 1
+        AND i.item_id is not null
+        <if test="businessId != null ">
+          AND  t.business_id = #{businessId}
+        </if>
+
+    </select>
+    <select id="getListsByWhere" resultMap="entityItemMan" >
+        SELECT DISTINCT
+        <include refid="BaseFindColumnSqlMan"></include>
+        FROM
+        rule_entity_info t LEFT JOIN rule_entity_item_info i
+        ON t.entity_id = i.entity_id
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+    <select id="getEntityItemIdCode" resultType="com.ht.rule.common.api.entity.EntityItemCodeView">
+        SELECT i.item_id as id, CONCAT(e.type,'_',e.entity_identify,'_',i.item_identify) as code FROM `rule_entity_info` e LEFT JOIN rule_entity_item_info i
+        on i.entity_id = e.entity_id
+        where e.business_id = #{bussinessId};
+    </select>
+
+</mapper>

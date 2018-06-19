@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>table模块快速使用</title>
+    <link rel="stylesheet" href="/dispatch/ui/plugins/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/dispatch/ui/plugins/font-awesome/css/font-awesome.min.css" media="all" />
+    <style>
+        .admin-main{
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+        .layui-table-cell {
+            height: 32px;
+            line-height:32px;
+        }
+        #table{
+            width: inherit;
+            margin: 0 auto;
+        }
+        #table tr th {
+            min-width: 200px;
+        }
+        #table tr th:last-child{
+            display: none;}
+        #table tr td:last-child{
+            display: none;}
+
+        .layui-table td, .layui-table th {
+            text-align: center;
+        }
+        #table .con{
+            color: #1e9fff;
+        }
+        #table .val{
+            color: #ffb122;
+        }
+        #table .actionType{
+            color: #1e9fff;
+        }
+        #table .actionVal{
+            color: red;
+            font-weight: bold;
+        }
+        .layui-table .select {
+            background-color: #d2d2d2;
+        }
+        .del,.addTypeTr,.reGroupName,.deleteCon,.addCon,.addAct {display: none}
+        ul {
+            margin-bottom: 0px;
+        }
+        ul.con_ul li{
+            margin-bottom: 3px;
+        }
+        td.index a.addTypeTr{
+            position: absolute;
+            float: right;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        td a.addCon{
+            float: right;
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            color: #5fb878;
+        }
+        /*权值框*/
+        .form-group .qz{
+            height: 24px;
+            width: 100px;
+            margin: auto;
+            border-width: 0px;
+            color: yellowgreen;
+            padding: initial;
+            margin-top: 5px;
+            text-align: -webkit-center;
+        }
+        .param{
+            display: inline;
+        }
+        .actionBar{
+            float: right;
+            margin-right: 8px;
+        }
+        .actionEntity {
+            color: #fba117;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+
+<div class="admin-main">
+    <div class="layui-col-md6">
+        <fieldset class="layui-elem-field">
+            <legend class="lay-legend">决策管理</legend>
+            <div class="layui-field-box">
+            <form  class="layui-form layui-form-pane" onsubmit="javascript:return false;">
+                <div class="layui-form-item" style="margin-bottom:0px;">
+                    <div class="layui-input-inline">
+                        <input type="text"  placeholder="过滤条件查询"  class="layui-input" id="key">
+                    </div>
+                    <div class="layui-input-inline" style="width: 120px" id="business_ser">
+                    </div>
+                    <div class="layui-input-inline" style="width: 120px">
+                        <select name="sceneType" id="sceneType">
+                            <option value="">类型</option>
+                            <option value="1" >决策</option>
+                            <option value="2">评分卡</option>
+                        </select>
+                    </div>
+
+                    <button type="button" onclick="leftActive.reload()" id="btn_query"  class="layui-btn layui-btn">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+                    <button type="button"  class="layui-btn  layui-btn-small" id="scene_btn_add">
+                        <i class="layui-icon">&#xe654;</i>决策
+                    </button>
+                    <button  type="button"   class="layui-btn  layui-btn-small" id="grade_btn_add">
+                        <i class="layui-icon">&#xe654;</i>评分卡
+                    </button>
+
+                </div>
+            </form>
+                <table id="sceneList" lay-filter="sceneList"></table>
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="layui-col-md6">
+        <fieldset class="layui-elem-field">
+            <legend class="lay-legend">版本记录</legend>
+            <div class="layui-field-box">
+                <form  class="layui-form layui-form-pane" onsubmit="javascript:return false;">
+                    <div class="layui-form-item" style="margin-bottom:0px;">
+                        <label class="layui-form-label">版本号</label>
+
+
+                        <div class="layui-input-inline">
+                            <input type="text"  placeholder="版本号查询"  class="layui-input" id="versionN">
+                        </div>
+                        <button type="button" onclick="active.reload()" id="version_btn"  class="layui-btn layui-btn">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+
+                    <!--    <button class="layui-btn layui-btn-small" id="entity_btn_add">
+                            <i class="layui-icon">&#xe654;</i>新增
+                        </button>-->
+                    </div>
+                </form>
+                <table id="version" lay-filter="version"></table>
+            </div>
+        </fieldset>
+    </div>
+</div>
+
+
+
+<script src="/dispatch/ui/plugins/layui/layui.js"></script>
+
+<script src="/dispatch/ui/src/js/dispatch/version/version.js"></script>
+<!--操作-->
+<script type="text/html" id="toolbar_left">
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-primary layui-btn-sm" title="编辑" lay-event="edit">
+            <i class="layui-icon">&#xe642;</i>
+        </button>
+        <button class="layui-btn  layui-btn-primary layui-btn-sm" title="删除" lay-event="del">
+            <i class="layui-icon">&#xe640;</i>
+        </button>
+
+        <button class="layui-btn  layui-btn-primary layui-btn-sm" title="发布测试版" lay-event="push">
+            <i class="layui-icon">&#xe609;</i>
+        </button>
+    </div>
+</script>
+<script type="text/html"  id="statusTpl">
+
+        {{#  if(d.orderStatus === 1){ }}
+        <input type="checkbox" name="status" value="{{d.versionId}}" title="正常" lay-filter="lockDemo" {{ d.status == 1 ? 'checked' : '' }}>
+        {{#  } else { }}
+        <input type="checkbox" name="status" value="{{d.versionId}}" title="冻结" lay-filter="lockDemo" >
+        {{#  } }}
+</script>
+<script type="text/html"  id="typeTpl">
+
+    {{#  if(d.sceneType === 1){ }}
+    <span style="color: #1e9fff;" >决策</span>
+
+    {{#  } else { }}
+    <span style="color: #ffb800;" >评分卡</span>
+    {{#  } }}
+</script>
+<script type="text/html"  id="versionTypeTpl">
+
+    {{#  if(d.type === 1){ }}
+    <span style="color: #1e9fff;" >正式版</span>
+
+    {{#  } else { }}
+    <span style="color: #ffb800;" >测试版</span>
+    {{#  } }}
+</script>
+
+<!--操作-->
+<script type="text/html" id="bar">
+    <button class="layui-btn layui-btn-sm"  ht-auth="push" lay-event="push">
+       发布测试版  <!--&nbsp;<i class="layui-icon">&#xe609;</i>-->
+    </button>
+</script>
+<!--定义规则-->
+<script type="text/html" id="bar_rule_defined">
+    <button class="layui-btn layui-btn-sm"  ht-auth="rule-edit" lay-event="rule_defined">
+       规则定义  &nbsp;<i class="layui-icon">&#xe628;</i>
+    </button>
+</script>
+
+<!--操作-->
+<script type="text/html" id="toolbar">
+    <button class="layui-btn layui-btn-sm" title="查看规则"  ht-auth="ruleLook" lay-event="ruleLook">
+         查看&nbsp;<i class="layui-icon">&#xe615;</i>
+    </button>
+</script>
+<div id = "rule_div" style="display: none">
+    <fieldset class="layui-elem-field">
+        <legend class="lay-legend">规则详情</legend>
+        <div class="layui-field-box">
+            <table class="layui-table"   id="table">
+
+            </table>
+        </div>
+    </fieldset>
+</div>
+</div>
+</body>
+
+<script id="tableTp1" type="text/html">
+    <colgroup>
+        <col width="250">
+        <col width="100">
+        <col width="80px">
+    </colgroup>
+    <thead>
+    <tr>
+        <th class="contion">
+            <span  ><i class="layui-icon">&#xe62d;</i>  条件</span>
+        </th>
+        <th class="th-action  "><span><i class="layui-icon">&#xe62c;</i> 动作</span>
+            <a href="javascript:void(0); " class="del" onclick="deleteCol(this)"> <i
+                    class="layui-icon">&#xe640;</i></a>
+        </th>
+        <th class="" >
+            <span><i class="layui-icon">&#xe631;</i></span>操作
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#  layui.each(d.rules, function(index, rule){    }}
+    <tr>
+
+        <td>
+            <ul class="con_ul">
+
+                {{#  layui.each(rule.cons, function(i, con){    }}
+                <li>
+                    <a href="#" class="entityC" data-value="{{con.itemTable.entityId}}">{{con.itemTable.entityName}}</a>.
+                    <a href="#" class="itemC" data-value="{{con.itemTable.itemId}}">{{con.itemTable.itemName}}</a>
+                    &nbsp;
+                    <a href="#" data-value="{{con.ysf}}" class="con">{{con.ysfText}}</a>&nbsp;
+                    <a href="#" data-value="{{con.val}}" class="val">{{con.valText}}</a>
+                    <a href="javascript:void(0); " class="deleteCon" onclick="sceneUtil.deleteCon(this)"> <i
+                            class="layui-icon">&#x1006;</i></a>
+                </li>
+                {{#  });  }}
+            </ul>
+            <a href="javascript:void(0); " title="添加" class="addCon" onclick="sceneUtil.addCon(this)"> <i
+                    class="layui-icon">&#xe654;</i></a>
+        </td>
+
+
+        <td>
+            <ul class="action_ul">
+                {{#   layui.each(rule.actionRels, function(j, actions ){    }}
+                <li>
+                    <a href="#" class="actionType" data-value="">{{actions.actionInfo.actionName}}</a>
+                    <div class="param">
+                        <!-- (
+                         <a href="#" paramId="" class="actionVal" data-value="">请输入</a> ,
+                         <a href="#" paramId="" class="actionVal" data-value="">请输入</a>
+                         )-->
+                        (
+                        {{#   layui.each(actions.actionInfo.paramValueInfoList, function(m, actionVal){ }}
+                        {{# if(m == 0) { }}
+                        <a href="#" paramId="{{actionVal.actionParamId}}" class=" {{actionVal.clazz}}"  data-value="{{actionVal.paramValue}}">{{actionVal.paramText}}</a>
+
+                        {{#  }else{ }}
+                        , <a href="#" paramId="{{actionVal.actionParamId}}" class="{{actionVal.clazz}}"  data-value="{{actionVal.paramValue}}">{{actionVal.paramText}}</a>
+
+                        {{# } }}
+
+                        {{# }); }}
+                        )
+                    </div>
+                    <div class="actionBar">
+                        <a href="javascript:void(0); " title="添加" class="addAct"
+                           onclick="sceneUtil.addActionLi(this)"> <i
+                                class="layui-icon">&#xe654;</i></a>
+                        <a href="javascript:void(0); " class="deleteCon" title="删除该动作" onclick="sceneUtil.deleteAc(this)"> <i
+                                class="layui-icon">&#x1006;</i></a>
+                    </div>
+
+                </li>
+                {{#  });  }}
+            </ul>
+        </td>
+        <td>
+            <div class="layui-btn-group">
+                <!--<button class="layui-btn layui-btn-primary layui-btn-sm saveRow" onclick="hb();"><i
+                        class="layui-icon">&#xe618;</i></button>-->
+                <button class="layui-btn layui-btn-primary layui-btn-sm addRow" onclick="sceneUtil.addSceneRow(this)"><i
+                        class="layui-icon">&#xe654;</i></button>
+                <button class="layui-btn layui-btn-primary layui-btn-sm deleteRow" onclick="sceneUtil.deleteRow(this)"><i
+                        class="layui-icon">&#xe640;</i></button>
+            </div>
+        </td>
+    </tr>
+    {{#  });  }}
+    </tbody>
+
+</script>
+
+<script id="tableTp2" type="text/html">
+    <colgroup>
+        <col width="100">
+        <col width="250">
+        <col width="100">
+        <col width="80px">
+    </colgroup>
+    <thead>
+    <tr>
+        <th class="index">
+            <span  ><i class="layui-icon">&#xe630;</i> 分组</span>
+        </th>
+        <th class="contion">
+            <span  ><i class="layui-icon">&#xe62d;</i>  条件</span>
+        </th>
+        <th class="th-action  "><span><i class="layui-icon">&#xe62c;</i> 得分</span>
+            <a href="javascript:void(0); " class="del" onclick="deleteCol(this)"> <i
+                    class="layui-icon">&#xe640;</i></a>
+        </th>
+        <th class="" >
+            <span><i class="layui-icon">&#xe631;</i></span>操作
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#  layui.each(d.rules, function(index, rule){    }}
+    <tr>
+        <td class="index" data-index="{{rule.group.index}}">
+            <span >
+                <a href="#" data-value="{{rule.group.index}}" class="groupName">{{rule.group.name}}</a>
+            </span>
+            <a href="javascript:void(0); " title="添加" class="addTypeTr" onclick="sceneUtil.addTypeTr(this)"> <i
+                    class="layui-icon">&#xe61f;</i></a>
+            {{#if ( d.hasWeight == 1 ){ }}
+            <div class="form-group qzdiv">
+                <input type="number" readonly="readonly" class="form-control qz" value="{{rule.group.weight}}" id="exampleInputName2" placeholder="权值">
+            </div>
+            {{#  }   }}
+        </td>
+
+        <td>
+            <ul class="con_ul">
+
+                {{#  layui.each(rule.cons, function(i, con){    }}
+                <li>
+                    <a href="javascript:void(0); " class="reGroupName" onclick="sceneUtil.reGroupName(this)"> <i
+                            class="layui-icon">&#xe603;</i></a>
+                    <a href="#" class="entityC" data-value="{{con.itemTable.entityId}}">{{con.itemTable.entityName}}</a>.
+                    <a href="#" class="itemC" data-value="{{con.itemTable.itemId}}">{{con.itemTable.itemName}}</a>
+                    &nbsp;
+                    <a href="#" data-value="{{con.ysf}}" class="con">{{con.ysfText}}</a>&nbsp;
+                    <a href="#" data-value="{{con.val}}" class="val">{{con.valText}}</a>
+                    <a href="javascript:void(0); " class="deleteCon" onclick="sceneUtil.deleteCon(this)"> <i
+                            class="layui-icon">&#x1006;</i></a>
+                </li>
+                {{#  });  }}
+            </ul>
+            <a href="javascript:void(0); " title="添加" class="addCon" onclick="sceneUtil.addCon(this)"> <i
+                    class="layui-icon">&#xe654;</i></a>
+        </td>
+
+        {{#   layui.each(rule.actionRels, function(j, actions ){    }}
+        <td>
+            {{#   layui.each(actions.actionInfo.paramValueInfoList, function(m, actionVal){ }}
+            <a href="#" class="actionVal" data-value="{{actionVal.paramValue}}" actionParamId = "{{actionVal.actionParamId}}">{{actionVal.paramValue}}</a>
+            {{# }); }}
+        </td>
+        {{#  });  }}
+        <td>
+            <div class="layui-btn-group">
+                <!--<button class="layui-btn layui-btn-primary layui-btn-sm saveRow" onclick="hb();"><i
+                        class="layui-icon">&#xe618;</i></button>-->
+                <button class="layui-btn layui-btn-primary layui-btn-sm addRow" onclick="sceneUtil.addRow(this)"><i
+                        class="layui-icon">&#xe654;</i></button>
+                <button class="layui-btn layui-btn-primary layui-btn-sm deleteRow" onclick="sceneUtil.deleteRow(this)"><i
+                        class="layui-icon">&#xe640;</i></button>
+            </div>
+        </td>
+    </tr>
+
+    {{#  });  }}
+
+    </tbody>
+
+</script>
+</html>

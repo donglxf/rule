@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>table模块快速使用</title>
+    <link rel="stylesheet" href="/dispatch/ui/plugins/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/dispatch/ui/plugins/font-awesome/css/font-awesome.min.css" media="all"/>
+</head>
+<body>
+
+
+<div class="admin-main">
+    <div class="layui-row" style="margin-top: 10px;">
+        <div class="layui-col-xs6">
+            <form class="layui-form layui-form-pane" onsubmit="javascript:return false;">
+                <div class="layui-form-item" style="margin-bottom:0px;">
+                    <label class="layui-form-label">名称</label>
+
+
+                    <div class="layui-input-inline">
+                        <input type="text" placeholder="过滤条件查询"
+                               class="layui-input" id="entityName_ser">
+                    </div>
+                    <div class="layui-input-inline" id="business_ser">
+                    </div>
+                    <button type="button" onclick="active.reload()" id="btn_query" class="layui-btn layui-btn">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+
+                    <button type="button" class="layui-btn layui-btn-small" id="sys_btn_add">
+                        <i class="layui-icon">&#xe654;</i>新增系统
+                    </button>
+                </div>
+            </form>
+            <!-- <div class="layui-btn-group">
+                 <button class="layui-btn layui-btn-sm"><i class="layui-icon"></i></button>
+                 <button class="layui-btn layui-btn-sm"><i class="layui-icon"></i></button>
+                 <button class="layui-btn layui-btn-sm"><i class="layui-icon"></i></button>
+                 <button class="layui-btn layui-btn-sm"><i class="layui-icon"></i></button>
+             </div>-->
+
+
+            <table id="demo" lay-filter="entityTable"></table>
+        </div>
+        <div class="layui-col-xs6">
+            <div id="elementToolbar" class="layui-btn-group">
+                <button type="button" class="layui-btn layui-btn-small" id="entity_item_btn_add">
+                    <i class="layui-icon">&#xe654;</i>新增业务线
+                </button>
+            </div>
+            <table id="itemTable" lay-filter="itemTable">
+
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script src="/dispatch/ui/plugins/layui/layui.js"></script>
+
+<script src="/dispatch/ui/src/js/rule/business_sys/business_sys.js"></script>
+<script>
+
+</script>
+<script type="text/html" id="checkboxTpl">
+
+
+    {{#  if(d.isEffect === 1){ }}
+    <input type="checkbox" name="status" value="{{d.entityId}}" title="启用" lay-filter="lockDemo" {{ d.isEffect== 1
+           ? 'checked' : '' }}>
+    {{#  } else { }}
+    <input type="checkbox" name="status" value="{{d.entityId}}" title="停用" lay-filter="lockDemo">
+    {{#  } }}
+</script>
+<!--操作-->
+<script type="text/html" id="bar">
+    <button class="layui-btn layui-btn-sm"  ht-auth="entity-edit" lay-event="edit">
+        <i class="layui-icon">&#xe642;</i>
+    </button>
+    <button class="layui-btn layui-btn-sm"  ht-auth="entity-del" lay-event="del">
+        <i class="layui-icon">&#xe640;</i>
+    </button>
+
+</script>
+
+<!--操作-->
+<script type="text/html" id="item_bar">
+    <button class="layui-btn layui-btn-sm"  ht-auth="item-edit" lay-event="edit2">
+        <i class="layui-icon">&#xe642;</i>
+    </button>
+    <button class="layui-btn layui-btn-sm" ht-auth="item-del" lay-event="del2">
+        <i class="layui-icon">&#xe640;</i>
+    </button>
+
+</script>
+
+</body>
+</html>

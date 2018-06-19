@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.mapper.ConditionInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.ConditionInfo">
+        <id column="condition_id" property="conditionId" />
+        <result column="rule_id" property="ruleId" />
+        <result column="condition_name" property="conditionName" />
+        <result column="condition_expression" property="conditionExpression" />
+        <result column="condition_desc" property="conditionDesc" />
+        <result column="is_effect" property="isEffect" />
+        <result column="cre_user_id" property="creUserId" />
+        <result column="cre_time" property="creTime" />
+        <result column="remark" property="remark" />
+        <result column="val" property="val" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        condition_id AS conditionId, rule_id AS ruleId, condition_name AS conditionName, condition_expression AS conditionExpression, condition_desc AS conditionDesc, is_effect AS isEffect, cre_user_id AS creUserId, cre_time AS creTime, remark
+    </sql>
+
+    <sql id="BaseFindListSql">
+        t.condition_id,
+        t.rule_id,
+        t.condition_name,
+        t.condition_expression,
+        t.condition_desc,
+        t.is_effect,
+        t.cre_user_id,
+        t.cre_time,
+         t.val,
+        t.remark
+    </sql>
+    <select id="findBaseRuleConditionInfoList" parameterType="com.ht.rule.common.api.entity.ConditionInfo"
+            resultType="com.ht.rule.common.api.entity.ConditionInfo">
+        SELECT DISTINCT
+        <include refid="BaseFindListSql"></include>
+        FROM
+        rule_condition_info t
+        WHERE
+        1 = 1
+        <if test="ruleId != null">
+            AND t.rule_id = #{ruleId}
+        </if>
+
+    </select>
+    <select id="findRuleConditionInfoByRuleId" resultType="com.ht.rule.common.api.entity.ConditionInfo">
+        SELECT DISTINCT
+        <include refid="BaseFindListSql"></include>
+        FROM
+        rule_condition_info t
+        WHERE
+        1 = 1
+        <if test="ruleId != null">
+            and t.rule_id = #{ruleId}
+        </if>
+    </select>
+
+</mapper>

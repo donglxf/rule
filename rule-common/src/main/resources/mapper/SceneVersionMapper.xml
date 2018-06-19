@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.mapper.SceneVersionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.SceneVersion">
+        <id column="version_id" property="versionId"/>
+        <result column="version" property="version"/>
+        <result column="official_version" property="officialVersion"/>
+        <result column="type" property="type"/>
+        <result column="title" property="title"/>
+        <result column="comment" property="comment"/>
+        <result column="scene_id" property="sceneId"/>
+        <result column="cre_time" property="creTime"/>
+        <result column="cre_user_id" property="creUserId"/>
+        <result column="rule_div" property="ruleDiv"/>
+        <result column="rule_drl" property="ruleDrl"/>
+        <result column="`status`" property="status"/>
+        <result column="scene_identify" property="sceneIdentify"/>
+        <result column="test_status" property="testStatus"/>
+        <result column="business_type" property="businessType"/>
+        <result column="business_line" property="businessLine"/>
+        <result column="is_bind_var" property="isBindVar"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        version_id AS versionId, version, official_version AS officialVersion, type, title, comment, scene_identify AS sceneIdentify, scene_id AS sceneId, cre_time AS creTime, cre_user_id AS creUserId, rule_div AS ruleDiv, rule_drl AS ruleDrl, status, test_status AS testStatus, business_type AS businessType, business_line AS businessLine, is_bind_var AS isBindVar
+    </sql>
+    <select id="getNoBindVariableRecord" parameterType="map"
+            resultType="com.ht.rule.common.api.vo.SceneVersionInfoVo">
+        select rv.scene_id sceneId,rv.title,rv.version,rv.is_bind_var,rv.test_status,rs.scene_type senceType
+        ,rb.business_id,rb.business_name,rv.version_id versionId,rs.scene_identify sceneIdentify
+        from rule_scene_version rv inner join rule_scene_info rs on rv.scene_id=rs.scene_id inner join risk_business rb
+        on rs.business_id=
+        rb.business_id where type=0
+        <if test="title != null or is_bind_var != null or version != null or test_status != null ">
+            and ( rv.title like CONCAT('%',#{title},'%') or rv.is_bind_var like CONCAT('%',#{is_bind_var},'%')
+            or rv.version like CONCAT('%',#{version},'%') or rv.test_status like CONCAT('%',#{test_status},'%') )
+        </if>
+        <if test="business_id != null ">
+            and rb.business_id= #{business_id}
+        </if>
+        <if test="scene_type != null ">
+            and rs.scene_type= #{scene_type}
+        </if>
+        order by rv.cre_time desc
+    </select>
+
+    <select id="getMaxTestVersion" parameterType="map" resultType="map">
+		select max(version) maxVersion from rule_scene_version where scene_id=#{sceneId} and scene_identify = #{sceneIdentify} and type=#{type}
+	</select>
+
+    <select id="getRuleExecInfo" resultType="java.util.Map" parameterType="map">
+        select rs.scene_id,rs.scene_identify,rs.scene_name,rs.cre_time,rv.version,rv.title,rv.version_id
+            from rule_scene_info rs inner join rule_scene_version rv on rs.scene_id=rv.scene_id where version_id= #{versionId}
+    </select>
+
+    <select id="getRuleAgeTime" resultType="java.util.Map" parameterType="map">
+        select sence_versionid as senceVersionId ,AVG(execute_time) executeTime ,count(execute_time) execTotal from
+        risk_drools_log t where 1=1
+        <if test="startTime !=null and startTime!='' ">
+            and create_time>=#{startTime}
+        </if>
+        <if test="timerStop !=null and timerStop!='' ">
+            and create_time <![CDATA[ <= ]]> #{timerStop}
+        </if>
+        GROUP BY sence_versionid order by execute_time desc
+        <if test="getWay != null and getWay != 0 ">
+            limit 0,#{getWay}
+        </if>
+    </select>
+
+    <select id="getRuleExecTotal" resultType="java.util.Map" parameterType="map">
+        select rd.execute_rulename executeRuleName,count(drools_logid) executeTotal from rule_test_drools_log rl inner
+        join rule_test_drools_detail_log rd on rl.ID=rd.drools_logid
+        where 1=1
+        <if test="startTime !=null and startTime!='' ">
+            and rl.create_time>=#{startTime}
+        </if>
+        <if test="timerStop !=null and timerStop!='' ">
+            and rl.create_time <![CDATA[ <= ]]> #{timerStop}
+        </if>
+        GROUP BY execute_rulename
+        <if test="getWay != null and getWay != 0 ">
+            limit 0,#{getWay}
+        </if>
+
+    </select>
+
+
+
+    <select id="getLastVersionByType" parameterType="map" resultType="com.ht.rule.common.api.entity.SceneVersion">
+        select <include refid="Base_Column_List" />
+        from rule_scene_version s
+        inner join  (select max(version) versions from rule_scene_version where scene_identify=#{sceneIdentify} and `status`='1' and type=#{type}) a
+        on s.version=a.versions
+        where s.scene_identify=#{sceneIdentify} and s.`status`='1' and s.type=#{type}
+    </select>
+
+    <select id="getInfoByVersionId" resultType="com.ht.rule.common.api.entity.SceneVersion" parameterType="map">
+        select <include refid="Base_Column_List" />
+        from rule_scene_version s where version=#{version} and scene_identify=#{sceneIdentify} and type=#{type}
+    </select>
+
+    <select id="getSenceVersion" resultType="com.ht.rule.common.api.entity.SceneVersion" parameterType="map">
+        select <include refid="Base_Column_List" />
+        from rule_scene_version s where scene_identify=#{sceneIdentify} and `status` = '1'
+        <if test="type==1">
+            and type = 1
+            <if test="version!= null and version != ''">
+                and official_version = #{version}
+            </if>
+            order by official_version+0 desc
+        </if>
+        <if test="type==0">
+            and type = 0
+            <if test="version!= null and version != ''">
+                and version = #{version}
+            </if>
+            order by version+0 desc
+        </if>
+        limit 0,1
+    </select>
+
+</mapper>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>table模块快速使用</title>
+    <link rel="stylesheet" href="/dispatch/ui/plugins/layui/css/layui.css"
+          media="all">
+    <link rel="stylesheet"
+          href="/dispatch/ui/plugins/font-awesome/css/font-awesome.min.css"
+          media="all"/>
+    <style type="text/css">
+        .mycss{
+            margin-left:0;
+        }
+        .layui-form-pane .layui-form-label{
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="layui-tab">
+    <ul class="layui-tab-title">
+        <li class="layui-this">输入值</li>
+        <li>开始测试</li>
+    </ul>
+    <div class="layui-tab-content" style="height: 100px;">
+        <div class="layui-tab-item layui-show">
+            <div style="margin: 15px;">
+                <form class="layui-form layui-form-pane" action="/dispatch/service/actProcRelease/scene/variable/init"
+                      method="post" id="manu_model_valiable_form">
+                </form>
+            </div>
+        </div>
+        <div class="layui-tab-item">
+            <form class="layui-form layui-form-pane" action="" id="model_valiable_form">
+                <input type="hidden" name="senceVersionId" id="senceVersionId">
+                <input type="hidden" name="version" id="version">
+                <input type="hidden" name="senceId" id="senceId">
+                <input type="hidden" name="sceneIdentify" id="sceneIdentify">
+                <input type="hidden" name="stateCode" id="stateCode" value="1"><!-- 存储验证状态 -->
+                <div class="layui-container" id="validateResults">
+                    <button class="layui-btn" lay-submit lay-filter="start_verification">开始验证</button>
+                    <button class="layui-btn" lay-submit lay-filter="verification_pass">验证通过</button>
+                    <button class="layui-btn" lay-submit lay-filter="verification_nopass">验证不通过</button>
+                    <div class="layui-form-item">
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                            <legend>验证结果</legend>
+                        </fieldset>
+                        <div class="layui-input-block" style="margin-left: 0px;">
+                            <textarea readonly id="validateResult" class="layui-input" style="width: 267px;height: 77px;font-size: 15px;"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-container">
+                    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                        <legend>当前显示</legend>
+                    </fieldset>
+                    <div class="layui-input-block" style="margin-left: 0px;">
+                        <table class="layui-table" id="ruleTab">
+
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/dispatch/ui/plugins/layui/layui.js"></script>
+<script src="/dispatch/ui/src/js/rule/rule_util.js"></script>
+
+<script>
+    layui.config({
+        base: '/dispatch/ui/src/js/modules/' //假设这是你存放拓展模块的根目录
+    }).extend({ //设定模块别名
+        myutil:'common',
+    });
+    //Demo
+    layui.use(['form', 'element','myutil'], function () {
+        var form = layui.form;
+        var app = layui.app,
+            layerTips = layui.layer,
+            $ = layui.jquery;
+
+        $.ajax({
+            type: "GET",
+            url: '/dispatch/service/variableBind/getAll?versionId='+parent.versionIds ,
+            dataType: "json",
+            success: function (data) {
+                var modelVerification = new ModelVerification();
+                var contents = modelVerification.initModel(data);
+                var form1 = $("#manu_model_valiable_form");
+                form1.html(contents);
+                form.render();
+            }
+        });
+
+        form.on('submit(save)', function (data) {
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: '/dispatch/service/actProcRelease/scene/variable/init',
+                data: data.field,// 你的formid
+                async: false,
+                success: function (data) {
+                    layer.msg(data.msg);
+                }
+            });
+            return false;
+        });
+
+        // 验证通过
+        form.on('submit(verification_pass)', function (data) {
+            var stateCode=$("#stateCode").val();
+            if(stateCode !="" && stateCode!=undefined && stateCode!=null && stateCode==0){
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '/dispatch/service/strategy/variablePass?testState=1',
+                    data: data.field,// 你的formid
+                    async: false,
+                    error: function (request) {
+                        alert("Connection error");
+                    },
+                    success: function (da) {
+                        if (da.code == 0) {
+                            layer.alert('操作成功', function(index){
+                                window.parent.location.reload() // 刷新父页面
+                                // 关闭自身
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(layer.index);
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg(da.msg);
+                        }
+                    }
+                });
+            }else{
+                layer.msg("请先完成验证!");
+            }
+            return false;
+        });
+
+        // 验证不通过
+        form.on('submit(verification_nopass)', function (data) {
+            var stateCode=$("#stateCode").val();
+            if(stateCode !="" && stateCode!=undefined && stateCode!=null && stateCode==0){
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '/dispatch/service/strategy/variablePass?testState=2',
+                    data: data.field,// 你的formid
+                    async: false,
+                    error: function (request) {
+                        alert("Connection error");
+                    },
+                    success: function (da) {
+                        if (da.code == 0) {
+                            layer.alert('操作成功', function(index){
+                                window.parent.location.reload() // 刷新父页面
+                                // 关闭自身
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(layer.index);
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg(da.msg);
+                        }
+                    }
+                });
+            }else{
+                layer.msg("请先完成验证!");
+            }
+            return false;
+        });
+
+        //监听表单提交--- 开始验证
+        form.on('submit(start_verification)', function (data) {
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: '/dispatch/service/variableBind/manualVariable',
+                data: data.field,// 你的formid
+                async: false,
+                error: function (request) {
+                    alert("Connection error");
+                },
+                success: function (da) {
+                    if (da.code == 0) {
+                        $("#validateResult").val("测试完成");
+                        showRuleTestResult(da.data.logId, da.data.versionId);
+                    } else {
+                        layer.msg(da.msg);
+                    }
+                    $("#stateCode").val(da.code);
+                }
+            });
+            return false;
+        });
+
+        function showRuleTestResult(logId, versionId) {
+            $
+                .ajax({
+                    cache: true,
+                    type: "GET",
+                    url: '/dispatch/service/strategy/manuaRuleMatchResult?logId=' + logId + '&versionId=' + versionId, // 数据接口
+                    async: false,
+                    error: function (request) {
+                        alert("Connection error");
+                    },
+                    success: function (da) {
+                        console.log(da);
+                        var size = da.data.length;
+                        var modelVerification = new ModelVerification();
+                        var result = modelVerification.initResult(da.data);
+                        $("#ruleTab").html(result);
+                    }
+                });
+        }
+    });
+</script>
+</body>
+</html>

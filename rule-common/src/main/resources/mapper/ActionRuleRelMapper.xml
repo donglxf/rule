@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.mapper.ActionRuleRelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.ActionRuleRel">
+        <id column="rule_action_rel_id" property="ruleActionRelId" />
+        <result column="action_id" property="actionId" />
+        <result column="rule_id" property="ruleId" />
+        <result column="is_effect" property="isEffect" />
+        <result column="cre_user_id" property="creUserId" />
+        <result column="cre_time" property="creTime" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <resultMap type="com.ht.rule.common.api.entity.ActionRuleRel" id="actions">
+        <id column="rule_action_rel_id" property="ruleActionRelId" />
+        <result column="action_id" property="actionId" />
+        <result column="rule_id" property="ruleId" />
+        <result column="is_effect" property="isEffect" />
+        <result column="cre_user_id" property="creUserId" />
+        <result column="cre_time" property="creTime" />
+        <result column="remark" property="remark" />
+
+        <!-- 多对一的关系 -->
+        <!-- property: 指的是属性的值, javaType：指的是属性的类型-->
+        <association property="actionInfo" javaType="com.ht.rule.common.api.entity.ActionInfo">
+            <id column="action_id" property="actionId" />
+            <result column="action_type" property="actionType" />
+            <result column="action_name" property="actionName" />
+            <result column="action_desc" property="actionDesc" />
+            <result column="action_class" property="actionClass" />
+            <result column="is_effect" property="isEffect" />
+            <result column="cre_user_id" property="creUserId" />
+            <result column="cre_time" property="creTime" />
+            <result column="remark" property="remark" />
+        </association>
+    </resultMap>
+
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        rule_action_rel_id AS ruleActionRelId, action_id AS actionId, rule_id AS ruleId, is_effect AS isEffect, cre_user_id AS creUserId, cre_time AS creTime, remark
+    </sql>
+
+    <select id="findBaseRuleActionRuleRelInfoList" parameterType="com.ht.rule.common.api.entity.ActionRuleRel"
+            resultType="com.ht.rule.common.api.entity.ActionRuleRel">
+        SELECT DISTINCT
+        t.rule_action_rel_id,
+        t.action_id,
+        t.rule_id,
+        t.is_effect,
+        t.cre_user_id,
+        t.cre_time,
+        t.remark
+        from
+        rule_action_rule_rel t
+        WHERE
+        1 = 1
+        <if test="ruleId != null">
+            and t.rule_id = #{ruleId}
+        </if>
+
+    </select>
+    <select id="findActions" resultMap="actions" >
+      SELECT
+        t.rule_action_rel_id,
+        t.action_id,
+        t.rule_id,
+        t.is_effect,
+        t.cre_user_id,
+        t.cre_time,
+        t.remark,
+        a.*
+        from
+        rule_action_rule_rel t,rule_action_info a
+        where
+        t.action_id = a.action_id
+        <if test="ruleId != null">
+            and t.rule_id = #{ruleId}
+        </if>
+
+    </select>
+    <select id="findActionIdsBySceneId" resultType="java.lang.String">
+        SELECT DISTINCT
+            GROUP_CONCAT(a.action_id)
+        FROM
+            `rule_action_rule_rel` r
+            LEFT JOIN rule_info ru ON r.rule_id = ru.rule_id
+            LEFT JOIN rule_action_info a ON a.action_id = r.action_id
+            LEFT JOIN rule_scene_info s ON s.scene_id = ru.scene_id
+        where s.scene_id = #{sceneId}
+    </select>
+
+</mapper>

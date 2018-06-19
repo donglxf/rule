@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>table模块快速使用</title>
+<link rel="stylesheet" href="/dispatch/ui/plugins/layui/css/layui.css"
+	media="all">
+<link rel="stylesheet"
+	href="/dispatch/ui/plugins/font-awesome/css/font-awesome.min.css"
+	media="all" />
+</head>
+<body>
+
+
+	<div class="admin-main">
+		<div class="layui-row" style="margin-top: 10px;">
+			<div class="">
+				<form class="layui-form layui-form-pane"
+					onsubmit="javascript:return false;">
+					<div class="layui-form-item" style="margin-bottom: 0px;">
+						<label class="layui-form-label">名称</label>
+
+
+						<div class="layui-input-inline">
+							<input type="text" placeholder="过滤条件查询"
+								onchange="javascript:$('#btn_query').click();"
+								class="layui-input" id="entityName_ser">
+						</div>
+						<button type="button" onclick="active.reload()" id="btn_query"
+							class="layui-btn layui-btn">
+							<i class="fa fa-search" aria-hidden="true"></i>
+						</button>
+					</div>
+				</form>
+				<table id="demo" lay-filter="entityTable"></table>
+			</div>
+
+		</div>
+	</div>
+
+
+
+	<script src="/dispatch/ui/plugins/layui/layui.js"></script>
+
+	<script src="/dispatch/ui/src/js/dispatch/bind/rule_bind.js"></script>
+	<script type="text/html" id="sceneTypeConvert">
+	{{#  if(d.type == 1){ }}
+		<div>决策</div>
+	{{# } else if(d.type == 2){ }}
+		<div>模型</div>
+	{{# } }}
+</script>
+	<script type="text/html" id="statusConvert">
+	{{#  if(d.orderStatus == 1){ }}
+		<div>正常</div>
+	{{# } else if(d.orderStatus == 2){ }}
+		<div>禁用</div>
+	{{# } }}
+</script>
+
+
+	<script type="text/html" id="checkboxTpl">
+    <!-- 这里的 checked 的状态只是演示 -->
+    <input type="checkbox" name="isEffect" value="{{d.isEffect}}" title="锁定" lay-filter="lockDemo" {{ d.isEffect == 0 ? 'checked' : '' }}>
+</script>
+	<!--操作-->
+	<script type="text/html" id="bar">
+    <button class="layui-btn layui-btn-sm" lay-event="bind" >
+        <i class="layui-icon">绑定</i>
+    </button>
+</script>
+	<!--操作-->
+	<script type="text/html" id="item_bar">
+    <button class="layui-btn layui-btn-sm" lay-event="edit2" >
+        <i class="layui-icon">&#xe642;</i>
+    </button>
+    <button class="layui-btn layui-btn-sm" lay-event="del2">
+        <i class="layui-icon">&#xe640;</i>
+    </button>
+
+</script>
+<script>
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+        var app = layui.app,
+            layerTips = layui.layer,
+            $ = layui.jquery;
+        
+        form.on('select(droolsVariable)', function(data){
+        	var ht=$('.layui-form-select .layui-this').last().html();
+        	$("#variableName").val(ht);
+        	$("#bindColumn").val(data.value);
+        	console.log(ht);
+        	  //console.log(data); //得到select原始DOM对象
+        	  //console.log(data.elem); //得到select原始DOM对象
+        	  //console.log(data.value); //得到被选中的值
+        	  //console.log(data.othis); //得到美化后的DOM对象
+        	});
+        
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+           $.ajax({
+                cache : true,
+                type : "POST",
+                url : '/dispatch/service/variableBind/edit',
+                data : data.field,// 你的formid
+                async : false,
+                error : function(request) {
+                    alert("Connection error");
+                },
+                success : function(da) {
+                    if (da.code == 0) {
+                        layer.msg('保存数据成功');
+                       active.reload();
+                    } else {
+                       layer.msg(data.msg);
+                    }
+                }
+            });
+            return false;
+        });
+        form.render();
+    });
+</script>
+</body>
+</html>

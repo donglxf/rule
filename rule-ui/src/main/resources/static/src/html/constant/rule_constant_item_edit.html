@@ -1,0 +1,88 @@
+
+<ins class="adsbygoogle" style="display:inline-block;" data-ad-client="ca-pub-6111334333458862" data-ad-slot="3820120620"></ins>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 5px;">
+    <legend>新增常量</legend>
+</fieldset>
+<form class="layui-form" action="">
+    <input type="hidden"  isId=true name="conId" >
+    <input type="hidden" name="conKey">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">字段名<span style="color: red;">＊</span></label>
+        <div class="layui-input-block">
+            <input type="text" name="conName" required  lay-verify-max="200"  lay-verify="required|name" placeholder="请输入字段名" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">唯一标识<span style="color: red;">＊</span></label>
+        <div class="layui-input-block">
+            <input type="text" id="ttt" name="conCode" identifyType="5" lay-verify="required|name|identify"   lay-verify-max="200"  required   placeholder="请输入唯一标识" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <!--   <div class="layui-form-item">
+          <label class="layui-form-label">数据类型</label>
+          <div class="layui-input-inline">
+              <select name="dataType" id="dataId">
+                  <option value="">请选择</option>
+                  <option value="STRING">字符串</option>
+                  <option value="INTEGER"  >整形</option>
+                  <option value="BOOLEAN">布尔型</option>
+                  <option value="DOUBLE">数字型</option>
+              </select>
+          </div>
+      </div> -->
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">描述:</label>
+        <div class="layui-input-block">
+            <input type="text" name="remark"  lay-verify-max="255"  placeholder="请输入描述" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item" style="display: none;">
+        <div class="layui-input-block">
+
+            <button class="layui-btn"  lay-submit lay-filter="formDemo">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script>
+    //Demo
+    layui.use(['form','myutil'], function(){
+        var form = layui.form;
+        var app = layui.app,
+            layerTips = layui.layer,
+            $ = layui.jquery;
+        var common = layui.myutil;
+        var baseUrl = common.config.ruleServicePath.basePath;
+
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            $.ajax({
+                cache : true,
+                type : "POST",
+                url : baseUrl+'constantItemInfo/edit',
+                data : data.field,// 你的formid
+                async : false,
+                error : function(request) {
+                    alert("Connection error");
+                },
+                success : function(da) {
+                    if (da.code == 0) {
+                        layer.msg('保存数据成功');
+                        //这里以搜索为例
+                        var index = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                        layer.closeAll();
+
+                        itemActive.reload();
+                        layer.close(topIndex);
+                    } else {
+                        layer.msg(data.msg);
+                    }
+                }
+            });
+            return false;
+        });
+        form.render();
+    });
+</script>

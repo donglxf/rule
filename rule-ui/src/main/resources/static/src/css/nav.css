@@ -1,0 +1,54 @@
+/*=========================*/
+.jcalculator_wrap {
+    position: relative;
+}
+.jcalculator {
+    background: #232323;
+    width: 201px;
+    display: none;
+    position: absolute;
+    top: 82px;
+    right: 0;
+    font-family: Helvetica, Arial, Verdana, sans-serif;
+    border-top: 1px solid #000;
+    border-left: 1px solid #000;
+}
+.jcalculator span {
+    cursor: pointer;
+    color: #fff;
+    float: left;
+    display: block;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 12px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border-right: 1px solid #000;
+    border-bottom: 1px solid #000;
+    text-align: center;
+}
+.jcalculator span:active {
+    line-height: 52px;
+}
+.jcalculator .operation {
+    background: #191919;
+}
+.jcalculator .add_item{
+    background: #eb0934;
+}
+
+.jcalculator .operation.ok {
+    background: #1E9FFF;
+}
+
+
+
+.xy-dropdown-menu{ display: none; position: absolute; z-index: 1000;min-width: 160px;padding: 5px 0; background-color: #fff;border: 1px solid rgba(0,0,0,.2);font-size: 14px;border-radius: 6px; box-shadow: 0 5px 10px rgba(0,0,0,.2);background-clip: padding-box;text-align: left;}
+.xy-dropdown-menu>li,.xy-dropdown-menu>li ul.m-list li{ display: block;padding: 3px 20px;color: #333;white-space: nowrap;position: relative;}
+.xy-dropdown-menu>li:hover,.xy-dropdown-menu>li ul.m-list li:hover{background:#337ab7;color:#fff;cursor: pointer;}
+
+.xy-dropdown-menu::before{position: absolute;top: -7px;left: 9px;display: inline-block;border-right: 7px solid transparent;border-bottom: 7px solid #ccc;border-left: 7px solid transparent;border-bottom-color: rgba(0,0,0,.2);content: '';}
+.xy-dropdown-menu::after{position: absolute;top: -6px;left: 10px;display: inline-block;border-right: 6px solid transparent; border-bottom: 6px solid #fff;border-left: 6px solid transparent;content: '';}
+.xy-dropdown-menu>li ul.m-list{display:none;position:absolute;left: 100%;top: 0;min-width: 160px;padding: 5px 0;background-color: #fff;border: 1px solid rgba(0,0,0,.2);font-size: 14px;border-radius: 6px; box-shadow: 0 5px 10px rgba(0,0,0,.2);background-clip: padding-box;text-align: left;}

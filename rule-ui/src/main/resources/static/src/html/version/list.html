@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>table模块快速使用</title>
+    <link rel="stylesheet" href="/dispatch/ui/plugins/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/dispatch/ui/plugins/font-awesome/css/font-awesome.min.css" media="all" />
+    <style>
+        .admin-main{
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+        .layui-table-cell {
+            height: 32px;
+            line-height:32px;
+        }
+        #table{
+            width: inherit;
+            margin: 0 auto;
+        }
+        #table tr th {
+            min-width: 200px;
+        }
+        #table tr th:last-child{
+            display: none;}
+        #table tr td:last-child{
+            display: none;}
+
+        .layui-table td, .layui-table th {
+            text-align: center;
+        }
+        #table .con{
+            color: #1e9fff;
+        }
+        #table .val{
+            color: #ffb122;
+        }
+        #table .actionType{
+            color: #1e9fff;
+        }
+        #table .actionVal{
+            color: red;
+            font-weight: bold;
+        }
+        .layui-table .select {
+            background-color: #d2d2d2;
+        }
+        .del,.addTypeTr,.reGroupName,.deleteCon,.addCon,.addAct {display: none}
+        ul {
+            margin-bottom: 0px;
+        }
+        ul.con_ul li{
+            margin-bottom: 3px;
+        }
+        td.index a.addTypeTr{
+            position: absolute;
+            float: right;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        td a.addCon{
+            float: right;
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            color: #5fb878;
+        }
+        /*权值框*/
+        .form-group .qz{
+            height: 24px;
+            width: 100px;
+            margin: auto;
+            border-width: 0px;
+            color: yellowgreen;
+            padding: initial;
+            margin-top: 5px;
+            text-align: -webkit-center;
+        }
+        .param{
+            display: inline;
+        }
+        .actionBar{
+            float: right;
+            margin-right: 8px;
+        }
+        .actionEntity {
+            color: #fba117;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+
+<div class="admin-main">
+    <div class="layui-col-md5">
+        <fieldset class="layui-elem-field">
+            <legend class="lay-legend">决策管理</legend>
+            <div class="layui-field-box">
+            <form  class="layui-form layui-form-pane" onsubmit="javascript:return false;">
+                <div class="layui-form-item" style="margin-bottom:0px;">
+                    <div class="layui-input-inline">
+                        <input type="text"  placeholder="过滤条件查询"  class="layui-input" id="key">
+                    </div>
+                    <div class="layui-input-inline" style="width: 120px" id="business_ser">
+                    </div>
+                    <div class="layui-input-inline" style="width: 120px">
+                        <select name="sceneType" id="sceneType">
+                            <option value="">全部</option>
+                            <option value="1" >决策</option>
+                            <option value="2">评分卡</option>
+                        </select>
+                    </div>
+
+                    <button type="button" onclick="leftActive.reload()" id="btn_query"  class="layui-btn layui-btn">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </form>
+                <table id="sceneList" lay-filter="sceneList"></table>
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="layui-col-md7">
+        <fieldset class="layui-elem-field">
+            <legend class="lay-legend">版本记录</legend>
+            <div class="layui-field-box">
+                <form  class="layui-form layui-form-pane" onsubmit="javascript:return false;">
+                    <div class="layui-form-item" style="margin-bottom:0px;">
+                        <label class="layui-form-label">版本号</label>
+                        <div class="layui-input-inline">
+                            <input type="text"  placeholder="版本号查询"   class="layui-input" id="versionN">
+                        </div>
+                        <button type="button" onclick="active.reload()" id="version_btn"  class="layui-btn layui-btn">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+
+                    <!--    <button class="layui-btn layui-btn-small" id="entity_btn_add">
+                            <i class="layui-icon">&#xe654;</i>新增
+                        </button>-->
+                    </div>
+                </form>
+                <table id="version" lay-filter="version"></table>
+            </div>
+        </fieldset>
+    </div>
+</div>
+
+
+
+<script src="/dispatch/ui/plugins/layui/layui.js"></script>
+
+<script src="/dispatch/ui/src/js/dispatch/version/version-zs.js"></script>
+<!--操作-->
+<script type="text/html" id="toolbar_left">
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-primary layui-btn-sm" title="编辑" lay-event="edit">
+            <i class="layui-icon">&#xe642;</i>
+        </button>
+        <button class="layui-btn  layui-btn-primary layui-btn-sm" title="删除" lay-event="del">
+            <i class="layui-icon">&#xe640;</i>
+        </button>
+
+        <button class="layui-btn  layui-btn-primary layui-btn-sm" title="发布测试版" lay-event="push">
+            <i class="layui-icon">&#xe609;</i>
+        </button>
+    </div>
+</script>
+<script type="text/html"  id="statusTpl">
+
+        {{#  if(d.orderStatus === 1){ }}
+        <input type="checkbox" name="status" value="{{d.versionId}}" title="启用" lay-filter="lockDemo" {{ d.status == 1 ? 'checked' : '' }}>
+        {{#  } else { }}
+        <input type="checkbox" name="status" value="{{d.versionId}}" title="停用" lay-filter="lockDemo" >
+        {{#  } }}
+</script>
+<script type="text/html"  id="typeTpl">
+
+    {{#  if(d.sceneType === 1){ }}
+    <span style="color: #1e9fff;" >决策</span>
+
+    {{#  } else { }}
+    <span style="color: #ffb800;" >评分卡</span>
+    {{#  } }}
+</script>
+<script type="text/html"  id="versionTypeTpl">
+
+    {{#  if(d.type === 1){ }}
+    <span style="color: #1e9fff;" >已发布</span>
+
+    {{#  } else { }}
+    <span style="color: #ffb800;" >未发布</span>
+    {{#  } }}
+</script>
+
+<!--操作-->
+<script type="text/html" id="bar">
+    <button class="layui-btn layui-btn-sm" lay-event="push">
+       发布正式版  <!--&nbsp;<i class="layui-icon">&#xe609;</i>-->
+    </button>
+</script>
+<!--定义规则-->
+<script type="text/html" id="bar_rule_defined">
+    <button class="layui-btn layui-btn-sm" lay-event="rule_defined">
+       规则定义  &nbsp;<i class="layui-icon">&#xe628;</i>
+    </button>
+</script>
+
+<!--操作-->
+<script type="text/html" id="toolbar">
+    <button class="layui-btn layui-btn-sm" title="查看规则" lay-event="ruleLook">
+        <i class="layui-icon">&#xe615;</i>查看
+    </button>
+    <button class="layui-btn layui-btn-sm" title="发布" lay-event="rulePush">
+        <i class="layui-icon">&#xe609;</i>发布
+    </button>
+</script>
+<div id = "rule_div" style="display: none">
+    <fieldset class="layui-elem-field">
+        <legend class="lay-legend">规则详情</legend>
+        <div class="layui-field-box">
+            <table class="layui-table"   id="table">
+
+            </table>
+        </div>
+    </fieldset>
+</div>
+</div>
+</body>
+
+</html>

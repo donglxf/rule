@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.ht.cloud</groupId>
+        <artifactId>ht-cloud-release</artifactId>
+        <version>dev-20180327-01</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.ht.rule</groupId>
+    <artifactId>rule</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <!--通过maven.compiler.source和maven.compiler.target可以指定jdk编译版本-->
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <!-- mybatisplus 搭建版本号 -->
+        <mybatisplus-spring-boot-starter.version>1.0.5</mybatisplus-spring-boot-starter.version>
+        <mybatisplus.version>2.1.6</mybatisplus.version>
+
+        <mybatis.version>3.3.1</mybatis.version>
+        <mybatis.spring.version>1.2.4</mybatis.spring.version>
+        <pagehelper.version>4.1.1</pagehelper.version>
+        <mybatis.boot.version>1.3.1</mybatis.boot.version>
+
+        <commons.lang3.version>3.7</commons.lang3.version>
+
+        <swagger2.version>2.8.0</swagger2.version>
+    </properties>
+
+    <scm>
+        <connection>scm:git:http://172.16.200.102/dev2/eip.git</connection>
+        <developerConnection>scm:git:http://172.16.200.102/dev2/eip.git</developerConnection>
+        <url>http://172.16.200.102/dev2/eip.git</url>
+    </scm>
+
+    <ciManagement>
+        <system>Jenkins</system>
+        <url>http://172.16.200.111:8000/</url>
+    </ciManagement>
+    <repositories>
+        <repository>
+            <id>maven-public</id>
+            <name>maven-public</name>
+            <url>http://172.16.200.111:8081/repository/maven-public/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven-public</id>
+            <name>maven-public</name>
+            <url>http://172.16.200.111:8081/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>releases</name>
+            <url>http://172.16.200.111:8081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>snapshots</name>
+            <url>http://172.16.200.111:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+    <modules>
+        <module>rule-config</module>
+        <module>rule-ui</module>
+        <module>rule-drools</module>
+        <module>rule-common</module>
+    </modules>
+</project>

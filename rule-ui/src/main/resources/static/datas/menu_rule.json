@@ -1,0 +1,176 @@
+[
+  {
+    "id": "FK_M01",
+    "icon": "fa fa-sitemap",
+    "spread": true,
+    "title": "业务线管理",
+    "url": null,
+    "children": [
+      {
+        "id": "FK_M0101",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "业务线管理",
+        "url": "src/html/business/list.html",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "FK_M02",
+    "icon": "fa fa-sitemap",
+    "spread": true,
+    "title": "规则管理",
+    "url": null,
+    "children": [
+      {
+        "id": "FK_M0201",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "变量管理",
+        "url": "src/html/entity/entity_index.html",
+        "children": []
+      },
+      {
+        "id": "FK_M0202",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "常量管理",
+        "url": "rule/constant",
+        "children": []
+      },
+      {
+        "id": "FK_M0203",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "动作管理",
+        "url": "ruleAction/index",
+        "children": []
+      },
+      {
+        "id": "FK_M0204",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "策略管理",
+        "url": "rule/decision/version/list",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "FK_M03",
+    "icon": "fa fa-sitemap",
+    "spread": true,
+    "title": "模型管理",
+    "url": null,
+    "children": [
+      {
+        "id": "FK_M0301",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "模型配置",
+        "url": "model/list",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "FK_M04",
+    "icon": "fa fa-sitemap",
+    "spread": true,
+    "title": "验证中心",
+    "url": null,
+    "children": [
+      {
+        "id": "FK_M0401",
+        "icon": "",
+        "spread": true,
+        "title": "决策验证",
+        "url": "strategy/index",
+        "children": []
+      },
+      {
+        "id": "FK_M0402",
+        "icon": "",
+        "spread": true,
+        "title": "模型验证",
+        "url": "model/verfication",
+        "children": []
+      },
+      {
+        "id": "FK_M0403",
+        "icon": "",
+        "spread": true,
+        "title": "模型验证结果",
+        "url": "/rule/ui/model/verfication/result",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "FK_M05",
+    "icon": "fa fa-sitemap",
+    "spread": true,
+    "title": "发布管理",
+    "url": null,
+    "children": [
+      {
+        "id": "FK_M0501",
+        "icon": "",
+        "spread": true,
+        "title": "策略版本管理",
+        "url": "src/html/version/list.html",
+        "children": []
+      },
+      {
+        "id": "FK_M0502",
+        "icon": "",
+        "spread": true,
+        "title": "模型审批",
+        "url": "model/approval/list",
+        "children": []
+      },
+      {
+        "id": "FK_M0503",
+        "icon": "",
+        "spread": true,
+        "title": "模型版本管理",
+        "url": "model/publish/list",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "FK_M06",
+    "icon": "fa fa-sitemap",
+    "spread": true,
+    "title": "监控管理",
+    "url": null,
+    "children": [
+      {
+        "id": "FK_M0601",
+        "icon": "fa fa-table",
+        "spread": true,
+        "title": "日志查询",
+        "url": "supervision/log/index",
+        "children": []
+      },
+      {
+        "id": "FK_M0603",
+        "icon": "fa fa-table",
+        "spread": true,
+        "title": "策略报告",
+        "url": "supervision/rule/report",
+        "children": []
+      },
+      {
+        "id": "FK_M0602",
+        "icon": "fa fa-table",
+        "spread": true,
+        "title": "模型报告",
+        "url": "supervision/model/report",
+        "children": []
+      }
+    ]
+  }
+]

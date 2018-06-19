@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.mapper.VariableBindMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.VariableBind">
+        <id column="ID" property="id" />
+        <result column="SENCE_VERSION_ID" property="senceVersionId" />
+        <result column="VARIABLE_CODE" property="variableCode" />
+        <result column="VARIABLE_NAME" property="variableName" />
+        <result column="DATA_TYPE" property="dataType" />
+        <result column="CONSTANT_ID" property="constantId" />
+        <result column="BIND_TABLE" property="bindTable" />
+        <result column="BIND_COLUMN" property="bindColumn" />
+        <result column="IS_EFFECT" property="isEffect" />
+        <result column="TMP_VALUE" property="tmpValue" />
+        <result column="CREATE_USER" property="createUser" />
+        <result column="CREATE_TIME" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id AS id, sence_version_id AS senceVersionId, variable_code AS variableCode, variable_name AS variableName, data_type AS dataType, constant_id AS constantId, bind_table AS bindTable, bind_column AS bindColumn, is_effect AS isEffect, tmp_value AS tmpValue, create_user AS createUser, create_time AS createTime
+    </sql>
+
+    <select id="querySenceBindTableInfo" resultType="com.ht.rule.common.api.entity.VariableBind" parameterType="java.util.Map">
+        select a.bind_table,a.bind_column from rule_variable_bind a inner join rule_scene_version b on a.sence_version_id = b.version_id
+        where b.scene_identify = #{senceCode} and b.version = #{version}
+    </select>
+    <select id="getRandAutoData" resultType="java.util.Map" parameterType="java.util.Map">
+        ${sql}
+    </select>
+
+    <update id="myUpdate" parameterType="com.ht.rule.common.api.entity.VariableBind">
+        update rule_variable_bind
+        <set>
+            <if test="tmpValue != null">
+                tmp_value = #{tmpValue},
+            </if>
+            <if test="bindTable != null">
+                bind_table = #{bindTable},
+            </if>
+            <if test="bindColumn != null">
+                bind_column = #{bindColumn},
+            </if>
+            <if test="senceVersionId != null">
+                sence_version_id = #{senceVersionId}
+            </if>
+        </set>
+        WHERE sence_version_id = #{senceVersionId} AND variable_code = #{variableCode}
+    </update>
+
+
+</mapper>

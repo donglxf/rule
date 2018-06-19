@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.mapper.ActionInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.ActionInfo">
+        <id column="action_id" property="actionId" />
+        <result column="action_type" property="actionType" />
+        <result column="action_name" property="actionName" />
+        <result column="action_desc" property="actionDesc" />
+        <result column="action_class" property="actionClass" />
+        <result column="action_method" property="actionMethod" />
+        <result column="is_effect" property="isEffect" />
+        <result column="cre_user_id" property="creUserId" />
+        <result column="cre_time" property="creTime" />
+        <result column="remark" property="remark" />
+        <result column="action_out_desc" property="actionOutDesc" />
+    </resultMap>
+    <resultMap id="BaseResultMapVo" type="com.ht.rule.common.api.entity.ActionInfo">
+        <id column="action_id" property="actionId" />
+        <result column="action_type" property="actionType" />
+        <result column="action_name" property="actionName" />
+        <result column="action_desc" property="actionDesc" />
+        <result column="action_class" property="actionClass" />
+        <result column="action_method" property="actionMethod" />
+        <result column="is_effect" property="isEffect" />
+        <result column="cre_user_id" property="creUserId" />
+        <result column="cre_time" property="creTime" />
+        <result column="remark" property="remark" />
+        <result column="rule_action_rel_id" property="ruleActionRelId" />
+
+        <result column="action_out_desc" property="actionOutDesc" />
+    </resultMap>
+
+    <resultMap type="com.ht.rule.common.api.vo.ActionInfoVo" id="action">
+        <id column="action_id" property="value" />
+        <result column="action_type" property="actionType" />
+        <result column="action_name" property="text" />
+        <result column="action_desc" property="actionDesc" />
+        <result column="action_class" property="actionClass" />
+        <result column="is_effect" property="isEffect" />
+        <result column="cre_user_id" property="creUserId" />
+        <result column="cre_time" property="creTime" />
+        <result column="remark" property="remark" />
+        <!-- 一对多查询 -->
+        <collection property="paramInfoList"  ofType="com.ht.rule.common.api.vo.ActionParamInfoVo">
+            <!-- id:唯一标识
+                    property：要将订单明细的唯一标识映射到com.mybatis.entity.OrderDetail的那个属性
+                -->
+            <id column="action_param_id" property="value" />
+            <result column="action_id" property="actionId" />
+          <!--  <result column="action_id" property="actionId" />-->
+            <result column="action_param_name" property="text" />
+            <!--  <result column="action_param_id" property="value" />
+          <result column="action_param_id" property="actionParamId" />
+            <result column="action_param_name" property="actionParamName" />-->
+
+            <result column="action_param_desc" property="actionParamDesc" />
+            <result column="param_identify" property="paramIdentify" />
+        </collection>
+
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        action_id AS actionId, action_type AS actionType, action_name AS actionName, action_desc AS actionDesc, action_class AS actionClass, action_method as actionMethod, is_effect AS isEffect, cre_user_id AS creUserId, cre_time AS creTime, remark
+    </sql>
+
+    <select id="findBaseRuleActionInfoList" parameterType="com.ht.rule.common.api.entity.ActionInfo"
+            resultType="com.ht.rule.common.api.entity.ActionInfo">
+        SELECT DISTINCT
+        t.action_id,
+        t.action_type,
+        t.action_name,
+        t.action_desc,
+        t.action_class,
+        t.is_effect,
+        t.cre_user_id,
+        t.cre_time,
+        t.remark
+        FROM
+        rule_action_info t
+        WHERE
+        1 = 1
+    </select>
+    <select id="findRuleActionListByScene" parameterType="com.ht.rule.common.api.entity.SceneInfo"
+            resultType="com.ht.rule.common.api.entity.ActionInfo">
+        select distinct
+        a.action_id,
+        a.action_type,
+        a.action_name,
+        a.action_desc,
+        a.action_class,
+        a.is_effect,
+        a.cre_user_id,
+        a.cre_time,
+        a.remark
+        from
+        rule_action_info a
+        inner join rule_action_rule_rel ar on ar.action_id = a.action_id
+        inner join rule_info r on r.rule_id = ar.rule_id
+        inner join rule_scene_info s on s.scene_id = r.scene_id
+        where
+        1 = 1
+        and a.is_effect = 1
+        and ar.is_effect = 1
+        and r.is_effect = 1
+        and r.rule_enabled = 1
+        and s.is_effect = 1
+        <if test="sceneIdentify != null">
+            and s.scene_identify = #{sceneIdentify}
+        </if>
+        <if test="sceneId != null">
+            and s.scene_id = #{sceneId}
+        </if>
+
+    </select>
+    <select id="findRuleActionListByRule" resultMap="BaseResultMapVo">
+           SELECT DISTINCT
+                a.action_id,
+                a.action_type,
+                a.action_name,
+                a.action_desc,
+                a.action_class,
+                a.is_effect,
+                a.cre_user_id,
+                a.cre_time,
+                a.remark,
+                a.action_method,
+                ar.rule_action_rel_id
+            FROM
+                rule_action_info a
+            INNER JOIN rule_action_rule_rel ar ON ar.action_id = a.action_id
+            WHERE
+                1 = 1
+            AND a.is_effect = 1
+            AND ar.is_effect = 1
+            AND ar.rule_id = #{ruleId}
+    </select>
+    <select id="findRuleActionCountByRuleIdAndActionType" resultType="java.lang.Integer">
+        select count(1)
+        from
+        rule_action_info a
+        inner join rule_action_rule_rel ar on ar.action_id = a.action_id
+        where
+        1 = 1
+        and a.is_effect = 1
+        and ar.is_effect = 1
+        and a.action_type = 1
+        and ar.rule_id = #{ruleId}
+    </select>
+    <!--通过id查询集合-->
+    <select id="findByIds" resultMap="action">
+        SELECT
+        a.*, p.action_param_id,
+	      p.param_identify,
+	    p.action_param_name
+        FROM
+        rule_action_info a ,rule_action_param_info p
+        WHERE
+        a.action_id = p.action_id
+        AND a.action_id in (${ids})
+    </select>
+    <select id="findActionAllVos"  resultMap="action">
+        SELECT
+            a.*, p.action_param_id,
+            p.param_identify,
+            p.action_param_name
+        FROM
+        rule_action_info a inner JOIN
+        rule_action_param_info p
+        ON
+        p.action_id = a.action_id
+        <if test="businessId != null ">
+            AND  a.business_id = #{businessId}
+        </if>
+    </select>
+    
+    <update id="updateInfo" parameterType="com.ht.rule.common.api.entity.ActionInfo">
+        update  rule_action_info
+          <set>
+              <if test="businessId != null">
+                  business_id = #{businessId},
+              </if>
+              <if test="actionType != null">
+                  action_type = #{actionType},
+              </if>
+              <if test="actionName != null">
+                  action_name =#{actionName},
+              </if>
+              <if test="actionDesc != null">
+                  action_desc= #{actionDesc},
+              </if>
+              <if test="actionClass != null">
+                  action_class=#{actionClass},
+              </if>
+              <if test="actionMethod != null">
+                  action_Method=#{actionMethod},
+              </if>
+              <if test="isEffect != null">
+                  is_Effect = #{isEffect},
+              </if>
+              <if test="creUserId != null">
+                  cre_User_Id = #{creUserId},
+              </if>
+              <if test="remark != null">
+                  remark= #{remark},
+              </if>
+              <if test="creTime != null">
+                  cre_Time=#{creTime}
+              </if>
+
+          </set>
+        where action_id = #{actionId}
+    </update>
+
+</mapper>

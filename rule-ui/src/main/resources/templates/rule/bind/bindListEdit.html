@@ -1,0 +1,70 @@
+<ins class="adsbygoogle" style="display:inline-block;" data-ad-client="ca-pub-61113343334588621" data-ad-slot="38201206201"></ins>
+<style type="text/css">
+	.mylabel{
+		width:50px;
+		padding:9px 10px;
+		margin:3px 0px;
+	}
+	.mycss{
+		margin-left: 0px;
+	}
+</style>
+</head>
+<body>
+		<form class="layui-form" action="" lay-filter="test1">
+			<input type="hidden" name="senceVersionid" id="senceVersionid"> <!-- 版本id -->
+			<input type="hidden" name="sceneId" id="sceneId">
+			<table>
+				<tbody id="bindColumnTable"></tbody>
+			</table>
+
+
+			<div class="layui-form-item" style="display: none;">
+				<div class="layui-input-block">
+					<button class="layui-btn"  lay-submit lay-filter="formDemo">立即提交</button>
+					<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+				</div>
+			</div>
+		</form>
+
+	<script src="/dispatch/ui/src/js/dispatch/rule_util.js"></script>
+
+<script>
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+        var app = layui.app,
+            layerTips = layui.layer,
+            $ = layui.jquery;
+        
+
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+           $.ajax({
+                cache : true,
+                type : "POST",
+                url : '/dispatch/service/variableBind/edit',
+                data : data.field,// 你的formid
+                async : false,
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                    console.log(XMLHttpRequest);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                },
+                success : function(da) {
+                    if (da.code == 0) {
+                        layer.msg('保存数据成功');
+                        active.reload();
+                        layer.close(bindIndex);
+                    } else {
+                       layer.msg(data.msg);
+                    }
+                }
+            });
+            return false;
+        });
+        form.render();
+    });
+</script>
+</body>
+</html>

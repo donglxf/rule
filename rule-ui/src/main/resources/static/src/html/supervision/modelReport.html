@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>table模块快速使用</title>
+	<link rel="stylesheet" href="/rule/ui/plugins/layui/css/layui.css"
+		  media="all">
+	<link rel="stylesheet"
+		  href="/rule/ui/plugins/font-awesome/css/font-awesome.min.css"
+		  media="all" />
+</head>
+<body>
+<div class="admin-main">
+
+	<div class="layui-row" style="margin-top: 10px;margin-left: auto ">
+		<form class="layui-form" action="javascript:void(0);">
+			<div class="layui-input-inline">
+				<div class="layui-input-inline">
+					<!--<label class="layui-form-label">开始日期:</label>-->
+					<input type="text" name="startDate" id="startDate" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-input-inline">
+					<!--<label class="layui-form-label">结束日期:</label>-->
+					<input type="text" name="endDate" id="endDate" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-input-inline">
+				<!--<label class="layui-form-label">数量:</label>-->
+				<select id="getWay" class="layui-select" name="getWay" lay-verify="ss">
+					<option value="0">全部</option>
+					<option value="10">十条</option>
+					<option value="15">十五条</option>
+				</select>
+			</div>
+			<div class="layui-input-inline">
+				<div class="layui-input-block">
+					<button class="layui-btn" lay-submit lay-filter="formDemo">查询</button>
+				</div>
+			</div>
+
+		</form>
+	</div>
+	<div class="layui-form-item">
+		<fieldset class="layui-elem-field layui-field-title" style="margin-top: 15px;">
+			<legend>模型平均响应时间(ms)</legend>
+		</fieldset>
+		<div id="container" style="width: 100%;height: 400px;"></div>
+	</div>
+
+</div>
+
+<script src="/rule/ui/plugins/layui/layui.js"></script>
+<script src="/rule/ui/src/js/rule/rule_util.js"></script>
+<script src="/rule/ui/src/js/supervision/ruleReport.js"></script>
+<script src="/rule/ui/plugins/echarts/echarts.js"></script>
+
+
+<script>
+    layui.config({
+        base: '/rule/ui/src/js/modules/' //假设这是你存放拓展模块的根目录
+    }).extend({ //设定模块别名
+        myutil: 'common' //如果 mymod.js 是在根目录，也可以不用设定别名
+
+    });
+
+
+    //Demo
+    layui.use(['form','laydate','myutil'], function(){
+        var form = layui.form;
+        var app = layui.app,
+            layerTips = layui.layer,
+            $ = layui.jquery,laydata=layui.laydate;
+        //alert(addDate(new Date(),-30));
+        laydata.render({
+            elem: '#startDate',
+            type: 'datetime'
+//            ,value:addDate(new Date(),-30)
+        });
+        laydata.render({
+            elem: '#endDate',
+            type: 'datetime'
+//            ,value:addDate(new Date(),0)
+        });
+
+
+        function graphTime(da){
+            console.log("模型平均响应时间"+da);
+            var xAxisArr=new Array(da.ruleMap.length);
+            var seriesArr=new Array(da.listMap.length); // 响应时间
+            for(var i=0;i<da.ruleMap.length ;i++){
+                xAxisArr[i]=da.ruleMap[i].modelName+"_"+da.ruleMap[i].modelVersion;
+            }
+            for(var i=0;i<da.listMap.length ;i++){
+                seriesArr[i]=da.listMap[i].spendTime;
+            }
+
+            var dom = document.getElementById("container");
+            var myChart = echarts.init(dom);
+            var app = {};
+            option = null;
+            option = {
+                xAxis: {
+                    type: 'category',
+                    data: xAxisArr,
+                    axisLabel:{
+                        interval:0,//横轴信息全部显示
+                        rotate:-10,//-10度角倾斜显示
+                    }
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                animation:true,// 是否开启动画
+                tooltip: {
+                    formatter: function (params) {
+                        var html="<label>调用次数："+da.listMap[params.dataIndex].excuteTotal+"</label><br/>"
+                            +"<label>响应时间:"+params.data+"</label>";
+                        return html;
+                    }
+                },
+                series: [{
+                    data: seriesArr,
+                    type: 'bar',
+                    barWidth:7
+                }],
+                title: {
+                    text: 'x-模型名，y-响应时间',
+					align:'left',
+                    left: 30,
+					textStyle:{
+                        color:'red',
+                        fontWeight:'normal'
+					}
+                },
+                animationEasing: 'elasticOut',
+                animationDelayUpdate: function (idx) {
+                    return idx * 5;
+                }
+            };
+            if (option && typeof option === "object") {
+                myChart.setOption(option, true);
+            }
+        }
+
+
+        function formatRuleContent(ruleName){
+            console.log(ruleName);
+            var html = $
+                .ajax({
+                    cache: true,
+                    type: "GET",
+                    url: '/rule/service/ruleReport/formatRuleName/', // 数据接口
+                    data: {"ruleName":ruleName},// 你的formid
+                    async: false,
+                    error: function (request) {
+                    },
+                    success: function (da) {
+                        return da;
+                    }
+                });
+            return html;
+        }
+
+        function addDate(date,days){
+            var d=new Date(date);
+            d.setDate(d.getDate()+days);
+            var m=d.getMonth()+1;
+            return d.getFullYear()+'-'+m+'-'+d.getDate();
+        }
+
+
+        getModelDate('');
+
+        function getModelDate(data){
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: '/activiti/extend/modelStatistic/', // 数据接口
+                data: data.field,// 你的formid
+                async: false,
+                error: function (request) {
+                },
+                success: function (da) {
+                    console.log(da);
+                    graphTime(da.data);
+                }
+            });
+		}
+
+        form.on('submit(formDemo)',function (data) {
+            var startDate=$('#startDate').val();
+            var endDate=$('#endDate').val();
+            var d1 = new Date(startDate.replace(/\-/g, "\/"));
+            var d2 = new Date(endDate.replace(/\-/g, "\/"));
+            if(startDate!=""&&endDate!=""&& d1 >= d2)
+            {
+                alert("开始时间不能大于等于结束时间！");
+                return false;
+            }
+            getModelDate(data);
+        });
+
+        form.on('select(getWay)', function(data){
+//            var ht=$('.layui-form-select .layui-this').last().html(); // 获取选中下拉框的html文本
+            $("#sceneId").val(data.value);
+        });
+
+        form.render("");
+    });
+
+</script>
+</body>
+</html>

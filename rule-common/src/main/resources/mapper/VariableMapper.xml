@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.mapper.VariableMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.Variable">
+        <id column="variable_id" property="variableId" />
+        <result column="variable_name" property="variableName" />
+        <result column="variable_type" property="variableType" />
+        <result column="default_value" property="defaultValue" />
+        <result column="value_type" property="valueType" />
+        <result column="variable_value" property="variableValue" />
+        <result column="is_effect" property="isEffect" />
+        <result column="cre_user_id" property="creUserId" />
+        <result column="cre_time" property="creTime" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        variable_id AS variableId, variable_name AS variableName, variable_type AS variableType, default_value AS defaultValue, value_type AS valueType, variable_value AS variableValue, is_effect AS isEffect, cre_user_id AS creUserId, cre_time AS creTime, remark
+    </sql>
+
+    <select id="findBaseRuleVariableInfoList" parameterType="com.ht.rule.common.api.entity.Variable"
+            resultType="com.ht.rule.common.api.entity.Variable">
+        select distinct
+        t.variable_id,
+        t.variable_name,
+        t.variable_type,
+        t.default_value,
+        t.value_type,
+        t.variable_value,
+        t.is_effect,
+        t.cre_user_id,
+        t.cre_time,
+        t.remark
+        from
+        rule_variable t
+        where
+        1 = 1
+        <choose>
+            <when test="isEffect == 0">
+                AND t.is_effect = 0
+            </when>
+            <otherwise>
+                AND t.is_effect = 1
+            </otherwise>
+        </choose>
+        <if test="variableType != null">
+            AND t.variable_type = #{variableType}
+        </if>
+        <if test="valueType != null">
+            AND t.value_type = #{valueType}
+        </if>
+
+    </select>
+
+</mapper>

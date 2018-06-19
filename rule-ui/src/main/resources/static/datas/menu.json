@@ -1,0 +1,159 @@
+[
+  {
+    "id": "DP_M01",
+    "icon": "fa fa-sitemap",
+    "spread": true,
+    "title": "基础管理",
+    "url": null,
+    "children": [
+      {
+        "id": "DP_M0101",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "业务系统配置",
+        "url": "src/html/business_sys/business_sys_index.html",
+        "children": []
+      },
+      {
+        "id": "DP_M0102",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "超时配置",
+        "url": "src/html/warning_notice/list.html",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "DP_M02",
+    "icon": "fa fa-sitemap",
+    "spread": true,
+    "title": "规则管理",
+    "url": null,
+    "children": [
+      {
+        "id": "DP_M0201",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "变量管理",
+        "url": "src/html/entity/entity_index.html",
+        "children": []
+      },
+      {
+        "id": "DP_M0202",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "常量管理",
+        "url": "src/html/constant/rule_constant.html",
+        "children": []
+      },
+      {
+        "id": "DP_M0203",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "动作管理",
+        "url": "src/html/action/rule_action.html",
+        "children": []
+      },
+      {
+        "id": "DP_M0204",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "策略管理",
+        "url": "src/html/version/decision_list.html",
+        "children": []
+      },
+      {
+        "id": "FK_M0601",
+        "icon": "fa fa-table",
+        "spread": true,
+        "title": "派单日志",
+        "url": "src/html/supervision/list.html",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "DP_M03",
+    "icon": "fa fa-sitemap",
+    "spread": true,
+    "title": "派单管理",
+    "url": null,
+    "children": [
+      {
+        "id": "DP_M0301",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "派单列表",
+        "url": "src/html/order_main_Info/order_main_info_list.html",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "DP_M04",
+    "icon": "fa fa-sitemap",
+    "spread": true,
+    "title": "统计分析",
+    "url": null,
+    "children": [
+      {
+        "id": "DP_M0401",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "接单汇总",
+        "url": "src/html/dispatch_record/dispatch_record_summary.html",
+        "children": []
+      },
+      {
+        "id": "DP_M04023",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "工单统计",
+        "url": "src/html/record/order_index.html",
+        "children": []
+      },
+      {
+        "id": "DP_M05023",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "绩效统计",
+        "url": "src/html/record/user_index.html",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "DP_M05",
+    "icon": "fa fa-sitemap",
+    "spread": true,
+    "title": "用户管理",
+    "url": null,
+    "children": [
+      {
+        "id": "DP_M0501",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "小组信息",
+        "url": "src/html/dispatch_group/dispatch_group_summary.html",
+        "children": []
+      },
+      {
+        "id": "DP_M0503",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "小组-人员管理",
+        "url": "src/html/dispatch_group_user/group_list.html",
+        "children": []
+      },
+      {
+        "id": "DP_M0504",
+        "icon": "fa fa-user",
+        "spread": true,
+        "title": "接单人员列表",
+        "url": "src/html/dispatch_user/user_list.html",
+        "children": []
+      }
+    ]
+  }
+]

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>table模块快速使用</title>
+    <link rel="stylesheet" href="/dispatch/ui/plugins/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/dispatch/ui/plugins/font-awesome/css/font-awesome.min.css" media="all" />
+    <style>
+        .layui-table-cell {
+            height: 32px;
+            line-height:32px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="admin-main">
+        <fieldset class="layui-elem-field">
+            <legend class="lay-legend">业务线管理</legend>
+            <div class="layui-field-box">
+                <form  class="layui-form layui-form-pane" onsubmit="javascript:return false;">
+                    <div class="layui-form-item" style="margin-bottom:0px;">
+                        <div class="layui-input-inline">
+                            <input type="text"  placeholder="过滤条件查询"  class="layui-input" id="key">
+                        </div>
+
+                        <button type="button" onclick="active.reload()" id="btn_query"  class="layui-btn layui-btn">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+
+                        <button type="button" class="layui-btn  layui-btn-small" id="scene_btn_add">
+                            <i class="layui-icon">&#xe654;</i>新增
+                        </button>
+                    </div>
+                </form>
+                <table id="business" lay-filter="business"></table>
+            </div>
+        </fieldset>
+</div>
+
+
+<script src="/dispatch/ui/plugins/layui/layui.js"></script>
+<script src="/dispatch/ui/src/js/dispatch/business/business.js"></script>
+<!--操作-->
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-primary layui-btn-sm" title="编辑" lay-event="edit" ht-auth="add">
+            <i class="layui-icon">&#xe642;</i>
+        </button>
+        <button class="layui-btn  layui-btn-primary layui-btn-sm" title="删除" lay-event="del" ht-auth="del">
+            <i class="layui-icon">&#xe640;</i>
+        </button>
+    </div>
+</script>
+</div>
+</body>
+
+</html>

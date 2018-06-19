@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.mapper.EntityItemInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.EntityItemInfo">
+        <id column="item_id" property="itemId" />
+        <result column="entity_id" property="entityId" />
+        <result column="item_name" property="itemName" />
+        <result column="item_identify" property="itemIdentify" />
+        <result column="item_desc" property="itemDesc" />
+        <result column="cre_user_id" property="creUserId" />
+        <result column="data_type" property="dataType" />
+        <result column="cre_time" property="creTime" />
+        <result column="is_effect" property="isEffect" />
+        <result column="remark" property="remark" />
+    </resultMap>
+    
+    <!-- 通用查询映射结果 -->
+ <!--   <resultMap id="ResultMap" type="map">
+        <id column="rule_id" property="ruleId" />
+        <result column="condition_expression" property="conditionExpression" />
+        <result column="scene_id" property="sceneId" />
+        <result column="scene_identify" property="sceneIdentify" />
+        <result column="scene_type" property="sceneType" />
+        <result column="condition_id" property="conditionId" />
+    </resultMap>-->
+    
+    <resultMap id="itemEntityMap" type="com.ht.rule.common.api.entity.EntityItemInfo">
+        <id column="item_id" property="itemId" />
+        <result column="entity_id" property="entityId" />
+        <result column="item_name" property="itemName" />
+        <result column="item_identify" property="itemIdentify" />
+        <result column="item_desc" property="itemDesc" />
+        <result column="data_type" property="dataType" />
+        <result column="cre_user_id" property="creUserId" />
+        <result column="cre_time" property="creTime" />
+        <result column="is_effect" property="isEffect" />
+        <result column="remark" property="remark" />
+        <result column="constant_id" property="constantId" />
+
+        <!-- 多对一的关系 -->
+        <!-- property: 指的是属性的值, javaType：指的是属性的类型-->
+        <association property="entityInfo" javaType="com.ht.rule.common.api.entity.EntityInfo">
+            <result column="entity_name" property="entityName" />
+            <result column="entity_desc" property="entityDesc" />
+            <result column="entity_identify" property="entityIdentify" />
+            <result column="type" property="type" />
+        </association>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        item_id AS itemId, entity_id AS entityId, item_name AS itemName, item_identify AS itemIdentify, item_desc AS itemDesc, cre_user_id AS creUserId, cre_time AS creTime, is_effect AS isEffect, remark
+    </sql>
+    <!--变量中有实体-->
+    <sql id="Base_Table_List">
+        i.item_id AS itemId,
+        i.item_name AS itemName,
+        e.entity_name AS entityName,
+        e.entity_id AS entityId
+    </sql>
+    <sql id="BaseFindColumnSql">
+        t.item_id,
+        t.entity_id,
+        t.item_name,
+        t.item_identify,
+        t.item_desc,
+        t.cre_user_id,
+        t.cre_time,
+        t.is_effect,
+        t.remark
+    </sql>
+    <select id="findBaseRuleEntityItemInfoList" parameterType="com.ht.rule.common.api.entity.EntityItemInfo"
+            resultType="com.ht.rule.common.api.entity.EntityItemInfo">
+        SELECT DISTINCT
+        <include refid="BaseFindColumnSql"></include>
+        FROM
+        rule_entity_item_info t
+        WHERE 1=1
+
+    </select>
+    <select id="findBaseRuleEntityItemInfoById" resultType="com.ht.rule.common.api.entity.EntityItemInfo">
+        SELECT DISTINCT
+        <include refid="BaseFindColumnSql"></include>
+        FROM
+        rule_entity_item_info t
+        WHERE 1=1
+        AND t.item_id = #{id}
+    </select>
+    <select id="findRuleItemTableById" resultType="com.ht.rule.common.api.vo.RuleItemTable">
+
+        SELECT  <include refid="Base_Table_List"></include>
+        FROM
+        rule_entity_item_info i
+        LEFT JOIN rule_entity_info e
+        on e.entity_id = i.entity_id
+        WHERE i.item_id = #{itemId}
+    </select>
+    
+    <select id="findEntityItemBySceneId" resultType="java.util.Map" >
+		select ri.rule_id,rc.condition_expression,ri.scene_id,rs.scene_identify,rs.scene_type,rc.condition_id
+		 from rule_info ri inner join rule_scene_info rs on ri.scene_id = rs.scene_id 
+   inner join rule_condition_info rc on rc.rule_id=ri.rule_id 
+	 where rs.scene_id=#{sceneId} ;
+    </select>
+
+
+    <select id="selectItemBySceneId" resultMap="itemEntityMap">
+        SELECT DISTINCT
+            i.*, e.entity_identify,
+            e.entity_name,e.type
+        FROM
+            rule_scene_info s
+            LEFT JOIN rule_scene_item_rel r ON s.scene_id = r.scene_id
+            LEFT JOIN rule_entity_item_info i ON i.item_id = r.entity_item_id
+            LEFT JOIN rule_entity_info e ON e.entity_id = i.entity_id
+        WHERE
+          s.scene_id=#{sceneId} ;
+    </select>
+    <select id="findCountInBusiness" resultType="java.lang.Integer">
+        SELECT count(*) FROM `rule_entity_item_info` i LEFT JOIN rule_entity_info e
+        on e.entity_id = i.entity_id
+        where item_identify = #{key}
+        AND business_id = #{businessId}
+        <if test="id != null">
+            and item_id != #{id}
+        </if>
+        <if test="type != null">
+            and e.type = #{type}
+        </if>
+    </select>
+
+</mapper>

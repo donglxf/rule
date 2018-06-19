@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>自动派单系统</title>
+    <!--<link rel="stylesheet" href="/plugins/bootstrap/fonts/font-awesome-4.5.0/css/font-awesome.min.css" media="all"/>-->
+    <link rel="stylesheet" href="plugins/layui/css/layui.css" media="all"/>
+    <!-- <link rel="stylesheet" href="/src/css/ht.css" media="all"/>-->
+</head>
+
+<body class="kit-theme">
+<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+    <legend>流程测试</legend>
+    <div style="margin-left: 50px;margin-right: 50px;">
+        <form class="layui-form " >
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">测试ip</label>
+                    <div class="layui-input-inline">
+                        <input type="tel" name="sysCode" value="fk" lay-verify="required" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">系统编号</label>
+                    <div class="layui-input-inline">
+                        <input type="tel" name="sysCode" value="fk" lay-verify="required" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">业务线编号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="businessCode" value="cdfq" lay-verify="" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">角色编号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="roleCode" value="FD0001" lay-verify="" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                    <legend>人员签入</legend>
+                </fieldset>
+                <div class="layui-inline">
+                    <label class="layui-form-label">参数</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容" rows="5" cols="60" class="layui-textarea">
+                             {
+                "businessTypeCode":"cdfq",
+                "remoteUserId":"pc0020",
+                "jobNumber":"0012",
+                "userName":"刘澎城002",
+                "roleCode":"FD0001",
+                "businessSystemCode":"fk",
+                "specialItemMap":{
+                "acceptMoney":"80000"
+                }
+                }
+
+                        </textarea>
+                    </div>
+                </div>
+
+
+
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <button class="layui-btn layui-btn-normal">提交</button>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">结果</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder=""  rows="5" cols="60" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                    <legend>自动派单</legend>
+                </fieldset>
+                <div class="layui-inline">
+                    <label class="layui-form-label">参数</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容" rows="5" cols="60" class="layui-textarea">
+                             {
+	"contractId":"xd05040886",
+	"businessSystemCode":"fk",
+	"businessTypeCode":"cdfq",
+	"roleCode":"FD0001",
+	"stage":"1",
+	"specialItemMap":{
+		"money":"8780"
+	}
+}
+
+                        </textarea>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <button class="layui-btn layui-btn-normal">提交</button>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">结果</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder=""  rows="5" cols="60" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                    <legend>派单详情</legend>
+                </fieldset>
+                <div class="layui-inline">
+                    <label class="layui-form-label">参数</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容" rows="5" cols="60" class="layui-textarea">
+                            {
+  "businessSystemCode": "fk",
+  "businessTypeCode": "cdfq",
+  "contractId": "454545",
+  "stage": "1"
+}
+
+                        </textarea>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <button class="layui-btn layui-btn-normal">提交</button>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">结果</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder=""  rows="5" cols="60" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                    <legend>订单开始</legend>
+                </fieldset>
+                <div class="layui-inline">
+                    <label class="layui-form-label">参数</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容" rows="5" cols="60" class="layui-textarea">
+                            {
+"businessSystemCode":"fk",
+"businessTypeCode":"cdfq",
+"contractId":"xd05040886",
+"stage":"1",
+"remoteUserId":"pc0020"
+}
+
+                        </textarea>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <button class="layui-btn layui-btn-normal">提交</button>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">结果</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder=""  rows="5" cols="60" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                    <legend>订单完成</legend>
+                </fieldset>
+                <div class="layui-inline">
+                    <label class="layui-form-label">参数</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容" rows="5" cols="60" class="layui-textarea">
+                            {
+"businessSystemCode":"fk",
+"businessTypeCode":"cdfq",
+"contractId":"xd05040886",
+"stage":"1",
+"remoteUserId":"pc0020"
+}
+
+                        </textarea>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <button class="layui-btn layui-btn-normal">提交</button>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">结果</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder=""  rows="5" cols="60" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+        </form>
+    </div>
+</fieldset>
+
+
+
+<script src="plugins/layui/layui.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+
+        //日期
+        laydate.render({
+            elem: '#date'
+        });
+        laydate.render({
+            elem: '#date1'
+        });
+
+        //创建一个编辑器
+        var editIndex = layedit.build('LAY_demo_editor');
+
+
+    });
+
+</script>
+</body>
+
+</html>

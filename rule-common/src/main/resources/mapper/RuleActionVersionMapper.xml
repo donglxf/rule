@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.mapper.RuleActionVersionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.RuleActionVersion">
+        <id column="rule_action_version_id" property="riskRuleActionVersionId" />
+        <result column="version_id" property="versionId" />
+        <result column="action_class" property="actionClass" />
+        <result column="action_id" property="actionId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        rule_action_version_id AS riskRuleActionVersionId, version_id AS versionId, action_class AS actionClass, action_id AS actionId
+    </sql>
+
+</mapper>

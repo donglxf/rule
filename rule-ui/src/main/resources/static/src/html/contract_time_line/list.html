@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="css/home.css">
+<style>
+    .contrainer {
+        margin-bottom: 300px;
+    }
+</style>
+</head>
+<body>
+
+<div class="contrainer">
+    <div class="w1000 tc body">
+            <h3 class='header' id="contractId"></h3>
+            <div class="event_wrap clearfix">
+                <div class="middle_line">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src='js/jquery.eventFlow.js'></script>
+<script>
+
+    //获取url参数
+    (function ($) {
+        var qy = $.GetQueryString = function (name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return "";
+        };
+        var qy2 = $.GetUrlQueryString = function (url, name) {
+            var result = null;
+            if (url) {
+                var myIndex = url.indexOf("?");
+                if (myIndex != -1) {
+                    var search = url.substr(myIndex, url.length - myIndex);
+                    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                    var r = search.substr(1).match(reg);
+                    if (r != null) {
+                        result = unescape(r[2]);
+                    }
+                }
+            }
+            return result;
+        };
+    })(jQuery);
+
+    var businessTypeId = $.GetQueryString("businessTypeId");
+    var businessSystemId = $.GetQueryString("businessSystemId");
+    var contractId = $.GetQueryString("contractId");
+    $('#contractId').html(contractId);
+    //渲染下拉框
+    var requestVo = {
+        contractId: contractId,
+        businessSystemId: businessSystemId,
+        businessTypeId: businessTypeId
+    };
+    var business = {
+        baseUrl: "/dispatch/service/orderDetail/",
+    };
+
+
+    $.post(business.baseUrl + "info/for/contract/back", requestVo, function (response) {
+        var bigEvent = response.data;
+        $('.event_wrap').eventFlow({'events': bigEvent});
+        scrollTo(0, 10);
+    })
+
+</script>
+
+</body>
+</html>

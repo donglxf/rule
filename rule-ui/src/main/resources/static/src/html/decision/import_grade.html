@@ -1,0 +1,98 @@
+<fieldset class="layui-elem-field" style="margin-top: 10px;margin: 5px;">
+    <legend class="lay-legend">导入决策</legend>
+    <div class="layui-field-box">
+        <form  class="layui-form layui-form-pane" onsubmit="javascript:return false;">
+            <div class="layui-form-item" style="margin-bottom:0px;">
+                <div class="layui-input-inline">
+                    <input type="text"  placeholder="过滤条件查询"   onchange="active.reload();" class="layui-input" id="scene_key_ser">
+                </div>
+                <button type="button" onclick="active.reload()" id="btn_query"  class="layui-btn layui-btn-primary layui-btn">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </div>
+        </form>
+        <table id="sceneInfoTable" lay-filter="sceneInfoTable"></table>
+    </div>
+</fieldset>
+
+<script>
+
+    var  scene = {
+        baseUrl: "/dispatch/rule/sceneInfo/",
+        uiUrl :"/dispatch/ui/dispatch/decision/scene/edit",
+        entity: "sceneInfo",
+        tableId: "sceneInfoTable",
+        toolbarId: "#toolbar",
+        unique: "id",
+        order: "asc",
+        currentItem: {}
+    };
+    //表头
+    scene.cols = function () {
+        return [ //表头
+            {type:'checkbox'},
+
+            //{field: 'sceneId',  event: 'setItem',title: 'ID',sort: true, fixed: 'left'}
+            {field: 'sceneName',
+                event: 'setItem',
+                align:'center',
+                title: '名称'},
+            {field: 'sceneIdentify',
+                event: 'setItem',
+                align:'center',
+                title: '标识'}
+        ];
+    };
+    var layer,sceneTable,table,active;
+    var sceneId ;
+    layui.use(['table','form','laytpl','sceneUtil','myutil'], function() {
+        var laytpl = layui.laytpl;
+        sceneUtil = layui.sceneUtil;
+        var form = layui.form;
+        form.render();
+
+        sceneTable = layui.table;
+        var app = layui.app,
+            $ = layui.jquery
+            , form = layui.form;
+        //第一个实例
+        sceneTable.render({
+            elem: '#'+scene.tableId
+            , height: 'full'
+            , cellMinWidth: 40
+            , url: scene.baseUrl + 'page?sceneType=2' //数据接口
+            // data:[{"sceneId":1,"sceneName":"测试规则","sceneDesc":"测试规则引擎","sceneIdentify":"testrule","pkgName":"com.sky.testrule","creUserId":1,"creTime":1500522092000,"isEffect":1,"remark":null}]
+            , page: true //开启分页
+            , id: scene.tableId
+            , cols: [scene.cols()]
+            ,
+        });
+        //重载
+        //这里以搜索为例
+        active = {
+            reload: function () {
+                //执行重载
+                sceneTable.reload(scene.tableId, {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    , where: {
+                        key: $('#scene_key_ser').val(),
+                        // sceneType : '1' 无效
+                    },
+                });
+            },
+            getCheckData: function(){ //获取选中数据
+                var checkStatus = sceneTable.checkStatus('sceneInfoTable')
+                    ,data = checkStatus.data;
+                if(data.length > 1 || data.length <1 ){
+                    layer.msg('必须选中1个策略哦~');
+                    return -1;
+                }
+                return data[0].sceneId;
+            }
+        };
+
+
+    });
+</script>

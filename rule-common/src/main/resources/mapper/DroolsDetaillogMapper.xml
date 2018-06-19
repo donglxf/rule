@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.entityrule.mapper.DroolsDetailLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.DroolsDetailLog">
+        <id column="id" property="id" />
+        <result column="drools_logid" property="droolsLogid" />
+        <result column="execute_rulename" property="executeRulename" />
+        <result column="result" property="result" />
+        <result column="rule_num" property="ruleNum" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, drools_logid AS droolsLogid, execute_rulename AS executeRulename, result, rule_num AS ruleNum
+    </sql>
+
+</mapper>

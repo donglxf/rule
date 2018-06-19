@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.mapper.SenceVerficationBatchMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.SenceVerficationBatch">
+        <id column="id" property="id" />
+        <result column="sence_version_id" property="senceVersionId" />
+        <result column="batch_size" property="batchSize" />
+        <result column="verfication_type" property="verficationType" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="end_time" property="endTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, sence_version_id AS senceVersionId, batch_size AS batchSize, verfication_type AS verficationType, create_time AS createTime, create_user AS createUser, end_time AS timerStop
+    </sql>
+
+</mapper>

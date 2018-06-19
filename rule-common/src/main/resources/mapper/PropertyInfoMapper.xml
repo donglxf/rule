@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.mapper.PropertyInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.PropertyInfo">
+        <id column="rule_property_id" property="rulePropertyId" />
+        <result column="rule_property_identify" property="rulePropertyIdentify" />
+        <result column="rule_property_name" property="rulePropertyName" />
+        <result column="rule_property_desc" property="rulePropertyDesc" />
+        <result column="default_value" property="defaultValue" />
+        <result column="is_effect" property="isEffect" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        rule_property_id AS rulePropertyId, rule_property_identify AS rulePropertyIdentify, rule_property_name AS rulePropertyName, rule_property_desc AS rulePropertyDesc, default_value AS defaultValue, is_effect AS isEffect, remark
+    </sql>
+
+</mapper>

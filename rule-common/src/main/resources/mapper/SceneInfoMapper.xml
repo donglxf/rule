@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.mapper.SceneInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.SceneInfo">
+        <id column="scene_id" property="sceneId" />
+        <result column="scene_identify" property="sceneIdentify" />
+        <result column="scene_type" property="sceneType" />
+        <result column="scene_name" property="sceneName" />
+        <result column="scene_desc" property="sceneDesc" />
+        <result column="is_effect" property="isEffect" />
+        <result column="cre_user_id" property="creUserId" />
+        <result column="cre_time" property="creTime" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        scene_id AS sceneId, scene_identify AS sceneIdentify,business_id as businessId, scene_type AS sceneType, scene_name AS sceneName, scene_desc AS sceneDesc, is_effect AS isEffect, cre_user_id AS creUserId, cre_time AS creTime, remark
+    </sql>
+
+    <select id="findBaseRuleSceneInfiList" parameterType="com.ht.rule.common.api.entity.SceneInfo"
+            resultType="com.ht.rule.common.api.entity.SceneInfo">
+        select distinct
+        t.scene_id,
+        t.scene_identify,
+        t.scene_type,
+        t.scene_name,
+        t.scene_desc,
+        t.is_effect,
+        t.cre_user_id,
+        t.cre_time,
+        t.remark
+        from
+        rule_scene_info t
+        where	1 = 1
+
+    </select>
+
+</mapper>

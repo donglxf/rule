@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: dispatch-ui
+  autoconfigure:
+      exclude: org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration,org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration.RabbitAnnotationDrivenConfiguration,org.springframework.cloud.config.client.ConfigClientAutoConfiguration
+  cloud:
+    config:
+      name: dispatch-ui
+      discovery:
+        service-id: ussp-config-app
+        enabled: false
+      enabled: false
+    bus:
+      enabled: false
+eureka:
+  client:
+      serviceUrl:
+  #      defaultZone: http://192.168.12.195:30101/eureka/  # 配置注册中心url
+        defaultZone: http://172.16.200.110:30101/eureka/  # 配置注册中心url
+ht.config.ui:
+  baseUrl: http://172.16.200.120:32016/
+  gatewayUrl: http://172.16.200.110:30111/
+  changePwdUrl: http://172.16.200.110:30131/html/user/changePwdOther.html
+  userInfoUpdate: http://172.16.200.110:30131/html/user/userInfoOther.html
+  ruleServiceUrl: /rule/service/
+  ruleDroolsUrl: /rule/drools/

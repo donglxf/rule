@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.mapper.RuleInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.RuleInfo">
+        <id column="rule_id" property="ruleId" />
+        <result column="scene_id" property="sceneId" />
+        <result column="rule_name" property="ruleName" />
+        <result column="rule_desc" property="ruleDesc" />
+        <result column="rule_enabled" property="ruleEnabled" />
+        <result column="is_effect" property="isEffect" />
+        <result column="cre_user_id" property="creUserId" />
+        <result column="cre_time" property="creTime" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        rule_id AS ruleId, scene_id AS sceneId, rule_name AS ruleName, rule_desc AS ruleDesc, rule_enabled AS ruleEnabled, is_effect AS isEffect, cre_user_id AS creUserId, cre_time AS creTime, remark
+    </sql>
+    <!--联合分组-->
+    <resultMap type="com.ht.rule.common.api.entity.RuleInfo" id="rules">
+        <id column="rule_id" property="ruleId" />
+        <result column="scene_id" property="sceneId" />
+        <result column="rule_name" property="ruleName" />
+        <result column="rule_desc" property="ruleDesc" />
+        <result column="rule_enabled" property="ruleEnabled" />
+        <result column="is_effect" property="isEffect" />
+        <result column="cre_user_id" property="creUserId" />
+        <result column="cre_time" property="creTime" />
+        <result column="remark" property="remark" />
+        <!-- 多对一的关系 -->
+        <!-- property: 指的是属性的值, javaType：指的是属性的类型-->
+        <association property="group" javaType="com.ht.rule.common.api.entity.RuleGroup">
+            <id column="rule_group_id" property="ruleGroupId" />
+            <result column="index" property="index" />
+            <result column="weight" property="weight" />
+            <result column="name" property="name" />
+        </association>
+    </resultMap>
+    <select id="findBaseRuleInfoList" parameterType="com.ht.rule.common.api.entity.RuleInfo"
+            resultType="com.ht.rule.common.api.entity.RuleInfo">
+        select distinct
+        t.rule_id,
+        t.scene_id,
+        t.rule_name,
+        t.rule_desc,
+        t.rule_enabled,
+        t.is_effect,
+        t.cre_user_id,
+        t.cre_time,
+        t.remark
+        from
+        rule_info t
+        where
+        1 = 1
+        <if test="sceneId != null">
+            and t.scene_id = #{sceneId}
+        </if>
+        <if test="ruleEnabled != null">
+            and t.rule_enabled = #{ruleEnabled}
+        </if>
+
+    </select>
+
+
+    <select id="findBaseRulePropertyInfoList" parameterType="com.ht.rule.common.api.entity.PropertyInfo"
+            resultType="com.ht.rule.common.api.entity.PropertyInfo">
+        select distinct
+        t.rule_property_id,
+        t.rule_property_identify,
+        t.rule_property_name,
+        t.rule_property_desc,
+        t.default_value,
+        t.is_effect,
+        t.remark
+        from
+        rule_property_info t
+        where
+        1 = 1
+        <if test="rulePropertyIdentify != null">
+            and t.rule_property_identify = #{rulePropertyIdentify}
+        </if>
+        <if test="rulePropertyName != null">
+            and t.rule_property_name LIKE CONCAT('%',#{rulePropertyName},'%')
+        </if>
+    </select>
+
+    <select id="findRulePropertyListByRuleId" resultType="com.ht.rule.common.api.entity.PropertyRel">
+        SELECT DISTINCT
+        RPR.RULE_PRO_REL_ID,
+        RPR.RULE_ID,
+        RPR.RULE_PROPERTY_ID,
+        RPR.RULE_PROPERTY_VALUE,
+        T.RULE_PROPERTY_IDENTIFY,
+        T.RULE_PROPERTY_NAME,
+        T.RULE_PROPERTY_DESC,
+        T.DEFAULT_VALUE,
+        T.IS_EFFECT,
+        T.REMARK
+        FROM
+        rule_property_info T
+        INNER JOIN rule_property_rel RPR ON RPR.RULE_PROPERTY_ID = T.RULE_PROPERTY_ID
+        WHERE
+        1 = 1
+        AND T.IS_EFFECT = 1
+        <if test="ruleId != null">
+            AND RPR.RULE_ID = #{ruleId}
+        </if>
+
+    </select>
+    <select id="findBaseRuleListByScene" parameterType="com.ht.rule.common.api.entity.SceneInfo"
+            resultType="com.ht.rule.common.api.entity.RuleInfo">
+        select distinct
+        r.rule_id,
+        r.scene_id,
+        r.rule_name,
+        r.rule_desc,
+        r.rule_enabled,
+        r.is_effect,
+        r.cre_user_id,
+        r.cre_time,
+        r.remark
+        from
+        rule_info r
+        inner join rule_scene_info s on s.scene_id = r.scene_id
+        where
+        1 = 1
+        and s.is_effect = 1
+        and r.is_effect = 1
+        and r.rule_enabled = 1
+        <if test="sceneIdentify != null">
+            and s.scene_identify = #{sceneIdentify}
+        </if>
+        <if test="sceneId != null">
+            and s.scene_id = #{sceneId}
+        </if>
+    </select>
+    <select id="findListBySceneId" resultMap="rules">
+        SELECT r.*,g.rule_group_id,g.`index`,g.weight,g.`name` FROM `rule_info` r
+            LEFT JOIN rule_group g
+                on r.rule_id = g.rule_id
+        where r.scene_id = #{sceneId}
+    </select>
+
+</mapper>

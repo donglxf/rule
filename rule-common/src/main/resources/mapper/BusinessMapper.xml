@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.rule.common.api.mapper.BusinessMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ht.rule.common.api.entity.Business">
+        <id column="business_type_id" property="businessTypeId" />
+        <result column="business_type_name" property="businessTypeName" />
+        <result column="business_system_id" property="belongSystemLocalId" />
+        <result column="business_type_code" property="businessTypeCode" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user_id" property="updateUserId" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        business_type_id AS businessTypeId, business_type_name AS businessTypeName, business_system_id AS belongSystemLocalId, business_type_code AS businessTypeCode, create_user_id AS createUserId, create_time AS createTime, update_user_id AS updateUserId, update_time AS updateTime
+    </sql>
+
+</mapper>

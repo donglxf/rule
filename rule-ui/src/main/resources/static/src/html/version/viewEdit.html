@@ -1,0 +1,120 @@
+
+<ins class="adsbygoogle" style="display:inline-block;" data-ad-client="ca-pub-6111334333458862" data-ad-slot="3820120620"></ins>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 5px;">
+    <legend>发布版本</legend>
+</fieldset>
+<style>
+
+    .myform{
+        margin-right: 20px;
+    }
+    #tableView{
+        width: inherit;
+        margin: 0 auto;
+    }
+    #tableView tr th {
+        min-width: 200px;
+    }
+    #tableView tr th:last-child{
+        display: none;}
+    #tableView tr td:last-child{
+        display: none;}
+
+
+    #tableView .con{
+        color: #1e9fff;
+    }
+    #tableView .val{
+        color: #ffb122;
+    }
+    #tableView .actionType{
+        color: #1e9fff;
+    }
+    #tableView .actionVal{
+        color: red;
+        font-weight: bold;
+    }
+
+</style>
+<form class="layui-form myform"   >
+    <input type="hidden" name="sceneId"  >
+
+    <input type="hidden" id="ruleDiv" name="ruleDiv" >
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">标题:
+            <span style="color: red;">＊</span></label>
+        <div class="layui-input-block">
+            <input type="text" name="title"  required  lay-verify="required|name"  lay-verify-max="128"  placeholder="请输入标题名" autocomplete="off" class="layui-input form-control">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">相关描述:
+            <span style="color: red;">＊</span></label>
+        <div class="layui-input-block">
+            <textarea placeholder="请输入描述内容" lay-verify-max="512" name="comment" class="layui-textarea form-control"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item" style="display: none;">
+        <div class="layui-input-block">
+
+            <button class="layui-btn"  lay-submit lay-filter="formDemo">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<fieldset class="layui-elem-field">
+    <legend class="lay-legend">规则详情
+    </legend>
+    <div class="layui-field-box">
+
+        <table class="layui-table"   id="tableView">
+
+        </table>
+    </div>
+</fieldset>
+
+
+<script>
+    //Demo
+    layui.use(['form','myutil'], function(){
+        var form = layui.form;
+        var app = layui.app,
+            layerTips = layui.layer,
+            $ = layui.jquery;
+        var common = layui.myutil;
+        var baseUrl = common.config.ruleServicePath.basePath;
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+
+            if($("#ruleDiv").val() == '' || $("#ruleDiv").val() == undefined){
+                layer.msg("当前没有配置规则，不可发布");
+                return false;
+            }
+            var loadindex =  layer.msg('提交中..', {icon: 16,time:8000,shade :0.4});
+            $.ajax({
+                cache : true,
+                type : "POST",
+                url : baseUrl+'sceneVersion/push',
+                data : data.field,// 你的formid
+                async : false,
+                success : function(da) {
+                    layer.close(loadindex);
+                    if (da.code == '0') {
+                        layer.msg('保存数据成功', {icon: 1,time:1500});
+                        //   active.reload();
+                    } else {
+                        layer.msg('网络连接异常', {icon: 2,time:1200});
+                        //layer.msg(data.msg);
+                    }
+                    layer.close(layerTopIndex);
+                    active.reload();
+
+                },error:function () {
+                }
+            });
+            return false;
+
+        });
+    });
+</script>
