@@ -45,8 +45,8 @@
       SELECT
 	    *
       FROM
-	  dp_business_system s
-      LEFT JOIN dp_business_type b ON b.business_system_id = s.business_system_id
+	  rule_business_system s
+      LEFT JOIN rule_business_type b ON b.business_system_id = s.business_system_id
       WHERE  b.business_type_id is not null
     </select>
 

@@ -66,10 +66,10 @@ public class SceneVersionController extends BaseController {
         if (sceneType != null) {
             // wrapper.eq("scene_type",sceneType);
         }
-        wrapper.andNew().eq("test_status", 0);
-        wrapper.andNew().eq("type", 0);
+        //wrapper.andNew().eq("test_status", 0);
+      //  wrapper.andNew().eq("type", 0);
         if (sceneId != null) {
-            wrapper.andNew().eq("v.scene_id", sceneId);
+            wrapper.andNew().eq("s.scene_id", sceneId);
         }
         wrapper.orderBy("v.scene_id");
         wrapper.orderBy("v.version", false);
@@ -132,7 +132,7 @@ public class SceneVersionController extends BaseController {
         //获取当前总共发布的数量
         Wrapper wrapperCount = new EntityWrapper();
         wrapperCount.eq("scene_id", sceneInfo.getSceneId());
-        //wrapperCount.eq("type",0);
+        wrapperCount.eq("type",0);
         int count = sceneVersionService.selectCount(wrapperCount);
         //获取最大版本号 以0.1 为单位递增
 
@@ -196,7 +196,7 @@ public class SceneVersionController extends BaseController {
             return Result.error(-1, "验证未通过，不可发版");
         }
         if (version.getType() > 0) {
-            return Result.error(-1, "验证未通过，重复发布版本");
+            return Result.error(-1, "发布失败，重复发布版本");
         }
         SceneInfo sceneInfo = sceneInfoService.selectById(version.getSceneId());
         String identify = sceneInfo.getSceneIdentify();

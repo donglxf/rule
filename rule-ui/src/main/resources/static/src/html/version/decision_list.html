@@ -204,7 +204,15 @@
     <span style="color: #ffb800;" >测试版</span>
     {{#  } }}
 </script>
+<script type="text/html"  id="versionTpl">
 
+    {{#  if(d.type === 1){ }}
+    <span style="color: #44ff4e;" >v{{d.version}}</span>
+
+    {{#  } else { }}
+    <span  >Beta{{d.version}}</span>
+    {{#  } }}
+</script>
 <!--操作-->
 <script type="text/html" id="bar">
     <button class="layui-btn layui-btn-sm"  ht-auth="push" lay-event="push">
@@ -226,6 +234,7 @@
     <button class="layui-btn layui-btn-sm" title="验证"  ht-auth="check" lay-event="check">
         验证&nbsp;<i class="layui-icon">&#xe62c;</i>
     </button>
+
 </script>
 <div id = "rule_div" style="display: none">
     <fieldset class="layui-elem-field">

@@ -36,6 +36,8 @@ public class RuleExcuteResult {
     @ApiModelProperty(value = "传递给请求者的数据")
     private RuleStandardResult data;
 
+    @ApiModelProperty(value = "评分卡-平分")
+    private double grade;
     @ApiModelProperty(value = "决策版本")
     private String senceVersoionId;
 

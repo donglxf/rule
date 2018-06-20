@@ -24,7 +24,7 @@ public class DroolsExcuteController {
     @RequestMapping("/excuteDroolsScene")
     @ApiOperation(value = "通过决策版本号获取规则执行结果")
     public RuleExcuteResult excuteDroolsScene(@RequestBody DroolsParamter paramter) {
-        RuleExcuteResult data = null;
+        RuleExcuteResult data = new RuleExcuteResult();
         Long startTime = System.currentTimeMillis();
         SceneInfoVersion sceneInfoVersion = null;
         //执行结果
@@ -57,6 +57,7 @@ public class DroolsExcuteController {
         data.setSenceVersoionId(sceneInfoVersion.getVersionId().toString());
         data.setCode(0);
         RuleStandardResult result = getRuleStandardResult(actionForms);
+        data.setData(result);
         return data;
     }
 
@@ -84,7 +85,7 @@ public class DroolsExcuteController {
 
     @RequestMapping("/excuteDroolsGrade")
     @ApiOperation(value = "通过评分卡获取得分")
-    public Result<Double> excuteDroolsGrade(@RequestBody DroolsParamter paramter) {
+    public RuleExcuteResult excuteDroolsGrade(@RequestBody DroolsParamter paramter) {
 
         return null;
     }

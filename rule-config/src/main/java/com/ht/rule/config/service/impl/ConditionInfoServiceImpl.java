@@ -53,7 +53,7 @@ public class ConditionInfoServiceImpl extends BaseServiceImpl<ConditionInfoMappe
         conditionInfo.setCreTime(new Date());
         conditionInfo.setCreUserId(StringUtils.isEmpty( userInfoHelper.getUserId()) ? "-1" :  userInfoHelper.getUserId());
         conditionInfo.setIsEffect(1);
-        conditionInfo.setConditionName("我就是个测试");
+        conditionInfo.setConditionName("-----");
         this.conditionInfoMapper.insert(conditionInfo);
         return conditionInfo;
     }

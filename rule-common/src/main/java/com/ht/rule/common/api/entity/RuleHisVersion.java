@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -20,6 +21,7 @@ import java.util.Date;
  */
 @ApiModel
 @TableName("rule_his_version")
+@Data
 public class RuleHisVersion extends Model<RuleHisVersion> {
 
     private static final long serialVersionUID = 1L;
@@ -68,61 +70,6 @@ public class RuleHisVersion extends Model<RuleHisVersion> {
 	private Date createTime;
 
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getSenceVersionId() {
-		return senceVersionId;
-	}
-
-	public void setSenceVersionId(Long senceVersionId) {
-		this.senceVersionId = senceVersionId;
-	}
-
-	public String getRuleName() {
-		return ruleName;
-	}
-
-	public void setRuleName(String ruleName) {
-		this.ruleName = ruleName;
-	}
-
-	public String getRuleDesc() {
-		return ruleDesc;
-	}
-
-	public void setRuleDesc(String ruleDesc) {
-		this.ruleDesc = ruleDesc;
-	}
-
-	public String getIsEffect() {
-		return isEffect;
-	}
-
-	public void setIsEffect(String isEffect) {
-		this.isEffect = isEffect;
-	}
-
-	public String getCreateUser() {
-		return createUser;
-	}
-
-	public void setCreateUser(String createUser) {
-		this.createUser = createUser;
-	}
-
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
 
 	@Override
 	protected Serializable pkVal() {

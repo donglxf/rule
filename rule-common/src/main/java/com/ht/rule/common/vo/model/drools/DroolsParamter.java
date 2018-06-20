@@ -25,6 +25,7 @@ public class DroolsParamter {
 	 */
 	@ApiModelProperty(required= true,value = "调用类型")
 	private String type ="1";
+
 	/**
 	 * 业务数据
 	 */

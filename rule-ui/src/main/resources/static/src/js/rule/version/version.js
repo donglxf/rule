@@ -207,6 +207,8 @@ layui.use(['table','form','laytpl','sceneUtil','myutil'], function() {
 
         } else if (obj.event === 'check') {
             manuTest(data.sceneId, data.versionId,data.sceneIdentify,data.version);
+        }else if (obj.event === 'push4zs') {
+            push4zs(data.versionId);
         }
     });
     //监听锁定操作
@@ -389,9 +391,21 @@ layui.use(['table','form','laytpl','sceneUtil','myutil'], function() {
                 , yes: function (index) {
                     layerTopIndex = index;
                     //触发表单的提交事件
-                    $('form.layui-form').find('button[lay-filter=formDemo]').click();
+                    $("#subs").click();
+                   // $('form.layui-form').find('button[lay-filter=formDemo-push]').click();
                 },
             });
+        });
+    }
+    function push4zs(id){
+        var index =  layer.confirm('您确定要发布为正式颁布吗？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.get(baseUrl+'/push4zs?versionId='+id,function (res) {
+                layer.msg('发布成功');
+                active.reload();
+            },'json')
+        }, function(){
         });
     }
     //发布

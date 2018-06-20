@@ -1,8 +1,18 @@
 package com.ht.rule.config.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.ht.rule.common.api.entity.*;
+import com.ht.rule.common.api.vo.ActProcRelease;
+import com.ht.rule.common.api.vo.ModelSence;
+import com.ht.rule.common.api.vo.RuleHisVersionVo;
+import com.ht.rule.common.comenum.RuleCallTypeEnum;
+import com.ht.rule.common.comenum.VerficationTypeEnum;
+import com.ht.rule.common.constant.RuleConstant;
+import com.ht.rule.common.vo.model.drools.DroolsParamter;
+import com.ht.rule.common.vo.model.drools.RuleExcuteResult;
+import com.ht.rule.config.rpc.DroolsExcuteFeginClient;
 import com.ht.rule.config.service.*;
 import com.ht.rule.common.api.vo.VariableBindVo;
 import com.ht.rule.common.controller.BaseController;
@@ -43,13 +53,16 @@ public class VariableBindController extends BaseController {
 
     @Autowired
     private EntityItemInfoService entityItemInfoService;
-
-
+    @Autowired
+    private RuleHisVersionService ruleHisVersionService;
     @Autowired
     private SenceVerficationBatchService senceVerficationBatchService;
 
     @Autowired
     private ConstantInfoService constantInfoService;
+
+    @Autowired
+    private DroolsExcuteFeginClient droolsExcuteFeginClient;
 
     @Autowired
     private RedisTemplate<String, String> redis;
@@ -98,18 +111,64 @@ public class VariableBindController extends BaseController {
         return Result.success(0);
     }
 
-  /*  @PostMapping("manualVariable")
+    @GetMapping("getAll")
+    @ApiOperation(value = "手动验证时，根据版本查询规则绑定变量")
+    public ActProcRelease getAll(@RequestParam(name = "versionId") String versionId) {
+        Wrapper<VariableBind> wrapper = new EntityWrapper<>();
+        wrapper.eq("sence_version_id", versionId);
+        List<VariableBind> list = variableBindService.selectList(wrapper);
+        for (VariableBind bind : list) {
+            ArrayList<Map<String, String>> constantList = new ArrayList<>();
+            String variableCode = bind.getVariableCode();
+            Long constantId = bind.getConstantId(); // 常量id
+            if ("CONSTANT".equals(bind.getDataType())) {
+                Long val = redis.opsForList().size(variableCode + "name");
+                if (val == 0L) {
+                    ConstantInfo info = constantInfoService.selectById(constantId);
+                    List<ConstantInfo> ciList = constantInfoService.selectList(new EntityWrapper<ConstantInfo>().eq("con_key", info.getConKey()).eq("con_type", "1"));
+                    for (ConstantInfo constantInfo : ciList) {
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("value", constantInfo.getConCode());
+                        map.put("name", constantInfo.getConName());
+                        constantList.add(map);
+                        //缓存数据
+                        redis.opsForList().leftPush(variableCode + "name", constantInfo.getConName());
+                        redis.opsForList().leftPush(variableCode + "value", constantInfo.getConCode());
+                    }
+                } else {
+                    for (; val-- > 0; ) {
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("value", redis.opsForList().index(variableCode + "value", val));
+                        map.put("name", redis.opsForList().index(variableCode + "name", val));
+                        constantList.add(map);
+                    }
+                }
+                bind.setOptionData(constantList);
+            }
+        }
+        SceneVersion version = sceneVersionService.selectById(versionId);
+        ModelSence sence = new ModelSence();
+        sence.setData(list);
+        sence.setSceneName(version.getTitle());
+        List<ModelSence> model = new ArrayList<ModelSence>();
+        model.add(sence);
+        ActProcRelease result = new ActProcRelease();
+        result.setVariableMap(model);
+        return result;
+    }
+
+    @PostMapping("manualVariable")
     @ApiOperation(value = "规则手动验证")
     public PageResult<Map<String, Object>> manualVariable(VariableBindVo entityInfo, HttpServletRequest request) {
         Map<String, Object> data = new HashMap<String, Object>();
         DroolsParamter drools = new DroolsParamter();
         // 插入一笔记录到批次表
-        SenceVerficationBatch batch = new SenceVerficationBatch();
+/*        SenceVerficationBatch batch = new SenceVerficationBatch();
         batch.setBatchSize(1);
         batch.setSenceVersionId(String.valueOf(entityInfo.getSenceVersionId()));
         batch.setVerficationType(String.valueOf(VerficationTypeEnum.manu.getValue()));
         batch.setCreateUser(this.getUserId());
-        senceVerficationBatchService.insert(batch);
+        senceVerficationBatchService.insert(batch);*/
 
         //封装规则验证所需数据
         ActProcRelease act = getAll(String.valueOf(entityInfo.getSenceVersionId()));
@@ -125,33 +184,29 @@ public class VariableBindController extends BaseController {
                 }else{
                     data.put(ls.getVariableCode(), ls.getTmpValue());
                 }
-
             }
         }
-
-        drools.setVersionId(entityInfo.getSenceVersionId()); // 版本表id
-        drools.setType(RuleCallTypeEnum.rule.getType());
-        drools.setVersion(String.valueOf(entityInfo.getVersion())); // 版本号
         drools.setSence(entityInfo.getSceneIdentify());
-        drools.setBatchId(String.valueOf(batch.getId()));
+        drools.setVersion(String.valueOf(entityInfo.getVersion())); // 版本号
         drools.setData(data);
-
-
         // 规则验证返回结果处理
-        RuleExcuteResult result  = droolsExcuteFacade.excuteDroolsSceneValidation(drools);
+        RuleExcuteResult result  = droolsExcuteFeginClient.excuteDroolsScene(drools);
        // String res = String.valueOf(result);
         Map<String, Object> resultMap = new HashMap<String, Object>();
        // JSONObject obj = JSON.parseObject(res);
        if(result.getCode() == 0){
-           resultMap.put("logId", result.getData().getLogIdList().get(0));
+          // resultMap.put("logId", result.getData().getLogIdList().get(0));
            resultMap.put("versionId", entityInfo.getSenceVersionId());
+           //组装可以查看的数据
+           List<RuleHisVersionVo> list = ruleHisVersionService.getRuleValidationResultNew(entityInfo.getSenceVersionId(),result.getData().getRuleList());
+           resultMap.put("result",list);
            return PageResult.success(resultMap, 0);
        }
        else {
             return PageResult.error(1,result.getMsg());
         }
 
-    }*/
+    }
 
     @PostMapping("getVariableBindBySenceVersionId")
     @ApiOperation(value = "根据规则版本获取规则变量绑定信息")
@@ -189,9 +244,9 @@ public class VariableBindController extends BaseController {
             log.error(ex.getMessage());
             throw new Exception("数据绑定异常，请检查变量绑定信息是否正确");
         }
-    }
-*/
- /*   @PostMapping("getAutoValidaionData")
+    }*/
+
+  /*  @PostMapping("getAutoValidaionData")
     @ApiOperation(value = "根据规则id获取需要验证的数据")
     public List<Map<String, Object>> getAutoValidaionData(VariableBindVo entityInfo) throws Exception {
         List<VariableBind> bindList = getVariableBindBySenceVersionId(entityInfo);

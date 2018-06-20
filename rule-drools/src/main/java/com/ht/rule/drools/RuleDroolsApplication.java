@@ -20,7 +20,7 @@ public class RuleDroolsApplication {
 	
 	public static void main(String[] args) {
 		SpringApplication.run(RuleDroolsApplication.class, args);
-		System.err.println("ヾ(◍°∇°◍)ﾉﾞ    RuleConfigApplication      ヾ(◍°∇°◍)ﾉﾞ\n");
+		System.err.println("ヾ(◍°∇°◍)ﾉﾞ    RuleDroolsApplication      ヾ(◍°∇°◍)ﾉﾞ\n");
 	}
 
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -28,7 +29,7 @@ public class SceneInfo extends Model<SceneInfo> {
     /**
      * 主键
      */
-    @TableId("scene_id")
+    @TableId(value = "scene_id",type= IdType.AUTO)
 	@ApiModelProperty(required= true,value = "主键")
 	private Long sceneId;
 

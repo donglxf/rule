@@ -1,4 +1,4 @@
-package com.ht.rule.common.util;
+package com.ht.rule.drools.util;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

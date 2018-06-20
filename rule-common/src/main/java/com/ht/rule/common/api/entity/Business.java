@@ -23,7 +23,7 @@ import java.util.Date;
  */
 @Data
 @ApiModel
-@TableName("dp_business_type")
+@TableName("rule_business_type")
 public class Business extends Model<Business> {
 
 	private static final long serialVersionUID = 1L;

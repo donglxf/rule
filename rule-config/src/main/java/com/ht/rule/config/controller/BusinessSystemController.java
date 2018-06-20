@@ -81,7 +81,7 @@ public class BusinessSystemController extends BaseController {
 
     @GetMapping("delete")
     @ApiOperation(value = "通过id删除信息")
-    @OperationDelete(tableColumn = {"dp_business_type&business_system_id"},idVal = "#id")
+    @OperationDelete(tableColumn = {"rule_business_type&business_system_id"},idVal = "#id")
     public Result<Integer> delete( String  id) {
         businessSystemService.deleteById(id);
         return Result.success(0);

@@ -22,7 +22,7 @@ import java.util.Date;
  * @since 2017-12-15
  */
 @ApiModel
-@TableName("rule_scene_info s left join rule_scene_version v on v.scene_id = s.scene_id")
+@TableName("rule_scene_version v left join rule_scene_info s on v.scene_id = s.scene_id")
 @Data
 public class SceneInfoVersion extends Model<SceneInfoVersion> {
 

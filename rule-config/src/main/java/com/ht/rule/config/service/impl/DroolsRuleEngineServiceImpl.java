@@ -399,6 +399,10 @@ public class DroolsRuleEngineServiceImpl implements DroolsRuleEngineService {
      */
     private StringBuffer insertRuleActionInfo(StringBuffer ruleStr, RuleInfo ruleInfo) throws Exception {
         ruleStr.append(lineSeparator).append("then").append(lineSeparator);
+
+        // 记录规则
+        ruleStr.append(DroolsConstant.GLOBAL_VARIABLE_NAME + ".getMap().put(\"").append("rule").append("\",\"").append(ruleInfo.getRuleName()).append("\");").append(lineSeparator);
+
         // 2.根据规则获取动作信息
         List<ActionInfo> actionList = this.ruleActionService.findRuleActionListByRule(ruleInfo.getRuleId());
         //如果没有获取到动作信息，则默认动作部分为空
@@ -487,9 +491,6 @@ public class DroolsRuleEngineServiceImpl implements DroolsRuleEngineService {
                             .append(")").append(";").append(lineSeparator);
                 }
             }
-            // 记录日志
-            ruleStr.append(DroolsConstant.GLOBAL_VARIABLE_NAME + ".getMap().put(\"").append("rule").append("\",\"").append(ruleInfo.getRuleName()).append("\");").append(lineSeparator);
-
 
             // 记录日志动作
             ruleStr.append(DroolsConstant.CONDITION_ACTION).append(".").append(DroolsConstant.SAVE_LOG).

@@ -8,7 +8,7 @@ public class DroolsConstant {
 	public final static String IMPORT="import";
 	public final static String RULE_EXECUTIONR_RESULT="com.ht.rule.common.vo.model.drools.RuleExecutionResult";
 	public final static String RULE_EXECUTION_OBJECT="com.ht.rule.common.vo.model.drools.RuleExecutionObject";
-	public final static String DROOLS_ACTION_SERVICE="com.ht.dispatch.rule.service.DroolsActionService";
+	public final static String DROOLS_ACTION_SERVICE="com.ht.rule.drools.service.DroolsActionService";
 	public final static String GLOBAL="global";
 	public final static String GLOBAL_VARIABLE="RuleExecutionResult";
 	public final static String GLOBAL_VARIABLE_NAME="_result";

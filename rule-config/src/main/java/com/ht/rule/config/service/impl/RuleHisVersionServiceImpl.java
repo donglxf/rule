@@ -1,5 +1,6 @@
 package com.ht.rule.config.service.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.ht.rule.common.vo.model.drools.RpcRuleHisVersionParamter;
 import com.ht.rule.common.api.entity.RuleHisVersion;
 import com.ht.rule.common.api.mapper.RuleHisVersionMapper;
@@ -9,9 +10,11 @@ import com.ht.rule.common.service.impl.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -44,5 +47,30 @@ public class RuleHisVersionServiceImpl extends BaseServiceImpl<RuleHisVersionMap
         map.put("ruleNames",paramter.gettRuleName() );
         List<RuleHisVersion> rules = ruleHisVersionMapper.getHisVersionListByVidName(map);
         return rules;
+    }
+
+    @Override
+    public List<RuleHisVersionVo> getRuleValidationResultNew(Long senceVersionId, List<String> ruleList) {
+
+       List<RuleHisVersion> ruleHisVersions = ruleHisVersionMapper.selectList(
+               new EntityWrapper<RuleHisVersion>().
+                       eq("sence_version_id",senceVersionId));
+
+        List<RuleHisVersionVo> ruleHisVersionVos = ruleHisVersions.stream().map(his->{
+            RuleHisVersionVo vo = new RuleHisVersionVo();
+            vo.setVersionId(his.getSenceVersionId().toString());
+            vo.setExecuteRule(his.getRuleDesc());
+            vo.setVariableName(his.getRuleName());
+            vo.setValidationResult("1");
+            vo.setRuleName(his.getRuleName());
+            vo.setRuleDesc(his.getRuleDesc());
+            ruleList.forEach(ruleName ->{
+                if(vo.getRuleName().equals(ruleName))
+                    vo.setValidationResult("0");
+            });
+            return vo;
+        }).collect(Collectors.toList());
+
+        return  ruleHisVersionVos;
     }
 }

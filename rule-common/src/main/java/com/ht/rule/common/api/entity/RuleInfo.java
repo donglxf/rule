@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -37,7 +38,7 @@ public class RuleInfo extends Model<RuleInfo> {
 	/**
      * 主键
      */
-    @TableId("rule_id")
+    @TableId(value = "rule_id",type = IdType.AUTO)
 	@ApiModelProperty(required= true,value = "主键")
 	private Long ruleId;
     /**

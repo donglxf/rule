@@ -37,4 +37,12 @@ public interface RuleHisVersionService extends BaseService<RuleHisVersion> {
      * @return
      */
     List<RuleHisVersion> getHisVersionListByVidName(RpcRuleHisVersionParamter paramter) ;
+
+    /**
+     * 封装出决策验证的结果出来
+     * @param senceVersionId
+     * @param ruleList
+     * @return
+     */
+    List<RuleHisVersionVo> getRuleValidationResultNew(Long senceVersionId, List<String> ruleList);
 }

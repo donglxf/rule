@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Data
 @ApiModel
-@TableName("dp_business_system")
+@TableName("rule_business_system")
 public class BusinessSystem extends Model<BusinessSystem> {
 
     private static final long serialVersionUID = 1L;

@@ -10,6 +10,7 @@ import com.ht.rule.common.vo.model.drools.*;
 import com.ht.rule.drools.facade.DroolsRuleEngineFacade;
 import com.ht.rule.drools.service.*;
 import com.ht.rule.drools.util.DroolsUtil;
+import com.ht.rule.drools.util.SpringContextHolder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
 import org.drools.core.base.RuleNameStartsWithAgendaFilter;
@@ -77,7 +78,7 @@ public class DroolsRuleEngineFacadeImpl implements DroolsRuleEngineFacade {
         if(list.isEmpty()){
             return null;
         }
-        return list.get(1);
+        return list.get(0);
     }
 
     @Override
