@@ -1,17 +1,16 @@
-package com.ht.rule.config.service.impl;
+package com.ht.rule.drools.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.ht.rule.common.vo.model.drools.RpcRuleHisVersionParamter;
 import com.ht.rule.common.api.entity.RuleHisVersion;
 import com.ht.rule.common.api.mapper.RuleHisVersionMapper;
-import com.ht.rule.common.vo.model.drools.RuleStandardResult;
-import com.ht.rule.config.service.RuleHisVersionService;
 import com.ht.rule.common.api.vo.RuleHisVersionVo;
 import com.ht.rule.common.service.impl.BaseServiceImpl;
+import com.ht.rule.common.vo.model.drools.RpcRuleHisVersionParamter;
+import com.ht.rule.common.vo.model.drools.RuleStandardResult;
+import com.ht.rule.drools.service.RuleHisVersionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,9 +52,9 @@ public class RuleHisVersionServiceImpl extends BaseServiceImpl<RuleHisVersionMap
     @Override
     public List<RuleHisVersionVo> getRuleValidationResultNew(Long senceVersionId, RuleStandardResult ruleStandardResult) {
 
-        List<RuleHisVersion> ruleHisVersions = ruleHisVersionMapper.selectList(
-                new EntityWrapper<RuleHisVersion>().
-                        eq("sence_version_id",senceVersionId));
+       List<RuleHisVersion> ruleHisVersions = ruleHisVersionMapper.selectList(
+               new EntityWrapper<RuleHisVersion>().
+                       eq("sence_version_id",senceVersionId));
 
         List<RuleHisVersionVo> ruleHisVersionVos = ruleHisVersions.stream().map(his->{
             RuleHisVersionVo vo = new RuleHisVersionVo();

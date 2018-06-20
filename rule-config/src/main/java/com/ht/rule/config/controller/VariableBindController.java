@@ -189,6 +189,7 @@ public class VariableBindController extends BaseController {
         drools.setSence(entityInfo.getSceneIdentify());
         drools.setVersion(String.valueOf(entityInfo.getVersion())); // 版本号
         drools.setData(data);
+        drools.setType("2");
         // 规则验证返回结果处理
         RuleExcuteResult result  = droolsExcuteFeginClient.excuteDroolsScene(drools);
        // String res = String.valueOf(result);
@@ -198,7 +199,7 @@ public class VariableBindController extends BaseController {
           // resultMap.put("logId", result.getData().getLogIdList().get(0));
            resultMap.put("versionId", entityInfo.getSenceVersionId());
            //组装可以查看的数据
-           List<RuleHisVersionVo> list = ruleHisVersionService.getRuleValidationResultNew(entityInfo.getSenceVersionId(),result.getData().getRuleList());
+           List<RuleHisVersionVo> list = ruleHisVersionService.getRuleValidationResultNew(entityInfo.getSenceVersionId(),result.getData());
            resultMap.put("result",list);
            return PageResult.success(resultMap, 0);
        }

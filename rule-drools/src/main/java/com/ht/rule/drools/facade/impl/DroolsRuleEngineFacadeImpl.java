@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.ht.rule.common.api.entity.*;
 import com.ht.rule.common.api.mapper.SceneInfoVersionMapper;
+import com.ht.rule.common.api.vo.RuleHisVersionVo;
 import com.ht.rule.common.util.*;
 import com.ht.rule.common.vo.model.drools.*;
 import com.ht.rule.drools.facade.DroolsRuleEngineFacade;
@@ -37,6 +38,12 @@ public class DroolsRuleEngineFacadeImpl implements DroolsRuleEngineFacade {
     private SceneInfoVersionMapper sceneInfoVersionMapper;
     @Autowired
     private RuleActionVersionService ruleActionVersionService;
+    @Autowired
+    private DroolsLogService droolsLogService;
+    @Autowired
+    private DroolsDetailLogService droolsDetailLogService;
+    @Autowired
+    private RuleHisVersionService ruleHisVersionService;
 
     //换行符
     private static final String lineSeparator = System.getProperty("line.separator");
@@ -95,8 +102,30 @@ public class DroolsRuleEngineFacadeImpl implements DroolsRuleEngineFacade {
     }
 
     @Override
-    public void log4drools(List<DroolsActionForm> actionForms, DroolsParamter paramter, SceneInfoVersion sceneInfoVersion) {
+    public void log4drools(RuleStandardResult ruleStandardResult, DroolsParamter paramter, SceneInfoVersion sceneInfoVersion,long executeTime) {
+        DroolsLog log = new DroolsLog();
+        log.setInParamter(JSON.toJSONString(paramter.getData()));
+        log.setSenceName(sceneInfoVersion.getSceneName());
+        log.setSenceVersionid(sceneInfoVersion.getVersionId().toString());
+        log.setVersionNum(sceneInfoVersion.getVersion());
+        log.setExecuteTime(executeTime);
+        log.setSenceType(sceneInfoVersion.getSceneType());
+        log.setOutParamter(JSON.toJSONString(ruleStandardResult));
+        log.setBusinessId(sceneInfoVersion.getBusinessId());
+        droolsLogService.insert(log);
+        List<RuleHisVersionVo> list = ruleHisVersionService.getRuleValidationResultNew(sceneInfoVersion.getVersionId(),ruleStandardResult);
 
+        for (int i = 0; i < list.size(); i++) {
+            RuleHisVersionVo his = list.get(i);
+            DroolsDetailLog detailLog = new DroolsDetailLog();
+            detailLog.setDroolsLogid(log.getId());
+            detailLog.setExecuteRulename(his.getExecuteRule());
+            detailLog.setRuleNum(his.getRuleName());
+            detailLog.setResult(his.getResult());
+            int hit = "0".equals(his.getValidationResult()) ? 1:0;
+            detailLog.setHit(hit);
+            droolsDetailLogService.insert(detailLog);
+        }
     }
 
     /**

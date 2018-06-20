@@ -2,10 +2,7 @@ package com.ht.rule.drools.facade;
 
 import com.ht.rule.common.api.entity.SceneInfoVersion;
 import com.ht.rule.common.api.entity.SceneVersion;
-import com.ht.rule.common.vo.model.drools.DroolsActionForm;
-import com.ht.rule.common.vo.model.drools.DroolsParamter;
-import com.ht.rule.common.vo.model.drools.RuleExecutionObject;
-import com.ht.rule.common.vo.model.drools.RuleExecutionResult;
+import com.ht.rule.common.vo.model.drools.*;
 
 import java.util.List;
 
@@ -40,9 +37,9 @@ public interface DroolsRuleEngineFacade {
 
     /**
      * 添加日志
-     * @param actionForms
+     * @param ruleStandardResult
      * @param paramter
      * @param sceneInfoVersion
      */
-    void log4drools(List<DroolsActionForm> actionForms, DroolsParamter paramter, SceneInfoVersion sceneInfoVersion);
+    void log4drools(RuleStandardResult ruleStandardResult, DroolsParamter paramter, SceneInfoVersion sceneInfoVersion, long executeTime);
 }

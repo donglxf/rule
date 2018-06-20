@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>table模块快速使用</title>
+    <link rel="stylesheet" href="/plugins/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/plugins/font-awesome/css/font-awesome.min.css" media="all" />
+    <style>
+        .admin-main{
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+        .layui-table-cell {
+            height: 32px;
+            line-height:32px;
+        }
+        #table{
+            width: inherit;
+            margin: 0 auto;
+        }
+
+    </style>
+</head>
+<body>
+
+
+<div class="admin-main">
+    <form class="layui-form layui-form-pane" onsubmit="javascript:return false;">
+        <div class="layui-form-item" >
+            <div class="layui-inline">
+              <!--  <label class="layui-form-label">所属系统</label><div class="layui-input-inline" id="businessDiv"></div>-->
+
+                <label class="layui-form-label">合同号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="contact" class="layui-input " />
+                </div>
+
+                <label class="layui-form-label">时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="time" class="layui-input date"  placeholder=" - ">
+                </div>
+            </div>
+            <button type="button" onclick="active.reload()" id="search_business"
+                    class="layui-btn layui-btn">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
+        </div>
+    </form>
+    <div class="layui-col-md6">
+        <fieldset class="layui-elem-field">
+            <legend class="lay-legend">规则日志</legend>
+            <div class="layui-field-box">
+                <table id="loglist" lay-filter="loglist"></table>
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="layui-col-md6">
+        <fieldset class="layui-elem-field">
+            <legend class="lay-legend">详细信息</legend>
+            <div class="layui-field-box">
+
+
+                <table id="userlist" lay-filter="userlist"></table>
+            </div>
+        </fieldset>
+    </div>
+</div>
+
+
+
+<script src="/plugins/layui/layui.js"></script>
+
+<script src="/src/js/log/log_list.js"></script>
+
+<script type="text/html" id="createTime">
+
+    <div>{{ layui.util.toDateString(d.createTime) }}</div>
+
+</script>
+
+<script type="text/html"  id="type">
+
+    {{#  if(d.senceType === 1){ }}
+    <span style="color: #1e9fff;" >决策</span>
+
+    {{#  } else { }}
+    <span style="color: #ffb800;" >评分卡</span>
+    {{#  } }}
+</script>
+<script type="text/html"  id="select">
+
+    {{#  if(d.hit === 1){ }}
+    <input type="checkbox" name="status" value="{{d.hit}}" title="命中" lay-filter="lockDemo" {{ d.hit== 1
+           ? 'checked' : '' }} >
+
+    {{#  } else { }}
+
+    {{#  } }}
+</script>
+
+
+</div>
+</body>
+
+</html>

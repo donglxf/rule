@@ -52,6 +52,10 @@ public class DroolsDetailLog extends Model<DroolsDetailLog> {
 	@ApiModelProperty(required= true,value = "规则号")
 	private String ruleNum;
 
+	@TableField("is_hit")
+	@ApiModelProperty(required= true,value = "是否命中")
+	private int hit;
+
 
 	public static final String ID = "id";
 

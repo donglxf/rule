@@ -3,6 +3,7 @@ package com.ht.rule.common.api.entity;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -53,6 +54,10 @@ public class DroolsLog extends Model<DroolsLog> {
 	@TableField("out_paramter")
 	@ApiModelProperty(required= true,value = "计算结果")
 	private String outParamter;
+	@TableField("business_id")
+	@ApiModelProperty(required= true,value = "计算结果")
+	private String businessId;
+
     /**
      * 命中规则总数
      */
@@ -64,6 +69,7 @@ public class DroolsLog extends Model<DroolsLog> {
      */
 	@TableField("create_time")
 	@ApiModelProperty(required= true,value = "插入时间")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm",timezone = "GMT+8")
 	private Date createTime;
     /**
      * 执行时间
@@ -77,6 +83,14 @@ public class DroolsLog extends Model<DroolsLog> {
 	@TableField("sence_name")
 	@ApiModelProperty(required= true,value = "决策名")
 	private String senceName;
+	/**
+	 * 决策名
+	 */
+	@TableField("sence_type")
+	@ApiModelProperty(required= true,value = "决策类型")
+	private Integer senceType;
+
+
     /**
      * 版本号
      */

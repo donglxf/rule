@@ -44,6 +44,7 @@ ModelVerification.prototype = {
             "    <tr>\n" +
             "    <th>规则</th>\n" +
             "    <th>输出</th>\n" +
+            "    <th>结果</th>\n" +
             "    </tr>\n" +
             "    </thead>\n" ;
 
@@ -51,7 +52,9 @@ ModelVerification.prototype = {
             html+="<tbody><tr></tbody><td>"+data[i].ruleDesc.replace(/\$/g,'')+"</td>";
             if(data[i].validationResult=='0'){
                 html+="<td style='color: #ff598f;'>匹配规则</td>";
+                html+="<td style='color: #ff598f;'>"+data[i].result+"</td>";
             }else{
+                html+="<td style='color: #ff598f;'></td>";
                 html+="<td></td>";
             }
         }

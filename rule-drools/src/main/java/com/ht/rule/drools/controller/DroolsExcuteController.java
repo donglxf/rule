@@ -1,5 +1,6 @@
 package com.ht.rule.drools.controller;
 
+import com.ht.rule.common.api.entity.SceneInfo;
 import com.ht.rule.common.api.entity.SceneInfoVersion;
 import com.ht.rule.common.result.Result;
 import com.ht.rule.common.util.ObjectUtils;
@@ -8,6 +9,7 @@ import com.ht.rule.drools.facade.DroolsRuleEngineFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +30,8 @@ public class DroolsExcuteController {
         Long startTime = System.currentTimeMillis();
         SceneInfoVersion sceneInfoVersion = null;
         //执行结果
-        List<DroolsActionForm> actionForms = null;
+        List<DroolsActionForm> actionForms ;
+        RuleStandardResult ruleStandardResult = null; ;
         // 业务数据转化
         try {
             sceneInfoVersion = droolsRuleEngineFacade.getScenInfoVersion(paramter.getSence(),paramter.getVersion(),1);
@@ -46,20 +49,32 @@ public class DroolsExcuteController {
             Long endTime = System.currentTimeMillis();
             Long executeTime = endTime - startTime;
             log.info("规则验证执行时间》》》》》" + String.valueOf(executeTime));
+            ruleStandardResult = getRuleStandardResult(actionForms);
             // 记录日志
-            if("1".equals(paramter.getType())){
-              droolsRuleEngineFacade.log4drools(actionForms,paramter,sceneInfoVersion);
-            }
+            //if("1".equals(paramter.getType())){
+                final RuleStandardResult result = ruleStandardResult;
+                final SceneInfoVersion infoVersion = sceneInfoVersion;
+                new Thread( () -> droolsRuleEngineFacade.log4drools(result,paramter,infoVersion,executeTime) ).start();
+          //  }
         } catch (Exception e) {
             log.info("规则引擎执行异常",e);
             data = new RuleExcuteResult(1, "执行异常", null,null);
         }
         data.setSenceVersoionId(sceneInfoVersion.getVersionId().toString());
         data.setCode(0);
-        RuleStandardResult result = getRuleStandardResult(actionForms);
-        data.setData(result);
+        data.setData(ruleStandardResult);
         return data;
     }
+
+    @RequestMapping("/excuteDrools")
+    @ApiOperation(value = "通过决策版本号获取规则执行结果")
+    public RuleExcuteResult excuteDrools(@RequestBody DroolsForm form) {
+        DroolsParamter paramter = new DroolsParamter();
+        BeanUtils.copyProperties(form,paramter);
+        List<DroolsForm.ItemValForm> list = form.getData();
+        return null;
+    }
+
 
     private RuleStandardResult getRuleStandardResult(List<DroolsActionForm> actionForms) {
         RuleStandardResult ruleStandardResult = new RuleStandardResult();

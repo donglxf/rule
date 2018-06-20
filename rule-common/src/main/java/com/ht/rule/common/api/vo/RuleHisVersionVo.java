@@ -16,5 +16,6 @@ public class RuleHisVersionVo extends RuleHisVersion {
 
     public String versionId; // 版本id
     public List<String> tRuleName; // 规则名称集合
+    private String result;//动作执行的结果
 
 }

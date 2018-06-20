@@ -4,11 +4,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Map;
 
 @Data
 @ApiModel
-public class DroolsParamter {
+public class DroolsForm {
 	/**
 	 * 场景code
 	 */
@@ -31,6 +32,14 @@ public class DroolsParamter {
 	 * 业务数据
 	 */
 	@ApiModelProperty(required= true,value = "业务数据")
-	private Map<String, Object> data;
+	private List<ItemValForm> data;
+	@ApiModel
+	@Data
+	public  class ItemValForm{
+		@ApiModelProperty(required= true,value = "变量code")
+		private String entityCode;
+		@ApiModelProperty(required= true,value = "变量值")
+		private Map<String,Object> data;
+	}
 
 }
