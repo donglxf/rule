@@ -106,7 +106,9 @@ public class SceneVersionServiceImpl extends BaseServiceImpl<SceneVersionMapper,
 
             //操作新增操作
             itemInfos.forEach(itemInfo -> {
-                String code = itemInfo.getEntityInfo().getType().getValue()+"_"+itemInfo.getEntityInfo().getEntityIdentify()+"_"+itemInfo.getItemIdentify();
+//                String code = itemInfo.getEntityInfo().getType().getValue()+"_"+itemInfo.getEntityInfo().getEntityIdentify()+"_"+itemInfo.getItemIdentify();
+                String code = itemInfo.getEntityInfo().getEntityIdentify()+"_"+itemInfo.getItemIdentify();
+
                 String name = itemInfo.getEntityInfo().getEntityName()+"_"+itemInfo.getItemName();
                 String mapCode = bindMap.get(code);
                 //判断Map里面是否有值
@@ -116,7 +118,9 @@ public class SceneVersionServiceImpl extends BaseServiceImpl<SceneVersionMapper,
                     bind.setIsEffect("1");
                     bind.setCreateTime(new Date());
                     bind.setSenceVersionId(version.getVersionId());
-                    bind.setVariableCode( itemInfo.getEntityInfo().getType().getValue()+"_"+itemInfo.getEntityInfo().getEntityIdentify()+"_"+itemInfo.getItemIdentify());
+//                    bind.setVariableCode( itemInfo.getEntityInfo().getType().getValue()+"_"+itemInfo.getEntityInfo().getEntityIdentify()+"_"+itemInfo.getItemIdentify());
+                    bind.setVariableCode( itemInfo.getEntityInfo().getEntityIdentify()+"_"+itemInfo.getItemIdentify());
+
                     bind.setVariableName(itemInfo.getEntityInfo().getEntityName()+"_"+itemInfo.getItemName());
                     bind.setDataType(itemInfo.getDataType().getValue().toString());
                     if(itemInfo.getConstantId() != null ){

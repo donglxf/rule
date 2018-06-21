@@ -15,6 +15,7 @@ import com.ht.rule.common.api.entity.Business;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -77,6 +78,7 @@ public class BusinessController extends BaseController {
     @PostMapping("edit")
     @ApiOperation(value = "新增")
     @Transactional()
+    @CacheEvict(value = "risk-rule",key = "getIdCodeMap")
     public Result<Integer> edit( @Validated Business business){
         business.setCreateTime(new Date());
         business.setCreateUserId(this.getUserId());
@@ -94,6 +96,7 @@ public class BusinessController extends BaseController {
     @GetMapping("delete")
     @ApiOperation(value = "通过id删除信息")
     @OperationDelete(tableColumn = {"rule_entity_info&business_id","rule_action_info&business_id"},idVal = "#id")
+    @CacheEvict(value = "risk-rule",key = "getIdCodeMap4Business")
     public Result<Integer> delete( Long id){
         //判断是否有其他绑定数据
         businessService.deleteById(id);

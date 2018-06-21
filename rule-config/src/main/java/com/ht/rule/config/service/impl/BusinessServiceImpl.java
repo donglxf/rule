@@ -2,10 +2,16 @@ package com.ht.rule.config.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.ht.rule.common.api.entity.Business;
+import com.ht.rule.common.api.entity.EntityItemCodeView;
 import com.ht.rule.common.api.mapper.BusinessMapper;
 import com.ht.rule.config.service.BusinessService;
 import com.ht.rule.common.service.impl.BaseServiceImpl;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -31,4 +37,17 @@ public class BusinessServiceImpl extends BaseServiceImpl<BusinessMapper, Busines
         count = count == null?0:count;
         return count > 0 ? true:false;
     }
+
+    @Override
+    @Cacheable(value = "risk-rule")
+    public Map<String, String> getIdCodeMap() {
+        Map<String, String> map = new HashMap<>();
+        List<Business> list = this.baseMapper.selectList(null);
+        list.forEach(business -> {
+            map.put(business.getBusinessTypeId(),business.getBusinessTypeCode());
+        });
+        
+        return map;
+    }
+
 }

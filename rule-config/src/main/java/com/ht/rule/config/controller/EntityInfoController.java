@@ -109,7 +109,8 @@ public class EntityInfoController extends BaseController {
             EntitySelectVo vo = new EntitySelectVo();
             vo.setValue(info.getEntityId().toString());
             vo.setText(info.getEntityName());
-            vo.setKey(info.getType().getValue()+"_"+info.getEntityIdentify());
+         //   vo.setKey(info.getType().getValue()+"_"+info.getEntityIdentify());
+            vo.setKey(info.getEntityIdentify());
             //设置子集
             List<EntitySelectVo> sons = new ArrayList<>();
             List<EntityItemInfo> itemInfos = info.getItems();

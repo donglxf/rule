@@ -26,7 +26,7 @@ public interface DroolsRuleEngineFacade {
      * @param type 1 决策 2评分卡
      * @return
      */
-    SceneInfoVersion getScenInfoVersion(String scene, String version, Integer type);
+    SceneInfoVersion getScenInfoVersion(String scene, String version, String businessCode, Integer type);
 
     /**
      * 将参数信息转化为Ob
@@ -37,9 +37,9 @@ public interface DroolsRuleEngineFacade {
 
     /**
      * 添加日志
-     * @param ruleStandardResult
+     * @param actionForms 结果
      * @param paramter
      * @param sceneInfoVersion
      */
-    void log4drools(RuleStandardResult ruleStandardResult, DroolsParamter paramter, SceneInfoVersion sceneInfoVersion, long executeTime);
+    void log4drools(List<DroolsActionForm> actionForms , DroolsParamter paramter, SceneInfoVersion sceneInfoVersion, long executeTime);
 }

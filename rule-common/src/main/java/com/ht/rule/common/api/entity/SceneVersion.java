@@ -30,7 +30,7 @@ public class SceneVersion extends Model<SceneVersion> {
     /**
      * 版本记录id
      */
-    @TableId(value = "version_id", type = IdType.AUTO)
+    @TableId(value = "version_id",type= IdType.ID_WORKER)
     @ApiModelProperty(required = true, value = "版本记录id")
     private Long versionId;
     /**

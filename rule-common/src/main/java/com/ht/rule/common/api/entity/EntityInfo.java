@@ -67,9 +67,9 @@ public class EntityInfo extends Model<EntityInfo> {
     private String pkgName;
 
 
-    @TableField("type")
+   /* @TableField("type")
     @ApiModelProperty( value = "对象类型")
-    private EntityTypeEnum type;
+    private EntityTypeEnum type;*/
 
     /**
      * 创建人

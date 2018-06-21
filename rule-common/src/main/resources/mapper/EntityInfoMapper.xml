@@ -25,7 +25,6 @@
         <result column="cre_time" property="creTime" />
         <result column="is_effect" property="isEffect" />
         <result column="remark" property="remark" />
-        <result column="type" property="type" />
         <!-- 一对多查询 -->
         <collection property="items"  ofType="com.ht.rule.common.api.entity.EntityItemInfo">
             <!-- id:唯一标识
@@ -136,7 +135,7 @@
         </where>
     </select>
     <select id="getEntityItemIdCode" resultType="com.ht.rule.common.api.entity.EntityItemCodeView">
-        SELECT i.item_id as id, CONCAT(e.type,'_',e.entity_identify,'_',i.item_identify) as code FROM `rule_entity_info` e LEFT JOIN rule_entity_item_info i
+        SELECT i.item_id as id, CONCAT(e.entity_identify,'_',i.item_identify) as code FROM `rule_entity_info` e LEFT JOIN rule_entity_item_info i
         on i.entity_id = e.entity_id
         where e.business_id = #{bussinessId};
     </select>

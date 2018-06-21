@@ -8,7 +8,7 @@ layui.config({
 
 });
 
-layui.use(['table', 'form','laydate','util','myutil'], function () {
+layui.use(['table', 'form','laydate','util','myutil','code'], function () {
     var layer = layui.layer;
     var table = layui.table;
     var laydate =  layui.laydate;
@@ -23,8 +23,9 @@ layui.use(['table', 'form','laydate','util','myutil'], function () {
         , range: true
     });
 //初始化
-
-    comon.business.init4chirden('',$("#businessDiv"));
+    //查询构造
+    comon.business.init("",$("#businessDiv"),"businessId_ser");
+    //comon.business.init4chirden('',$("#businessDiv"));
     logTable.render({
         elem: '#loglist'
         ,height: 550
@@ -74,7 +75,8 @@ layui.use(['table', 'form','laydate','util','myutil'], function () {
         if(res.data.length > 0){
             //设置默认
             var logId = res.data[0].id;
-            userActive.reload(logId);
+            var code = res.data[0].inParamter;
+            userActive.reload(logId,code);
         }
     }
     });
@@ -83,13 +85,12 @@ layui.use(['table', 'form','laydate','util','myutil'], function () {
         var data = obj.data;
         if(obj.event === 'setItem'){
             //选择实体对象的id
-            userActive.reload(data.id);
+            userActive.reload(data.id,data.inParamter);
         }
     });
     // 第一个实例
     userTable.render({
         elem: '#userlist'
-        ,height: 550
         ,url: preUrl + 'log/getDetails' //数据接口
         ,page: true //开启分页
         ,id:'userlist'
@@ -134,7 +135,8 @@ layui.use(['table', 'form','laydate','util','myutil'], function () {
                 where: {
                     date: startDate,
                     endDate: endDate,
-                    logId:$('#contact').val()
+                    sceneCode:$('#contact').val(),
+                    businessId:$("#businessId_ser").val()
                 }
             });
         }
@@ -143,7 +145,7 @@ layui.use(['table', 'form','laydate','util','myutil'], function () {
     // 重载
     // 这里以搜索为例
         userActive = {
-            reload: function(logId){
+            reload: function(logId,code){
                 //var demoReload = $('#demoReload');
                 //执行重载
                 table.reload('userlist', {
@@ -153,6 +155,13 @@ layui.use(['table', 'form','laydate','util','myutil'], function () {
                     where: {
                         logId: logId
                     }
+                });
+                $(".layui-code").html(code);
+
+                layui.code({
+                    title: '传入参数信息',
+                    height: '250px',
+                    about: false
                 });
             }
         };

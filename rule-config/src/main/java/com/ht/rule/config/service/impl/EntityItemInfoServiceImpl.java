@@ -123,7 +123,7 @@ public class EntityItemInfoServiceImpl extends BaseServiceImpl<EntityItemInfoMap
         }else{
                 //查询实体类
                 EntityInfo entityInfo = entityMapper.selectById(other);
-                count = entityItemInfoMapper.findCountInBusiness(key,entityInfo.getBusinessId(),id,entityInfo.getType().getCode());
+                count = entityItemInfoMapper.findCountInBusiness(key,entityInfo.getBusinessId(),id);
         }
         count = count == null?0:count;
         return count > 0 ? true:false;

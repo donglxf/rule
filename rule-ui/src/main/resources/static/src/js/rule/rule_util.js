@@ -47,11 +47,10 @@ ModelVerification.prototype = {
             "    <th>结果</th>\n" +
             "    </tr>\n" +
             "    </thead>\n" ;
-
         for(var i=0;i<data.length;i++){
             html+="<tbody><tr></tbody><td>"+data[i].ruleDesc.replace(/\$/g,'')+"</td>";
             if(data[i].validationResult=='0'){
-                html+="<td style='color: #ff598f;'>匹配规则</td>";
+                html+="<td style='color: #ff598f;'> <input type=\"checkbox\"  readonly title=\"匹配\" checked></td>";
                 html+="<td style='color: #ff598f;'>"+data[i].result+"</td>";
             }else{
                 html+="<td style='color: #ff598f;'></td>";

@@ -3,6 +3,7 @@ package com.ht.rule.drools.service;
 import com.ht.rule.common.api.entity.RuleHisVersion;
 import com.ht.rule.common.api.vo.RuleHisVersionVo;
 import com.ht.rule.common.service.BaseService;
+import com.ht.rule.common.vo.model.drools.DroolsActionForm;
 import com.ht.rule.common.vo.model.drools.RpcRuleHisVersionParamter;
 import com.ht.rule.common.vo.model.drools.RuleStandardResult;
 
@@ -44,5 +45,5 @@ public interface RuleHisVersionService extends BaseService<RuleHisVersion> {
      * @param senceVersionId
      * @return
      */
-    List<RuleHisVersionVo> getRuleValidationResultNew(Long senceVersionId,RuleStandardResult ruleStandardResult);
+    List<RuleHisVersionVo> getRuleValidationResultNew(Long senceVersionId,List<DroolsActionForm> actionForms);
 }

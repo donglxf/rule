@@ -191,12 +191,17 @@
                     alert("Connection error");
                 },
                 success: function (da) {
+                    debugger;
                     if (da.code == 0) {
                         layer.msg("验证完成");
-                        $("#validateResult").val("测试完成");
+                        var text = '';
+                        if(da.data.scope)
+                            text = "  -->"+da.data.scope;
+                        $("#validateResult").val("测试完成"+text);
                         var modelVerification = new ModelVerification();
                         var result = modelVerification.initResult(  da.data.result );
                         $("#ruleTab").html(result);
+                        form.render();
                         layer.close(zzz);
                       //  showRuleTestResult(da.data.logId, da.data.versionId);
                     } else {

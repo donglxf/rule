@@ -70,5 +70,5 @@ public interface EntityItemInfoMapper extends SuperMapper<EntityItemInfo> {
      * @param businessId
      * @return
      */
-    Integer findCountInBusiness(@Param("key") String key, @Param("businessId") String businessId, @Param("id") String id, @Param("type") String type);
+    Integer findCountInBusiness(@Param("key") String key, @Param("businessId") String businessId, @Param("id") String id);
 }

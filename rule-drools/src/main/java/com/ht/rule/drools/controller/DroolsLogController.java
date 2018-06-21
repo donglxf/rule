@@ -60,7 +60,7 @@ public class DroolsLogController extends BaseController {
     }
     @GetMapping("/page")
     @ApiOperation(value = "分页查询")
-    public PageResult<List<DroolsLog>> page(String date, String endDate,String key ,String businessId, Integer page , Integer limit){
+    public PageResult<List<DroolsLog>> page(String date, String endDate,String sceneCode ,String businessId, Integer page , Integer limit){
         Wrapper<DroolsLog> wrapper = new EntityWrapper<>();
 
         if (org.apache.commons.lang3.StringUtils.isNotBlank(date)) {
@@ -69,12 +69,15 @@ public class DroolsLogController extends BaseController {
         if (org.apache.commons.lang3.StringUtils.isNotBlank(endDate)) {
             wrapper.and().le("create_time", endDate);
         }
-        if(StringUtils.isNotBlank(key)){
-            wrapper.like(DroolsLog.SENCE_NAME,key);
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(businessId)) {
+            wrapper.and().eq("business_id", businessId);
+        }
+        if(StringUtils.isNotBlank(sceneCode)){
+            wrapper.eq(DroolsLog.SENCE_NAME,sceneCode);
           //  wrapper.or().like(DroolsLog.VERSION_NUM,key);
            // wrapper.or().like("entity_identify",key);
         }
-        wrapper.orderBy(DroolsLog.CREATE_TIME,false);
+        wrapper.orderBy(DroolsLog.ID,false);
          Page<DroolsLog> pages = new Page<>();
          pages.setCurrent(page);
          pages.setSize(limit);

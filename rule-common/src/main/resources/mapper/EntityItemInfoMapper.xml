@@ -45,7 +45,6 @@
             <result column="entity_name" property="entityName" />
             <result column="entity_desc" property="entityDesc" />
             <result column="entity_identify" property="entityIdentify" />
-            <result column="type" property="type" />
         </association>
     </resultMap>
 
@@ -126,9 +125,7 @@
         <if test="id != null">
             and item_id != #{id}
         </if>
-        <if test="type != null">
-            and e.type = #{type}
-        </if>
+
     </select>
 
 </mapper>

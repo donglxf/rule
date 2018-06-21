@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.ht.rule.common.api.entity.*;
+import com.ht.rule.common.api.mapper.BusinessMapper;
 import com.ht.rule.common.api.mapper.SceneInfoVersionMapper;
 import com.ht.rule.common.api.vo.RuleHisVersionVo;
 import com.ht.rule.common.util.*;
@@ -34,8 +35,8 @@ import java.util.Map;
 @Service
 @Log4j2
 public class DroolsRuleEngineFacadeImpl implements DroolsRuleEngineFacade {
-    @Autowired
-    private SceneInfoVersionMapper sceneInfoVersionMapper;
+   /* @Autowired
+    private SceneInfoVersionMapper sceneInfoVersionMapper;*/
     @Autowired
     private RuleActionVersionService ruleActionVersionService;
     @Autowired
@@ -73,15 +74,18 @@ public class DroolsRuleEngineFacadeImpl implements DroolsRuleEngineFacade {
     }
 
     @Override
-    public SceneInfoVersion getScenInfoVersion(String scene, String version, Integer type) {
+    public SceneInfoVersion getScenInfoVersion(String scene, String version,String businessCode, Integer type) {
+
+        Business business =  new Business().selectOne(new EntityWrapper<Business>().eq(Business.BUSINESS_TYPE_CODE,businessCode));
         Wrapper<SceneInfoVersion> wrapper = new EntityWrapper<>();
         wrapper.eq("s.scene_identify",scene);
         wrapper.eq("scene_type",type);
+        wrapper.eq("business_id",business.getBusinessTypeId());
         if(StringUtils.isNotBlank(version)){
             wrapper.eq("v.`version`",version);
         }
         wrapper.orderBy("v.`version`",false);
-        List<SceneInfoVersion> list = sceneInfoVersionMapper.selectList(wrapper);
+        List<SceneInfoVersion> list = new  SceneInfoVersion().selectList(wrapper) ;
         if(list.isEmpty()){
             return null;
         }
@@ -102,18 +106,19 @@ public class DroolsRuleEngineFacadeImpl implements DroolsRuleEngineFacade {
     }
 
     @Override
-    public void log4drools(RuleStandardResult ruleStandardResult, DroolsParamter paramter, SceneInfoVersion sceneInfoVersion,long executeTime) {
+    public void log4drools(List<DroolsActionForm> actionForms , DroolsParamter paramter, SceneInfoVersion sceneInfoVersion,long executeTime) {
         DroolsLog log = new DroolsLog();
         log.setInParamter(JSON.toJSONString(paramter.getData()));
-        log.setSenceName(sceneInfoVersion.getSceneName());
+        log.setSenceName(sceneInfoVersion.getSceneIdentify());
         log.setSenceVersionid(sceneInfoVersion.getVersionId().toString());
         log.setVersionNum(sceneInfoVersion.getVersion());
         log.setExecuteTime(executeTime);
         log.setSenceType(sceneInfoVersion.getSceneType());
-        log.setOutParamter(JSON.toJSONString(ruleStandardResult));
+        log.setOutParamter(JSON.toJSONString(actionForms));
         log.setBusinessId(sceneInfoVersion.getBusinessId());
         droolsLogService.insert(log);
-        List<RuleHisVersionVo> list = ruleHisVersionService.getRuleValidationResultNew(sceneInfoVersion.getVersionId(),ruleStandardResult);
+        List<RuleHisVersionVo> list = ruleHisVersionService.getRuleValidationResultNew(sceneInfoVersion.getVersionId(),actionForms);
+
 
         for (int i = 0; i < list.size(); i++) {
             RuleHisVersionVo his = list.get(i);

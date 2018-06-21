@@ -11,10 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 描述：
@@ -239,12 +236,15 @@ public class DroolsRuleEngineServiceImpl implements DroolsRuleEngineService {
         ruleStr.append(DroolsConstant.CONDITION_ACTION).append(":").append(DroolsConstant.CONDITION_ACTION_VALUE).append(lineSeparator);
         // 根据规则绑定的动作，设置动作条件
         List<ActionInfo> actionList = this.ruleActionService.findRuleActionListByRule(ruleInfo.getRuleId());
-        for (ActionInfo actionTemp : actionList) {
-            ActionInfo action = actionTemp;
+        //去除重复动作
+        Map<Long,ActionInfo> actionInfoMap = new LinkedHashMap<>();
+        actionList.forEach(actionInfo -> {
+            actionInfoMap.put(actionInfo.getActionId(),actionInfo);
+        });
+        for (Long key : actionInfoMap.keySet()) {
+            ActionInfo action = actionInfoMap.get(key);
             ruleStr.append("$" + action.getActionMethod()).append(":").append(action.getActionClazzIdentify1() + "()").append(lineSeparator);
-
         }
-
         List<ConditionInfo> conList = this.ruleConditionService.findRuleConditionInfoByRuleId(ruleInfo.getRuleId());
         //如果没有找到条件信息，则默认永远满足
         if (StringUtil.listIsNotNull(conList)) {

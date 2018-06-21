@@ -9,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,6 +35,8 @@ public class OrderByActionImpl extends DroolsActionService {
      * @param grade  // 权值
      */
     public void grade(RuleExecutionObject fact, RuleExecutionResult result, String key, String grade) {
+        //都执行的东西
+      //  execute(fact,result,key);
 
         double scope = 0;
         Object total = result.getMap().get("scope");
@@ -53,14 +56,13 @@ public class OrderByActionImpl extends DroolsActionService {
         DroolsActionForm actionForm = new DroolsActionForm();
         log.debug("--------设置执行结果--------");
         String rule = (String) result.getMap().get("rule");
-        actionForm.setResult(fen+"");
+        actionForm.setResult(Arrays.asList(fen+""));
         actionForm.setRuleName(rule);
         if(list == null ){
             list = new ArrayList<>();
         }
         list.add(actionForm);
         result.setDefalutActions(list);
-
     }
 
 }

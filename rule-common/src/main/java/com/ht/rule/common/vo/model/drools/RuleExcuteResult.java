@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @ApiModel
 public class RuleExcuteResult {
@@ -13,7 +15,7 @@ public class RuleExcuteResult {
         super();
     }
 
-    public RuleExcuteResult(int code, String msg, RuleStandardResult data, String senceVersoionId) {
+    public RuleExcuteResult(int code, String msg, List<DroolsActionForm> data, String senceVersoionId) {
         this.code = code;
         this.msg = msg;
         this.data = data;
@@ -34,7 +36,7 @@ public class RuleExcuteResult {
      * 传递给请求者的数据
      */
     @ApiModelProperty(value = "传递给请求者的数据")
-    private RuleStandardResult data;
+    private List<DroolsActionForm> data;
 
     @ApiModelProperty(value = "评分卡-平分")
     private double grade;

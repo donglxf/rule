@@ -6,7 +6,9 @@ import com.ht.rule.common.vo.model.drools.RuleExecutionResult;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 描述： drools 实现类动作接口 CLASSPATH: com.sky.DroolsActionService VERSION: 1.0
@@ -34,12 +36,36 @@ public class DroolsActionService {
 		log.debug("--------设置执行结果--------");
 		Object val = result.getMap().get(key);
 		String rule = (String) result.getMap().get("rule");
-		actionForm.setResult(val.toString());
 		actionForm.setRuleName(rule);
+		//首次
 		if(list == null ){
 			list = new ArrayList<>();
+			List<String> ls = new ArrayList<>();
+			ls.add(val.toString());
+			actionForm.setResult(ls);
+			list.add(actionForm);
 		}
-		list.add(actionForm);
+		//已经存在结果集
+		else{
+			boolean flag = true;
+		   //其他的时候
+			for (DroolsActionForm form : list) {
+				//同一个规则的，结果
+				if(form.getRuleName().equals(rule)){
+					List<String > results = form.getResult();
+					results.add(val.toString());
+					form.setResult(results);
+					flag = false;
+					break;
+				}
+			}
+			if(flag){
+				List<String> ls = new ArrayList<>();
+				ls.add(val.toString());
+				actionForm.setResult(ls);
+				list.add(actionForm);
+			}
+		}
 		result.setDefalutActions(list);
 	}
 	/**

@@ -1,6 +1,8 @@
 package com.ht.rule.config.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.ht.rule.common.vo.model.drools.DroolsActionForm;
 import com.ht.rule.common.vo.model.drools.RpcRuleHisVersionParamter;
 import com.ht.rule.common.api.entity.RuleHisVersion;
 import com.ht.rule.common.api.mapper.RuleHisVersionMapper;
@@ -51,7 +53,7 @@ public class RuleHisVersionServiceImpl extends BaseServiceImpl<RuleHisVersionMap
     }
 
     @Override
-    public List<RuleHisVersionVo> getRuleValidationResultNew(Long senceVersionId, RuleStandardResult ruleStandardResult) {
+    public List<RuleHisVersionVo> getRuleValidationResultNew(Long senceVersionId,List<DroolsActionForm> actionForms ) {
 
         List<RuleHisVersion> ruleHisVersions = ruleHisVersionMapper.selectList(
                 new EntityWrapper<RuleHisVersion>().
@@ -66,11 +68,13 @@ public class RuleHisVersionServiceImpl extends BaseServiceImpl<RuleHisVersionMap
             vo.setRuleName(his.getRuleName());
             vo.setRuleDesc(his.getRuleDesc());
 
-            for (int i = 0; i < ruleStandardResult.getRuleList().size(); i++) {
-                String ruleName = ruleStandardResult.getRuleList().get(i);
+            for (int i = 0; i < actionForms.size(); i++) {
+                DroolsActionForm form = actionForms.get(i);
+
+                String ruleName = form.getRuleName();
                 if(vo.getRuleName().equals(ruleName)){
                     vo.setValidationResult("0");
-                    vo.setResult(ruleStandardResult.getResult().get(i));
+                    vo.setResult(JSON.toJSONString( form.getResult()));
                 }
             }
             return vo;

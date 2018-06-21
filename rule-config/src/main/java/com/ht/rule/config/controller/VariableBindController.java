@@ -44,19 +44,17 @@ import java.util.*;
 @RequestMapping("/variableBind/")
 public class VariableBindController extends BaseController {
 
-    protected static final Logger log = LoggerFactory.getLogger(VariableBindController.class);
     @Autowired
     private VariableBindService variableBindService;
 
     @Autowired
     private SceneVersionService sceneVersionService;
-
     @Autowired
-    private EntityItemInfoService entityItemInfoService;
+    private BusinessService businessService;
     @Autowired
     private RuleHisVersionService ruleHisVersionService;
     @Autowired
-    private SenceVerficationBatchService senceVerficationBatchService;
+    private SceneInfoService sceneInfoService;
 
     @Autowired
     private ConstantInfoService constantInfoService;
@@ -186,12 +184,23 @@ public class VariableBindController extends BaseController {
                 }
             }
         }
+        //查询出决策
+        SceneInfo sceneInfo = sceneInfoService.selectById(entityInfo.getSenceId());
         drools.setSence(entityInfo.getSceneIdentify());
         drools.setVersion(String.valueOf(entityInfo.getVersion())); // 版本号
         drools.setData(data);
         drools.setType("2");
+        Map<String,String > codeMap = businessService.getIdCodeMap();
+        drools.setBusinessCode(codeMap.get(sceneInfo.getBusinessId()));
+        //drools.setBusinessCode();
+        RuleExcuteResult result;
         // 规则验证返回结果处理
-        RuleExcuteResult result  = droolsExcuteFeginClient.excuteDroolsScene(drools);
+        if(sceneInfo.getSceneType().equals(2)){
+             result  = droolsExcuteFeginClient.excuteDroolsGrade(drools);
+        }else{
+             result  = droolsExcuteFeginClient.excuteDroolsScene(drools);
+        }
+
        // String res = String.valueOf(result);
         Map<String, Object> resultMap = new HashMap<String, Object>();
        // JSONObject obj = JSON.parseObject(res);
@@ -201,6 +210,7 @@ public class VariableBindController extends BaseController {
            //组装可以查看的数据
            List<RuleHisVersionVo> list = ruleHisVersionService.getRuleValidationResultNew(entityInfo.getSenceVersionId(),result.getData());
            resultMap.put("result",list);
+           resultMap.put("scope",result.getGrade());
            return PageResult.success(resultMap, 0);
        }
        else {
@@ -219,108 +229,6 @@ public class VariableBindController extends BaseController {
         List<VariableBind> bindList = variableBindService.selectByMap(columnMap);
         return bindList;
     }
-
-   /* public List<Map<String, Object>> getAutoValidaionData(List<VariableBind> bindList, VariableBindVo entityInfo) throws Exception{
-        StringBuffer buf = new StringBuffer(RuleConstant.SELECT + " ");
-        String column = "", table = "";
-        String getWay = entityInfo.getGetWay();
-        for (VariableBind vb : bindList) {
-            column += vb.getBindColumn() + " as " + vb.getVariableCode() + ",";
-            table = vb.getBindTable();
-        }
-        buf.append(column.substring(0, column.length() - 1)).append(" FROM ").append(table).append(" where ")
-                .append(RuleConstant.SCENE_ID).append("='").append(entityInfo.getSenceId()).append("' ");
-        if ("0".equals(getWay)) { // 随机取值
-            buf.append(" AND rand() ");
-        } else {
-            buf.append(" AND 1=1 ");
-        }
-        buf.append(" limit " + entityInfo.getExcuteTotal());
-        log.info("自动验证数据获取sql================" + buf.toString());
-        try {
-            List<Map<String, Object>> obj = tempDataContainsService.getAutoValidaionData(buf.toString());
-            log.info("=========================" + JSON.toJSONString(obj));
-            return obj;
-        } catch (Exception ex) {
-            log.error(ex.getMessage());
-            throw new Exception("数据绑定异常，请检查变量绑定信息是否正确");
-        }
-    }*/
-
-  /*  @PostMapping("getAutoValidaionData")
-    @ApiOperation(value = "根据规则id获取需要验证的数据")
-    public List<Map<String, Object>> getAutoValidaionData(VariableBindVo entityInfo) throws Exception {
-        List<VariableBind> bindList = getVariableBindBySenceVersionId(entityInfo);
-        List<Map<String, Object>> recordMap = getAutoValidaionData(bindList, entityInfo); // 查询所需验证数据
-
-        return recordMap;
-    }*/
-
-    /*@PostMapping("autoVariable")
-    @ApiOperation(value = "规则自动验证")
-    public PageResult<List<Map<String, Object>>> autoVariable(VariableBindVo entityInfo, HttpServletRequest request) throws Exception {
-        int success = 0, fail = 0;
-        try {
-            List<Map<String, Object>> recordMap = getAutoValidaionData(entityInfo); // 查询所需验证数据
-            if (ObjectUtils.isEmpty(recordMap)) {
-                return PageResult.error(1, "验证数据为空，请检查配置或数据!");
-            }
-            // 插入一笔记录到批次表
-            SenceVerficationBatch batch = new SenceVerficationBatch();
-            batch.setBatchSize(recordMap.size());
-            batch.setSenceVersionId(String.valueOf(entityInfo.getSenceVersionId()));
-            batch.setVerficationType(String.valueOf(VerficationTypeEnum.auto.getValue()));
-            batch.setCreateUser(this.getUserId());
-            senceVerficationBatchService.insertOrUpdate(batch);
-
-            List<DroolsParamter> list = new ArrayList<DroolsParamter>();
-            for (Map<String, Object> map2 : recordMap) {
-                Map<String, Object> data = new HashMap<String, Object>();
-                for (Map.Entry<String, Object> ma : map2.entrySet()) {
-                    data.put(ma.getKey(), ma.getValue());
-                }
-                DroolsParamter drools = new DroolsParamter();
-                drools.setVersion(String.valueOf(entityInfo.getVersion()));
-                drools.setType(RuleCallTypeEnum.rule.getType());
-    //            drools.setVersion(String.valueOf(entityInfo.getSenceVersionId()));
-                drools.setSence(entityInfo.getSceneIdentify());
-                drools.setData(data);
-                drools.setBatchId(String.valueOf(batch.getId()));
-                list.add(drools);
-            }
-
-            // 处理规定调用返回结果
-            List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
-            String res = droolsRuleRpc.batchExcuteRuleValidation(list);
-            JSONArray mainArray = JSONArray.parseArray(res);
-            for (int i = 0; i < mainArray.size(); i++) {
-                JSONObject obj = mainArray.getJSONObject(i);
-                JSONObject o = obj.getJSONObject("data");
-                JSONArray dataArr = o.getJSONArray("logIdList");
-                JSONArray count = (JSONArray) o.get("ruleList");
-                List<String> ruleList = new ArrayList<String>();
-                if (ObjectUtils.isNotEmpty(count)) {
-                    String[] ruleArr = count.toArray(new String[count.size()]);
-                    Set set = new HashSet();
-                    for (int j = 0; j < ruleArr.length; j++) {
-                        set.add(ruleArr[j]);
-                    }
-                    ruleList.addAll(set);
-                }
-                String[] arg = dataArr.toArray(new String[dataArr.size()]);
-                Map<String, Object> resultMap = new HashMap<String, Object>();
-                resultMap.put("logId", arg[0]);
-                resultMap.put("versionId", entityInfo.getSenceVersionId());
-                resultMap.put("count", ruleList.size());
-    //            resultMap.put("variableMap", variableMap);
-                resultList.add(resultMap);
-            }
-            return PageResult.success(resultList, 0);
-        }catch(Exception ex){
-            return PageResult.error(1, ex.getMessage());
-        }
-
-    }*/
 
     @PostMapping("development")
     @ApiOperation(value = "发布正式版")

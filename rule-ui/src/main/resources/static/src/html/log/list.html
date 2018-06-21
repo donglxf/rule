@@ -29,12 +29,11 @@
         <div class="layui-form-item" >
             <div class="layui-inline">
               <!--  <label class="layui-form-label">所属系统</label><div class="layui-input-inline" id="businessDiv"></div>-->
-
-                <label class="layui-form-label">合同号</label>
+                <label class="layui-form-label">所属业务线</label><div class="layui-input-inline" id="businessDiv"></div>
+                <label class="layui-form-label">决策code</label>
                 <div class="layui-input-inline">
                     <input type="text" id="contact" class="layui-input " />
                 </div>
-
                 <label class="layui-form-label">时间</label>
                 <div class="layui-input-inline">
                     <input type="text" id="time" class="layui-input date"  placeholder=" - ">
@@ -60,7 +59,8 @@
             <legend class="lay-legend">详细信息</legend>
             <div class="layui-field-box">
 
-
+                <pre class="layui-code">
+                </pre>
                 <table id="userlist" lay-filter="userlist"></table>
             </div>
         </fieldset>

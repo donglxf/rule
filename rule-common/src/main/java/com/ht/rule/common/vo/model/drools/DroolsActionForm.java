@@ -2,6 +2,8 @@ package com.ht.rule.common.vo.model.drools;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 说明：
  *
@@ -11,5 +13,5 @@ import lombok.Data;
 @Data
 public class DroolsActionForm {
     private String ruleName;
-    private String result;
+    private List<String> result;
 }
