@@ -1,5 +1,5 @@
 <fieldset class="layui-elem-field" style="margin-top: 10px;margin: 5px;">
-    <legend class="lay-legend">导入决策</legend>
+    <legend class="lay-legend">导入评分卡</legend>
     <div class="layui-field-box">
         <form  class="layui-form layui-form-pane" onsubmit="javascript:return false;">
             <div class="layui-form-item" style="margin-bottom:0px;">
@@ -16,10 +16,8 @@
 </fieldset>
 
 <script>
-
-    var  scene = {
-        baseUrl: "/dispatch/rule/sceneInfo/",
-        uiUrl :"/dispatch/decision/scene/edit",
+    var scene = {
+        baseUrl: "sceneInfo/",
         entity: "sceneInfo",
         tableId: "sceneInfoTable",
         toolbarId: "#toolbar",
@@ -45,10 +43,13 @@
     };
     var layer,sceneTable,table,active;
     var sceneId ;
-    layui.use(['table','form','laytpl','sceneUtil','myutil'], function() {
+    layui.use(['table','form','laytpl','myutil','ht_config'], function() {
         var laytpl = layui.laytpl;
-        sceneUtil = layui.sceneUtil;
+        var config = layui.ht_config;
+        var base = config.ruleServicePath.basePath;
         var form = layui.form;
+
+
         form.render();
 
         sceneTable = layui.table;
@@ -60,7 +61,7 @@
             elem: '#'+scene.tableId
             , height: 'full'
             , cellMinWidth: 40
-            , url: scene.baseUrl + 'page?sceneType=2' //数据接口
+            , url: base+scene.baseUrl + 'page?sceneType=2' //数据接口
             // data:[{"sceneId":1,"sceneName":"测试规则","sceneDesc":"测试规则引擎","sceneIdentify":"testrule","pkgName":"com.sky.testrule","creUserId":1,"creTime":1500522092000,"isEffect":1,"remark":null}]
             , page: true //开启分页
             , id: scene.tableId

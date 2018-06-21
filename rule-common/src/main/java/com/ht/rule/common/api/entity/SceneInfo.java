@@ -29,7 +29,7 @@ public class SceneInfo extends Model<SceneInfo> {
     /**
      * 主键
      */
-    @TableId(value = "scene_id",type= IdType.AUTO)
+    @TableId(value = "scene_id")
 	@ApiModelProperty(required= true,value = "主键")
 	private Long sceneId;
 

@@ -45,10 +45,12 @@
     };
     var layer,sceneTable,table,active;
     var sceneId ;
-    layui.use(['table','form','laytpl','sceneUtil','myutil'], function() {
+    layui.use(['table','form','laytpl','sceneUtil','myutil','ht_config'], function() {
         var laytpl = layui.laytpl;
         sceneUtil = layui.sceneUtil;
         var form = layui.form;
+        var config = layui.ht_config;
+        var base = config.ruleServicePath.basePath;
         form.render();
 
         sceneTable = layui.table;
@@ -60,7 +62,7 @@
             elem: '#'+scene.tableId
             , height: 'full'
             , cellMinWidth: 40
-            , url: scene.baseUrl + 'page?sceneType=1' //数据接口
+            , url: base+scene.baseUrl + 'page?sceneType=1' //数据接口
             // data:[{"sceneId":1,"sceneName":"测试规则","sceneDesc":"测试规则引擎","sceneIdentify":"testrule","pkgName":"com.sky.testrule","creUserId":1,"creTime":1500522092000,"isEffect":1,"remark":null}]
             , page: true //开启分页
             , id: scene.tableId

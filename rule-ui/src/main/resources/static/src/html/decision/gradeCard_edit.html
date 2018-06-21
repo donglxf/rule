@@ -128,27 +128,30 @@
 <body>
 <header class="fix">
     <div class="layui-row " >
-        <div class="layui-col-xs3">
+        <div class="layui-col-xs2">
             <div class="layui-btn-group">
-                <button class="layui-btn layui-btn import-entity"><i class="layui-icon">&#xe635;</i>导入变量库
+                <button class="layui-btn layui-btn import-entity"><i class="layui-icon">&#xe635;</i>导入变量
                 </button>
             </div>
         </div>
 
-        <div class="layui-col-xs3 layui-form">
+        <div class="layui-col-xs2 layui-form">
             <button class="layui-btn  layui-btn import-scene" onclick="sceneUtil.openImportDecision(2)"><i class="layui-icon">&#xe630;</i>导入评分卡
             </button>
         </div>
 
-        <div class="layui-col-xs3 layui-form">
+        <div class="layui-col-xs2 layui-form">
             <div class="layui-form-item">
                 <div class="layui-input-block"  style="margin-left: 5px;">
                     <input type="checkbox" name="like[write]" id="openQz"   lay-filter="lockDemo" title="权值">
                 </div>
             </div>
         </div>
-
-        <div class="layui-col-xs3">
+        <div class="layui-col-xs2 layui-form">
+            <button class="layui-btn  layui-btn import-scene" onclick="sceneUtil.openJson(2)"><i class="layui-icon">&#xe64e;</i>JSON导入
+            </button>
+        </div>
+        <div class="layui-col-xs2">
             <div class="layui-form-item">
                 <button class="layui-btn layui-btn-normal " onclick="sceneUtil.subGrad();">
                     <i class="layui-icon">&#xe609;</i>保存

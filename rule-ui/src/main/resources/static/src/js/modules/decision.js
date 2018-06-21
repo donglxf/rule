@@ -6,7 +6,7 @@
  * Website:http://kit.zhengjinfan.cn/
  * LICENSE:MIT
  */
-layui.define(['layer','form','laytpl','ht_ajax','ht_config'], function (exports) {
+layui.define(['layer','form','laytpl','ht_ajax','ht_config','code'], function (exports) {
     var $ = layui.jquery,
         layer = layui.layer,
         form = layui.form,
@@ -182,6 +182,7 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config'], function (exports)
         sub:{
             gradeForm:{},
         },
+        jsonResult:{},
         data:{
             //常量库
             dicBank:[],
@@ -630,6 +631,79 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config'], function (exports)
 
             });
         },
+        openJson2:function (type) {
+            layer.open({
+                type: 1
+                ,title: false //不显示标题栏
+                ,closeBtn: false
+                ,area: ['500px','400px']
+                ,shade: 0.8
+                ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                ,resize: false
+                ,btn: ['继续', '关闭']
+                ,btnAlign: 'c'
+                ,moveType: 1 //拖拽模式，0或者1
+                ,content: '<div style="padding: 5px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">'+JSON.stringify(sceneUtil.jsonResult)+'</div>'
+                ,success: function(layero){
+                   // var btn = layero.find('.layui-layer-btn');
+                    layui.code(); //引用code方法
+                },yes:function (index) {
+                    layer.close(index);
+                    sceneUtil.openJsonInput(type);
+                }
+            });
+        },
+        /**
+         * 直接导入json数据
+         */
+        openJson:function (type) {
+            layer.prompt({
+                title: '请输入json数据',
+                formType: 2,
+                value: JSON.stringify(sceneUtil.jsonResult),
+                area: ['500px', '350px'] //自定义文本域宽高
+                , maxlength: 300000, //可输入文本的最大长度，默认500
+            }, function(text, index){
+                if(type == 1){
+                    var result = JSON.parse(text);
+                    var getTpl = tableTp.innerHTML
+                        ,view = document.getElementById('table');
+                    laytpl(getTpl).render(result, function(html){
+                        view.innerHTML = html;
+                    });
+                    //初始化 实体类的值
+                    if(sceneUtil.isEdit){
+                        sceneUtil.sceneId = sceneId;
+                    }
+                    sceneUtil.dataInit.entityBank();
+                    sceneUtil.dataInit.actionBank();
+                    sceneUtil.sceneInit();
+                }else{
+                    var result = JSON.parse(text);
+                    var hasWeight = result.hasWeight;
+                    var getTpl = tableTp.innerHTML
+                        ,view = document.getElementById('table');
+                    laytpl(getTpl).render(result, function(html){
+                        view.innerHTML = html;
+                    });
+                    //初始化 实体类的值
+                    if(sceneUtil.isEdit){
+                        sceneUtil.sceneId = sceneId;
+                    }
+
+                    sceneUtil.dataInit.entityBank();
+                    sceneUtil.dataInit.actionBank();
+                    sceneUtil.gradeInit();
+                    //是否有权值
+                    if(hasWeight > 0){
+                        $("#openQz").attr("checked",true);
+                        $("#table tbody tr td .qzdiv").show();
+                        form.render('checkbox');
+                    }
+                }
+                layer.close(index);
+            });
+        },
         /**
          * 打开定义评分卡的弹窗页面
          * @param sceneId
@@ -641,6 +715,7 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config'], function (exports)
             $.get(baseUrl+'rule/getGradeCardAll',{'sceneId':sceneId},function(data){
                 if(data.code == '0'){
                     var result = data.data;
+                    sceneUtil.jsonResult = result;
                     var hasWeight = result.hasWeight;
                     var getTpl = tableTp.innerHTML
                         ,view = document.getElementById('table');
@@ -685,6 +760,7 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config'], function (exports)
             $.get(baseUrl+'rule/getAll',{'sceneId':sceneId},function(data){
                 if(data.code == '0'){
                     var result = data.data;
+                    sceneUtil.jsonResult = result;
                     var hasWeight = result.hasWeight;
                     var getTpl = tableTp.innerHTML
                         ,view = document.getElementById('table');
