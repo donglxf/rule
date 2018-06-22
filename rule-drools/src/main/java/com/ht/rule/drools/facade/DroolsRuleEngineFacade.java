@@ -5,6 +5,7 @@ import com.ht.rule.common.api.entity.SceneVersion;
 import com.ht.rule.common.vo.model.drools.*;
 
 import java.util.List;
+import java.util.Map;
 
 public interface DroolsRuleEngineFacade {
 
@@ -30,16 +31,22 @@ public interface DroolsRuleEngineFacade {
 
     /**
      * 将参数信息转化为Ob
-     * @param paramter
      * @return
      */
-    RuleExecutionObject change2RuleExcutionObject(DroolsParamter paramter, SceneInfoVersion sceneInfoVersion );
+    RuleExecutionObject change2RuleExcutionObject(Map<String, Object> data, SceneInfoVersion sceneInfoVersion );
 
     /**
      * 添加日志
      * @param actionForms 结果
-     * @param paramter
      * @param sceneInfoVersion
      */
-    void log4drools(List<DroolsActionForm> actionForms , DroolsParamter paramter, SceneInfoVersion sceneInfoVersion, long executeTime);
+    void log4drools(List<DroolsActionForm> actionForms ,  Map<String,Object > data, SceneInfoVersion sceneInfoVersion, long executeTime);
+
+    /**
+     * 规则执行
+     * @param sceneInfoVersion
+     * @param data
+     * @return
+     */
+    List<DroolsActionForm> excuteAll(SceneInfoVersion sceneInfoVersion, Map<String, Object> data,int type);
 }

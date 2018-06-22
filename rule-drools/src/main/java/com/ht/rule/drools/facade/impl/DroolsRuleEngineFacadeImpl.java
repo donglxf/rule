@@ -58,13 +58,13 @@ public class DroolsRuleEngineFacadeImpl implements DroolsRuleEngineFacade {
         Long sceneId = scene.getSceneId();
         try {
             //获取ksession
-            KieSession ksession = DroolsUtil.getInstance().getDrlSessionInCache(String.valueOf(sceneId));
+            KieSession ksession = DroolsUtil.getInstance().getDrlSessionInCache(String.valueOf(scene.getVersionId()));
             if (ksession != null) {
                 //直接执行
-                return executeRuleEngine(ksession, ruleExecutionObject,sceneId, scene.getVersionId());
+                return executeRuleEngine(ksession, ruleExecutionObject, scene.getVersionId());
             } else {
                 //重新编译规则，然后执行
-                return this.compileRuleAndexEcuteRuleEngine(scene.getRuleDrl(), ruleExecutionObject, sceneId, scene.getVersionId());
+                return this.compileRuleAndexEcuteRuleEngine(scene.getRuleDrl(), ruleExecutionObject, scene.getVersionId());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,22 +93,20 @@ public class DroolsRuleEngineFacadeImpl implements DroolsRuleEngineFacade {
     }
 
     @Override
-    public RuleExecutionObject change2RuleExcutionObject(DroolsParamter paramter, SceneInfoVersion sceneInfoVersion) {
+    public RuleExecutionObject change2RuleExcutionObject( Map<String, Object> data, SceneInfoVersion sceneInfoVersion) {
 
-        log.info("规则入参：" + JSON.toJSONString(paramter));
+        log.info("规则入参：" + JSON.toJSONString(data));
         RuleExecutionObject object = new RuleExecutionObject();
-        Map<String, Object> mapData = paramter.getData();
-        object.addFactObject(mapData);
+        object.addFactObject(data);
         RuleExecutionResult result = new RuleExecutionResult();
         object.setGlobal("_result", result);
 
         return object;
     }
-
     @Override
-    public void log4drools(List<DroolsActionForm> actionForms , DroolsParamter paramter, SceneInfoVersion sceneInfoVersion,long executeTime) {
+    public void log4drools(List<DroolsActionForm> actionForms , Map<String,Object > data, SceneInfoVersion sceneInfoVersion,long executeTime) {
         DroolsLog log = new DroolsLog();
-        log.setInParamter(JSON.toJSONString(paramter.getData()));
+        log.setInParamter(JSON.toJSONString(data));
         log.setSenceName(sceneInfoVersion.getSceneIdentify());
         log.setSenceVersionid(sceneInfoVersion.getVersionId().toString());
         log.setVersionNum(sceneInfoVersion.getVersion());
@@ -118,7 +116,6 @@ public class DroolsRuleEngineFacadeImpl implements DroolsRuleEngineFacade {
         log.setBusinessId(sceneInfoVersion.getBusinessId());
         droolsLogService.insert(log);
         List<RuleHisVersionVo> list = ruleHisVersionService.getRuleValidationResultNew(sceneInfoVersion.getVersionId(),actionForms);
-
 
         for (int i = 0; i < list.size(); i++) {
             RuleHisVersionVo his = list.get(i);
@@ -133,6 +130,42 @@ public class DroolsRuleEngineFacadeImpl implements DroolsRuleEngineFacade {
         }
     }
 
+    @Override
+    public  List<DroolsActionForm> excuteAll(SceneInfoVersion sceneInfoVersion, Map<String, Object> data,int type) {
+      //  RuleExcuteResult result = new RuleExcuteResult();
+        Long startTime = System.currentTimeMillis();
+        //执行结果
+        List<DroolsActionForm> actionForms = null;
+        // 业务数据转化
+        try {
+            //封装数据为规则引擎可以使用的
+            RuleExecutionObject object = this.change2RuleExcutionObject(data,sceneInfoVersion);
+            //执行规则引擎
+            object = this.excute(object,sceneInfoVersion);
+            RuleExecutionResult res = (RuleExecutionResult) object.getGlobalMap().get("_result");
+           // if(sceneInfoVersion.getSceneType().equals(2))
+           //     result.setGrade((double )res.getMap().get("scope"));
+            //添加日志
+            actionForms =  res.getDefalutActions();
+            Long endTime = System.currentTimeMillis();
+            Long executeTime = endTime - startTime;
+            log.info("规则验证执行时间》》》》》" + String.valueOf(executeTime));
+            // ruleStandardResult = getRuleStandardResult(actionForms);
+            // 记录日志
+            if(type == 1){
+            final List<DroolsActionForm> actionForms4log = actionForms;
+            final SceneInfoVersion infoVersion = sceneInfoVersion;
+            new Thread( () -> this.log4drools(actionForms4log,data,infoVersion,executeTime) ).start();
+              }
+        } catch (Exception e) {
+            log.info("规则引擎执行异常",e);
+            return null;
+            //result = new RuleExcuteResult(1, "执行异常", null,null);
+        }
+        return actionForms;
+    }
+
+
     /**
      * Date 2017/7/26
      * Author lihao [lihao@sinosoft.com]
@@ -142,7 +175,7 @@ public class DroolsRuleEngineFacadeImpl implements DroolsRuleEngineFacade {
      * @param session             会话
      * @param ruleExecutionObject 参数
      */
-    private RuleExecutionObject executeRuleEngine(KieSession session, RuleExecutionObject ruleExecutionObject, final Long sceneId, final Long versionId) throws Exception {
+    private RuleExecutionObject executeRuleEngine(KieSession session, RuleExecutionObject ruleExecutionObject, final Long versionId) throws Exception {
         try {
             // 1.插入全局对象
             Map<String, Object> globalMap = ruleExecutionObject.getGlobalMap();
@@ -202,18 +235,18 @@ public class DroolsRuleEngineFacadeImpl implements DroolsRuleEngineFacade {
      * @param droolRuleStr        规则脚本
      * @param ruleExecutionObject 参数
      */
-    private RuleExecutionObject compileRuleAndexEcuteRuleEngine(String droolRuleStr, RuleExecutionObject ruleExecutionObject, final Long sceneId, final Long versionId) throws Exception {
+    private RuleExecutionObject compileRuleAndexEcuteRuleEngine(String droolRuleStr, RuleExecutionObject ruleExecutionObject, final Long versionId) throws Exception {
         //KieSession对象
         KieSession session;
         try {
             //编译规则脚本,返回KieSession对象
-            session = DroolsUtil.getInstance().getDrlSession(droolRuleStr, sceneId);
+            session = DroolsUtil.getInstance().getDrlSession(droolRuleStr, versionId);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Drools初始化失败，请检查Drools语句！");
         }
         //执行规则
-        return this.executeRuleEngine(session, ruleExecutionObject, sceneId, versionId);
+        return this.executeRuleEngine(session, ruleExecutionObject, versionId);
     }
 
 }

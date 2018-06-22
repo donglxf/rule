@@ -21,6 +21,11 @@ public class DroolsParamter4Batch {
 	@ApiModelProperty(required= true,value = "版本号")
 	private String version;
 	/**
+	 * 版本号
+	 */
+	@ApiModelProperty(required= true,value = "业务线编号")
+	private String businessCode;
+	/**
 	 * 调用类型
 	 * 1：业务调用；2：规则验证;
 	 */

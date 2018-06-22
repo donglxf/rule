@@ -38,19 +38,20 @@ public class OrderByActionImpl extends DroolsActionService {
         //都执行的东西
       //  execute(fact,result,key);
 
-        double scope = 0;
+      /*  double scope = 0;
         Object total = result.getMap().get("scope");
         if (null != total) {
             scope = Double.parseDouble(String.valueOf(total));
-        }
+        }*/
         Object val = result.getMap().get(key);
         Object gra = result.getMap().get(grade);
         double fen =  CalculateUtils.mul4Obj(val,gra);
-        scope += fen;
-        result.getMap().put("scope", scope);
+
+      //  scope += fen;
+    //    result.getMap().put("scope", scope);
        //设置分值
-        log.info("TestActionImpl 执行");
-        System.err.println("总得分>>>>>>>>::" + result.getMap().get("scope"));
+       // log.info("TestActionImpl 执行");
+       // System.err.println("总得分>>>>>>>>::" + result.getMap().get("scope"));
         //统一记录
         List<DroolsActionForm> list = result.getDefalutActions();
         DroolsActionForm actionForm = new DroolsActionForm();
