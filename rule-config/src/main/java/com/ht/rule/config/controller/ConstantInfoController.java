@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.ht.rule.common.api.entity.ConstantInfo;
 import com.ht.rule.common.api.mapper.DelFindMapper;
+import com.ht.rule.common.util.StringUtil;
 import com.ht.rule.config.service.ConstantInfoService;
 import com.ht.rule.config.util.anno.OperationDelete;
 import com.ht.rule.common.controller.BaseController;
@@ -50,7 +51,7 @@ public class ConstantInfoController extends BaseController {
 			 wrapper.or().like("con_name", key);
 			 wrapper.or().like("con_code", key);
 		}
-		if(businessId != null ){
+		if(StringUtils.isNotBlank( businessId )){
 			wrapper.andNew().eq("business_id",businessId);
 		}
 		wrapper.andNew("con_type<>1");

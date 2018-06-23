@@ -45,6 +45,7 @@ layui.use(['table','form','laytpl','myutil'], function(){
         // data:[{"entityId":1,"entityName":"测试规则","entityDesc":"测试规则引擎","entityIdentify":"testrule","pkgName":"com.sky.testrule","creUserId":1,"creTime":1500522092000,"isEffect":1,"remark":null}]
         ,page: true //开启分页
         ,id:'demos'
+        ,loading:true
         ,cols: [[ //表头
             //{field: 'entityId',  event: 'setItem',title: 'ID',sort: true, fixed: 'left'}
             {field: 'entityName',  event: 'setItem',title: '名称'}
@@ -134,6 +135,7 @@ layui.use(['table','form','laytpl','myutil'], function(){
         // data:[{"entityId":1,"entityName":"测试规则","entityDesc":"测试规则引擎","entityIdentify":"testrule","pkgName":"com.sky.testrule","creUserId":1,"creTime":1500522092000,"isEffect":1,"remark":null}]
         ,page: false
         ,id:'itemT'
+        ,loading:true
         ,cols: [[ //表头
             {field: 'itemId', title: 'ID',  sort: true, fixed: 'left'}
             ,{field: 'itemName', title: '名称'}
