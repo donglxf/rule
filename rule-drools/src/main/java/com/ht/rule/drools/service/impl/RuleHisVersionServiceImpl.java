@@ -10,6 +10,7 @@ import com.ht.rule.common.vo.model.drools.DroolsActionForm;
 import com.ht.rule.common.vo.model.drools.RpcRuleHisVersionParamter;
 import com.ht.rule.common.vo.model.drools.RuleStandardResult;
 import com.ht.rule.drools.service.RuleHisVersionService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,15 +68,18 @@ public class RuleHisVersionServiceImpl extends BaseServiceImpl<RuleHisVersionMap
             vo.setRuleName(his.getRuleName());
             vo.setRuleDesc(his.getRuleDesc());
 
-            for (int i = 0; i < actionForms.size(); i++) {
-                DroolsActionForm form = actionForms.get(i);
+            if(!CollectionUtils.isEmpty(actionForms)){
+                for (int i = 0; i < actionForms.size(); i++) {
+                    DroolsActionForm form = actionForms.get(i);
 
-                String ruleName = form.getRuleName();
-                if(vo.getRuleName().equals(ruleName)){
-                    vo.setValidationResult("0");
-                    vo.setResult(JSON.toJSONString( form.getResult()));
+                    String ruleName = form.getRuleName();
+                    if(vo.getRuleName().equals(ruleName)){
+                        vo.setValidationResult("0");
+                        vo.setResult(JSON.toJSONString( form.getResult()));
+                    }
                 }
             }
+
             return vo;
         }).collect(Collectors.toList());
 
