@@ -78,7 +78,7 @@ public class BusinessController extends BaseController {
     @PostMapping("edit")
     @ApiOperation(value = "新增")
     @Transactional()
-    @CacheEvict(value = "risk-rule",key = "getIdCodeMap")
+    @CacheEvict(value = "getIdCodeMap", key = "'getIdCodeMap'")
     public Result<Integer> edit( @Validated Business business){
         business.setCreateTime(new Date());
         business.setCreateUserId(this.getUserId());
@@ -96,8 +96,9 @@ public class BusinessController extends BaseController {
     @GetMapping("delete")
     @ApiOperation(value = "通过id删除信息")
     @OperationDelete(tableColumn = {"rule_entity_info&business_id","rule_action_info&business_id"},idVal = "#id")
-    @CacheEvict(value = "risk-rule",key = "getIdCodeMap4Business")
-    public Result<Integer> delete( Long id){
+    @CacheEvict(value = "getIdCodeMap", allEntries=true)
+    @Transactional
+    public Result<Integer> delete( String id){
         //判断是否有其他绑定数据
         businessService.deleteById(id);
         return Result.success(0);

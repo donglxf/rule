@@ -90,6 +90,9 @@ public class RedisConfig extends CachingConfigurerSupport {
         expires.put("risk-rule", 6000L);
         //缓存设置
         expires.put("risk-active", 600L);
+
+        //缓存设置
+        expires.put("rule-business", 600L);
         cacheManager.setExpires(expires);
         // Number of seconds before expiration. Defaults to unlimited (0)
         cacheManager.setDefaultExpiration(6000); //设置key-value超时时间

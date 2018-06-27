@@ -39,7 +39,7 @@ public class BusinessServiceImpl extends BaseServiceImpl<BusinessMapper, Busines
     }
 
     @Override
-    @Cacheable(value = "risk-rule")
+    @Cacheable(value = "getIdCodeMap",key = "'getIdCodeMap'")
     public Map<String, String> getIdCodeMap() {
         Map<String, String> map = new HashMap<>();
         List<Business> list = this.baseMapper.selectList(null);
