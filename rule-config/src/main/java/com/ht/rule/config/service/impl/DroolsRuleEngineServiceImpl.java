@@ -290,9 +290,9 @@ public class DroolsRuleEngineServiceImpl implements DroolsRuleEngineService {
                 expression = expression.replace(conditionVariable, s);
             }
             else {
-                if (!RuleUtils.checkStyleOfString(conditionVariable.trim())) {
+               /* if (!RuleUtils.checkStyleOfString(conditionVariable.trim())) {
                     expression = expression.replace(conditionVariable, "'" + conditionVariable.trim() + "'");
-                }
+                }*/
             }
 
             // 1.获取条件参数（比如：$21$ ，21 代表实体属性表id）
@@ -456,9 +456,13 @@ public class DroolsRuleEngineServiceImpl implements DroolsRuleEngineService {
                         implFlag = true;
 
                         if (RuleUtils.checkContainOfOperator(realValue, "#")) { // 条件包含变量时
-                            String s = "$map[" + realValue + "]";
-                            s = s.replaceAll("\\#", "\"");
-                            realValue = realValue.replace(realValue, s);
+//                            realValue = realValue.replace('#',' ');
+//                            String s = "$map[" + realValue + "]";
+//                            s = s.replaceAll("\\#", "\"");
+//                            realValue = realValue.replace(realValue, s);
+                            //直接传参数名，不直接转化为值了
+                            realValue = realValue.replaceAll("\\#", "").trim();
+
                         }
                         //包含@@的时候
                         else if (RuleUtils.checkContainOfOperator(realValue, "@")) { // 条件包含四则运算时

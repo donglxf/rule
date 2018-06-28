@@ -49,4 +49,13 @@ public interface DroolsRuleEngineFacade {
      * @return
      */
     List<DroolsActionForm> excuteAll(SceneInfoVersion sceneInfoVersion, Map<String, Object> data,int type);
+
+    /**
+     * 规则执行，返回更多信息
+     * @param sceneInfoVersion
+     * @param data
+     * @param type
+     * @return
+     */
+    DroolsTreadResult excute4AllParam(SceneInfoVersion sceneInfoVersion, Map<String, Object> data, int type);
 }

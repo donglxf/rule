@@ -11,6 +11,7 @@ import com.ht.rule.common.api.mapper.ActionRuleRelMapper;
 import com.ht.rule.common.util.RuleUtils;
 import com.ht.rule.config.service.ActionRuleRelService;
 import com.ht.rule.common.service.impl.BaseServiceImpl;
+import lombok.experimental.var;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class ActionRuleRelServiceImpl extends BaseServiceImpl<ActionRuleRelMappe
             vals.forEach(val ->{
                 if( val.getParamValue().indexOf("#") >= 0){
                     val.setClazz("actionEntity");
-                    val.getParamValue().replaceAll("#","");
+                    val.setParamValue(val.getParamValue().replaceAll("#",""));
                 }else{
                     val.setClazz("actionVal");
                 }

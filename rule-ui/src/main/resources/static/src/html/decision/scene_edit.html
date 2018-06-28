@@ -318,10 +318,10 @@
                         (
                         {{#   layui.each(actions.actionInfo.paramValueInfoList, function(m, actionVal){ }}
                              {{# if(m == 0) { }}
-                             <a href="#" paramId="{{actionVal.actionParamId}}" class=" {{actionVal.clazz}}"  data-itemId="{{actionVal.itemIds}}" data-value="{{actionVal.paramValue}}">{{actionVal.paramText}}</a>
+                             <a href="#" paramId="{{actionVal.actionParamId}}" class=" {{actionVal.clazz}}"  data-itemId="{{actionVal.itemIds}}" data-key="{{actionVal.paramValue}}" data-value="{{actionVal.paramValue}}">{{actionVal.paramText}}</a>
 
                               {{#  }else{ }}
-                               , <a href="#" paramId="{{actionVal.actionParamId}}" class="{{actionVal.clazz}}"  data-itemId="{{actionVal.itemIds}}"  data-value="{{actionVal.paramValue}}">{{actionVal.paramText}}</a>
+                               , <a href="#" paramId="{{actionVal.actionParamId}}" class="{{actionVal.clazz}}"  data-itemId="{{actionVal.itemIds}}" data-key="{{actionVal.paramValue}}" data-value="{{actionVal.paramValue}}">{{actionVal.paramText}}</a>
 
                         {{# } }}
 

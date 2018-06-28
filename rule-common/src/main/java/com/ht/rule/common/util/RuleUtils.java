@@ -258,20 +258,7 @@ public class RuleUtils {
 //        int count = 1;
 //        double maxVersion = 1.0 + count*0.1;
 //        System.out.print(maxVersion);
-        String str = "@{{order_money}}*12-{{order_money}}@-";
-        Matcher m = Pattern.compile("\\{\\{(.*?)\\}\\}").matcher(str);
-        List<String> list = new ArrayList<>();
-        String result = "";
-        while (m.find()) {
-            list.add(m.group(1));
-        }
-
-        Matcher m2 = Pattern.compile("\\#(.*?)\\#").matcher(str);
-        while (m2.find()) {
-            list.add((m2.group(1)));
-        }
-        result = StringUtils.join(list,",");
-        System.out.println(result);
+        System.out.print( getConditionByMe("$参数:性别$等于'2'","'2'"));
 
     }
 }

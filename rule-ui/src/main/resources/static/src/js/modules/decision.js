@@ -2007,6 +2007,7 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config','code'], function (e
                 var actionTd = $(this).find("td").eq(1);
                 //动作数
                 $(actionTd).find("ul li").each(function(i,e){
+
                     var actionParamValsList = [];
                     $(this).find("div.param a").each(function(i,e){
                         //拼动作参数，参数值
@@ -2016,6 +2017,7 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config','code'], function (e
                         //参数为变量值
                         if($(e).hasClass("actionEntity")){
                             val = '#'+$(e).attr("data-key")+'#';
+
                         }
 
                         if($(e).hasClass("conditionSZ")){

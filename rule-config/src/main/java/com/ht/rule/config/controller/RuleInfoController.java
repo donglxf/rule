@@ -4,6 +4,7 @@ package com.ht.rule.config.controller;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.ht.rule.common.api.entity.*;
+import com.ht.rule.common.api.entity.enums.DataTypeEnum;
 import com.ht.rule.common.api.vo.RuleFormVo;
 import com.ht.rule.common.api.vo.RuleGradeFormVo;
 import com.ht.rule.common.api.vo.RuleItemTable;
@@ -17,6 +18,7 @@ import com.ht.rule.config.facade.SceneRuleFacade;
 import com.ht.rule.config.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.experimental.var;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -79,7 +81,7 @@ public class RuleInfoController extends BaseController {
 
     @GetMapping("getAll")
     @ApiOperation(value = "查询所有的规则")
-    @Cacheable(value = "risk-rule",key = "'getRules:'+#sceneId")
+   // @Cacheable(value = "risk-rule",key = "'getRules:'+#sceneId")
     public Result< Map<String ,Object >> getAll(Long sceneId) throws  Exception{
         Map<String ,Object > result = new HashMap<>();
       //  SceneInfo sceneInfo = sceneInfoService.selectById(sceneId);
@@ -115,23 +117,25 @@ public class RuleInfoController extends BaseController {
                 //转换去#符合
                 if(val.indexOf("#") >= 0){
                     conditionInfo.setClazz("actionEntity");
-                    val = val.replaceAll("#","");
+                    val = val.replace('#',' ').trim();
                     //设置itemId值
                 }
 
                 if(val.indexOf("@") >= 0){
                     conditionInfo.setClazz("conditionSZ");
-                    val = val.replaceAll("@","");
+                    val = val.replace('@',' ').trim();
                 }
+                val = val.replaceAll("'","");
                 //设置使用的itemId
                 conditionInfo.setItemIds(itemIds);
-                conditionInfo.setVal(val);
 
                 //设置中文名 运算符
                 conditionInfo.setYsfText(RuleUtils.getConditionByMe(conditionInfo.getConditionDesc(),conditionInfo.getValText()));
                 //获取变量
                RuleItemTable itemTable = entityItemInfoService.findRuleItemTableById(Long.parseLong(itemId));
                 conditionInfo.setItemTable(itemTable);
+                conditionInfo.setVal(val);
+                conditionInfo.setValText(conditionInfo.getValText().replaceAll("'",""));
             }
             // 动作集合
          //   List<ActionInfo> actionInfos = actionInfoService.findRuleActionListByRule(rule.getRuleId());
@@ -165,6 +169,7 @@ public class RuleInfoController extends BaseController {
         Long sceneId = ruleFormVo.getSceneId() ;
         List<String> entityS = ruleFormVo.getEntityIds();
         List<String > items = ruleFormVo.getItemVals();
+        Map<String,DataTypeEnum> itemType = new HashMap<>();
         //去重复
         entityS = StringUtil.removeRe(entityS);
         items = StringUtil.removeRe(items);
@@ -193,6 +198,7 @@ public class RuleInfoController extends BaseController {
             sceneItemRelService.insert(rel);
             i++;
         }
+
         //添加规则
         int j = 1;
         for (RuleSubmitVo vo : ruleFormVo.getVos() ){
@@ -204,6 +210,9 @@ public class RuleInfoController extends BaseController {
              * 添加条件
              */
             for(ConditionInfo conditionInfo : vo.getConditionInfos()){
+                //改造规则串
+                changeVal(itemType,conditionInfo);
+
                 conditionInfo =  conditionInfoService.add(conditionInfo,ruleId);
                 if(StringUtils.isBlank(ruleRemark)){
                     ruleRemark += "如果"+conditionInfo.getConditionDesc();
@@ -231,6 +240,31 @@ public class RuleInfoController extends BaseController {
         return Result.success(0);
     }
 
+    /**
+     * //改造规则串
+     * @param itemType
+     * @param conditionInfo
+     */
+    private void  changeVal(Map<String,DataTypeEnum> itemType,ConditionInfo conditionInfo){
+
+
+        String val = RuleUtils.getConditionOfVariable(conditionInfo.getConditionExpression());
+        String itemId = RuleUtils.getConditionParamBetweenChar(conditionInfo.getConditionExpression()).get(0);
+        DataTypeEnum type = itemType.get(itemId);
+        if(type == null ){
+            EntityItemInfo itemInfo = entityItemInfoService.selectById(itemId);
+            type = itemInfo.getDataType();
+            itemType.put(itemId,type);
+        }
+        if(type == DataTypeEnum.STRING || type == DataTypeEnum.CONSTANT){
+            String ex = conditionInfo.getConditionExpression();
+            String des = conditionInfo.getConditionDesc();
+           conditionInfo.setConditionExpression( ex.substring(0,ex.length()-val.length())+"'"+val+"'");
+           conditionInfo.setVal("'"+val+"'");
+
+            conditionInfo.setConditionDesc( des.substring(0,des.length()-val.length())+"'"+val+"'");
+        }
+    }
     @PostMapping("saveGrade")
     @ApiOperation(value = "规则保存")
     @Transactional(rollbackFor = RuntimeException.class)
@@ -239,6 +273,7 @@ public class RuleInfoController extends BaseController {
         Long sceneId = ruleFormVo.getSceneId() ;
         List<String> entityS = ruleFormVo.getEntityIds();
         List<String > items = ruleFormVo.getItemVals();
+        Map<String,DataTypeEnum> itemType = new HashMap<>();
         //去重复
         entityS = StringUtil.removeRe(entityS);
         items = StringUtil.removeRe(items);
@@ -285,6 +320,8 @@ public class RuleInfoController extends BaseController {
              * 添加条件
              */
             for(ConditionInfo conditionInfo : vo.getConditionInfos()){
+                //改造规则串
+                changeVal(itemType,conditionInfo);
                 conditionInfo =  conditionInfoService.add(conditionInfo,ruleId);
                 if(StringUtils.isBlank(ruleRemark)){
                     ruleRemark += "如果"+conditionInfo.getConditionDesc();
@@ -319,6 +356,14 @@ public class RuleInfoController extends BaseController {
     public Result<Integer> delete(Long sceneId){
         infoService.clearBySceneId(sceneId);
         return Result.success(1);
+    }
+
+    public static void main(String[] args) {
+
+        String a = "$1011885037801230337$==1";
+        String c = "1";
+        String b = a.substring(0,a.length()-c.length())+"'"+c+"'";
+        System.out.println(b);
     }
 
 }

@@ -165,6 +165,42 @@ public class DroolsRuleEngineFacadeImpl implements DroolsRuleEngineFacade {
         return actionForms;
     }
 
+    @Override
+    public DroolsTreadResult excute4AllParam(SceneInfoVersion sceneInfoVersion, Map<String, Object> data, int type) {
+        DroolsTreadResult result = new DroolsTreadResult();
+        Long startTime = System.currentTimeMillis();
+        //执行结果
+        List<DroolsActionForm> actionForms = null;
+        // 业务数据转化
+        try {
+            //封装数据为规则引擎可以使用的
+            RuleExecutionObject object = this.change2RuleExcutionObject(data,sceneInfoVersion);
+            //执行规则引擎
+            object = this.excute(object,sceneInfoVersion);
+            RuleExecutionResult res = (RuleExecutionResult) object.getGlobalMap().get("_result");
+            //添加日志
+            actionForms =  res.getDefalutActions();
+            Long endTime = System.currentTimeMillis();
+            Long executeTime = endTime - startTime;
+
+            log.info("规则验证执行时间》》》》》" + String.valueOf(executeTime));
+            // 记录日志
+            if(type == 1){
+                final List<DroolsActionForm> actionForms4log = actionForms;
+                final SceneInfoVersion infoVersion = sceneInfoVersion;
+                new Thread( () -> this.log4drools(actionForms4log,data,infoVersion,executeTime) ).start();
+            }
+            result.setRes(res);
+            result.setObject(object);
+            result.setList(actionForms);
+        } catch (Exception e) {
+            log.info("规则引擎执行异常",e);
+            throw new RuntimeException("规则引擎执行异常");
+            //result = new RuleExcuteResult(1, "执行异常", null,null);
+        }
+        return result;
+    }
+
 
     /**
      * Date 2017/7/26

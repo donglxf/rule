@@ -1,5 +1,8 @@
 package com.ht.rule.drools.config;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +18,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -71,7 +75,7 @@ public class RedisConfig extends CachingConfigurerSupport {
                 for (Object obj : params) {
                     sb.append(obj.toString());
                 }
-                return "RULE:"+sb.toString();
+                return "DROOLS:"+sb.toString();
             }
         };
     }
@@ -90,6 +94,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         expires.put("risk-rule", 6000L);
         //缓存设置
         expires.put("risk-active", 600L);
+        expires.put("drools", 6000L);
         cacheManager.setExpires(expires);
         // Number of seconds before expiration. Defaults to unlimited (0)
         cacheManager.setDefaultExpiration(6000); //设置key-value超时时间
@@ -102,7 +107,7 @@ public class RedisConfig extends CachingConfigurerSupport {
      * @param factory
      * @return
      */
-   /* @Bean
+    @Bean
     public RedisTemplate<?,?> redisTemplate(RedisConnectionFactory factory) {
         //StringRedisTemplate的构造方法中默认设置了stringSerializer
         RedisTemplate<?,?> template = new RedisTemplate<>();
@@ -124,7 +129,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         template.afterPropertiesSet();
         return template;
     }
-*/
+
 
     /**
      * redis模板，存储关键字是字符串，值是Jdk序列化
@@ -132,7 +137,7 @@ public class RedisConfig extends CachingConfigurerSupport {
      * @param factory
      * @return
      */
-    @Bean
+/*    @Bean
     public RedisTemplate<?,?> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<?,?> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
@@ -147,7 +152,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         redisTemplate.setHashValueSerializer(jdkRedisSerializer);
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
-    }
+    }*/
 
 
 

@@ -106,18 +106,20 @@ public class SceneRuleFacadeImpl implements SceneRuleFacade {
                 //转换去#符合
                 if(val.indexOf("#") >= 0){
                     conditionInfo.setClazz("actionEntity");
-                    val = val.replaceAll("#","");
+                    val = val.replace('#',' ').trim();
                 }
                 if(val.indexOf("@") >= 0){
                     conditionInfo.setClazz("conditionSZ");
-                    val = val.replaceAll("@","");
+                    val = val.replace('@',' ').trim();
                 }
+
                 //设置使用的itemId
                 conditionInfo.setItemIds(itemIds);
-
-                conditionInfo.setVal(val);
                 //设置中文名 运算符
                 conditionInfo.setYsfText(RuleUtils.getCondition(conditionInfo.getConditionDesc(),conditionInfo.getValText()));
+                val = val.replaceAll("'","");
+                conditionInfo.setVal(val);
+                conditionInfo.setValText(conditionInfo.getValText().replaceAll("'",""));
             }
             // 动作集合
             //   List<ActionInfo> actionInfos = actionInfoService.findRuleActionListByRule(rule.getRuleId());

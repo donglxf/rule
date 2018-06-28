@@ -21,6 +21,11 @@ public class RuleExcuteResult {
         this.data = data;
         this.senceVersoionId=senceVersoionId;
     }
+    public RuleExcuteResult(int code, String msg, String senceVersoionId) {
+        this.code = code;
+        this.msg = msg;
+        this.senceVersoionId=senceVersoionId;
+    }
     /**
      * 错误代码
      */
@@ -38,9 +43,12 @@ public class RuleExcuteResult {
     @ApiModelProperty(value = "传递给请求者的数据")
     private List<DroolsActionForm> data;
 
-    @ApiModelProperty(value = "评分卡-平分")
-    private double grade;
+  /*  @ApiModelProperty(value = "评分卡-平分")
+    private double grade;*/
     @ApiModelProperty(value = "决策版本")
     private String senceVersoionId;
 
+
+    @ApiModelProperty(value = "得分")
+    private Double grade;
 }
