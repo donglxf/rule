@@ -20,7 +20,7 @@ public class DroolsParamter4Param implements Serializable{
 	/**
 	 * 版本号
 	 */
-	@ApiModelProperty(required= true,value = "版本号",example = "1.9")
+	@ApiModelProperty(required= true,value = "版本号",example = "2.0")
 	private String version;
 	/**
 	 * 版本号
