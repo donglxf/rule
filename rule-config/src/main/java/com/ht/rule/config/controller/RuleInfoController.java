@@ -81,7 +81,7 @@ public class RuleInfoController extends BaseController {
 
     @GetMapping("getAll")
     @ApiOperation(value = "查询所有的规则")
-   // @Cacheable(value = "risk-rule",key = "'getRules:'+#sceneId")
+    @Cacheable(value = "risk-rule",key = "'getRules:'+#sceneId")
     public Result< Map<String ,Object >> getAll(Long sceneId) throws  Exception{
         Map<String ,Object > result = new HashMap<>();
       //  SceneInfo sceneInfo = sceneInfoService.selectById(sceneId);

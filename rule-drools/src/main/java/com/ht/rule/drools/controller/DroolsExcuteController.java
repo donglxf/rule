@@ -56,8 +56,7 @@ public class DroolsExcuteController {
     }
     @PostMapping("/excuteDrools2changeParam")
     @ApiOperation(value = "参数适配")
-   // @Cacheable(value = "drools4param")
-   // @Cacheable(value = "drools",key = "'drools4parm'+#root.args.longToString")
+    @Cacheable(value = "drools4param")
     public RuleExcuteResult4changeParam excuteDrools2changeParam(@RequestBody DroolsParamter4Param paramter) {
         //参数转化,不需要传入实体对象的前缀
         paramter.setDatas(paramter.getDatas().stream().map(data ->{
