@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.ht.rule.common.api.entity.SceneInfo;
+import com.ht.rule.common.api.entity.SceneInfoBusinessView;
 import com.ht.rule.config.service.RuleInfoService;
 import com.ht.rule.config.service.SceneInfoService;
 import com.ht.rule.config.util.anno.OperationDelete;
@@ -45,8 +46,9 @@ public class SceneInfoController extends BaseController{
 
     @GetMapping("page")
     @ApiOperation(value = "分页查询")
-    public PageResult<List<SceneInfo>> page(String key , String businessId, Integer sceneType, Integer page , Integer limit){
-        Wrapper<SceneInfo> wrapper = new EntityWrapper<>();
+    public PageResult<List<SceneInfoBusinessView>> page(String key , String businessId, Integer sceneType, Integer page , Integer limit){
+
+        Wrapper<SceneInfoBusinessView> wrapper = new EntityWrapper<>();
         if(StringUtils.isNotBlank(key)){
             wrapper.like("scene_name",key);
             wrapper.or().like("scene_desc",key);
@@ -59,10 +61,11 @@ public class SceneInfoController extends BaseController{
             wrapper.andNew().eq("scene_type",sceneType);
         }
         wrapper.orderBy("cre_time",false);
-        Page<SceneInfo> pages = new Page<>();
+        Page<SceneInfoBusinessView> pages = new Page<>();
         pages.setCurrent(page);
         pages.setSize(limit);
-        pages = sceneInfoService.selectPage(pages,wrapper);
+        pages = new SceneInfoBusinessView().selectPage(pages,wrapper);
+       // List<SceneInfoBusinessView>
         return PageResult.success(pages.getRecords(),pages.getTotal());
     }
 

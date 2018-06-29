@@ -6,6 +6,7 @@ import com.ht.rule.common.api.mapper.SceneInfoMapper;
 import com.ht.rule.config.service.SceneInfoService;
 import com.ht.rule.common.result.Result;
 import com.ht.rule.common.service.impl.BaseServiceImpl;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -57,7 +58,8 @@ public class SceneInfoServiceImpl extends BaseServiceImpl<SceneInfoMapper, Scene
         }else{
             //如果为修改
             SceneInfo sceneInfo = sceneInfos.get(0);
-            if(id != null && sceneInfo.getSceneId().equals(id)){
+
+            if(StringUtils.isNotBlank(id) && sceneInfo.getSceneId().toString().equals(id)){
                 return false;
             }
             return true;

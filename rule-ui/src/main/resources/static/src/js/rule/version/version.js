@@ -37,6 +37,12 @@ sceneLeft.cols = function () {
             title: '类型',
             width:120,
             templet: '#typeTpl'},
+        {field: 'businessTypeName',
+            align:'center',
+            event: 'setItem',
+            title: '业务线',
+            width:120
+            },
         {field: 'sceneId2',
             title: '规则定义',
             event: 'setItem',
