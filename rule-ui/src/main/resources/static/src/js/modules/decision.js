@@ -42,7 +42,7 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config','code'], function (e
     //工具
     var myUtil = {
         v: '1.0.3',
-        baseSerive:'/dispatch/service',
+        baseSerive:'/rule/config',
 
         //业务相关
         business:{
@@ -657,6 +657,8 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config','code'], function (e
          * 直接导入json数据
          */
         openJson:function (type) {
+            sceneUtil.jsonResult.entity =  sceneUtil.data.entitysBank;
+            sceneUtil.jsonResult.action =  sceneUtil.data.actionBank;
             layer.prompt({
                 title: '请输入json数据',
                 formType: 2,
@@ -664,8 +666,11 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config','code'], function (e
                 area: ['500px', '350px'] //自定义文本域宽高
                 , maxlength: 300000, //可输入文本的最大长度，默认500
             }, function(text, index){
+                sceneUtil.isEdit = false;
+                var data = JSON.parse(text);
+                var result = data.rule;
                 if(type == 1){
-                    var result = JSON.parse(text);
+
                     var getTpl = tableTp.innerHTML
                         ,view = document.getElementById('table');
                     laytpl(getTpl).render(result, function(html){
@@ -675,11 +680,12 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config','code'], function (e
                     if(sceneUtil.isEdit){
                         sceneUtil.sceneId = sceneId;
                     }
-                    sceneUtil.dataInit.entityBank();
-                    sceneUtil.dataInit.actionBank();
+                    sceneUtil.data.entitysBank = data.entity;
+                    sceneUtil.data.actionBank = data.action;
                     sceneUtil.sceneInit();
+
+                    //导入变量库
                 }else{
-                    var result = JSON.parse(text);
                     var hasWeight = result.hasWeight;
                     var getTpl = tableTp.innerHTML
                         ,view = document.getElementById('table');
@@ -690,9 +696,9 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config','code'], function (e
                     if(sceneUtil.isEdit){
                         sceneUtil.sceneId = sceneId;
                     }
+                    //导入变量库
+                    sceneUtil.data.entitysBank = data.entity;
 
-                    sceneUtil.dataInit.entityBank();
-                    sceneUtil.dataInit.actionBank();
                     sceneUtil.gradeInit();
                     //是否有权值
                     if(hasWeight > 0){
@@ -701,6 +707,7 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config','code'], function (e
                         form.render('checkbox');
                     }
                 }
+                sceneUtil.isEdit = true;
                 layer.close(index);
             });
         },
@@ -715,7 +722,7 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config','code'], function (e
             $.get(baseUrl+'rule/getGradeCardAll',{'sceneId':sceneId},function(data){
                 if(data.code == '0'){
                     var result = data.data;
-                    sceneUtil.jsonResult = result;
+                    sceneUtil.jsonResult.rule = result;
                     var hasWeight = result.hasWeight;
                     var getTpl = tableTp.innerHTML
                         ,view = document.getElementById('table');
@@ -727,8 +734,8 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config','code'], function (e
                         sceneUtil.sceneId = sceneId;
                     }
 
-                    sceneUtil.dataInit.entityBank();
-                    sceneUtil.dataInit.actionBank();
+                    sceneUtil.dataInit.entityBank(sceneId);
+                    sceneUtil.dataInit.actionBank(sceneId);
                     sceneUtil.gradeInit();
                     //是否有权值
                     if(hasWeight > 0){
@@ -760,7 +767,7 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config','code'], function (e
             $.get(baseUrl+'rule/getAll',{'sceneId':sceneId},function(data){
                 if(data.code == '0'){
                     var result = data.data;
-                    sceneUtil.jsonResult = result;
+                    sceneUtil.jsonResult.rule = result;
                     var hasWeight = result.hasWeight;
                     var getTpl = tableTp.innerHTML
                         ,view = document.getElementById('table');
@@ -771,8 +778,8 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config','code'], function (e
                     if(sceneUtil.isEdit){
                         sceneUtil.sceneId = sceneId;
                     }
-                    sceneUtil.dataInit.entityBank();
-                    sceneUtil.dataInit.actionBank();
+                    sceneUtil.dataInit.entityBank(sceneId);
+                    sceneUtil.dataInit.actionBank(sceneId);
                     sceneUtil.sceneInit();
                 }else{
                     $("#table").html(tableNoDataPt);
@@ -1693,12 +1700,12 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config','code'], function (e
          */
         dataInit: {
             //数据变量库
-            entityBank:function () {
+            entityBank:function (sceneId) {
                 $.ajax({
                     cache: true,
                     type: "get",
                     url: baseUrl+'entityInfo/getEntitysByScene',
-                    data: {sceneId: sceneUtil.sceneId},// 你的formid
+                    data: {sceneId: sceneId},// 你的formid
                     async: false,
                     success: function (da) {
                         //console.log(da);
@@ -1711,12 +1718,12 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config','code'], function (e
                 });
             },
             //动作库导入
-            actionBank:function () {
+            actionBank:function (sceneId) {
                 $.ajax({
                     cache: true,
                     type: "get",
                     url: baseUrl+'actionInfo/getByScene',
-                    data: {sceneId: sceneUtil.sceneId},// 你的formid
+                    data: {sceneId: sceneId},// 你的formid
                     async: false,
                     success: function (da) {
                         if (da.code == 0) {
