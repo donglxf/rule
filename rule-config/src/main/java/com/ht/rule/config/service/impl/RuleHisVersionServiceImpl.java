@@ -68,7 +68,7 @@ public class RuleHisVersionServiceImpl extends BaseServiceImpl<RuleHisVersionMap
             vo.setValidationResult("1");
             vo.setRuleName(his.getRuleName());
             vo.setRuleDesc(his.getRuleDesc());
-            if(CollectionUtils.isNotEmpty(actionForms){
+            if(CollectionUtils.isNotEmpty(actionForms) ){
                 for (int i = 0; i < actionForms.size(); i++) {
                     DroolsActionForm form = actionForms.get(i);
                     String ruleName = form.getRuleName();
