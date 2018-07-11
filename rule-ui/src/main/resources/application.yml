@@ -1,6 +1,6 @@
 spring:
     application:
-        name: dispatch-ui
+        name: rule-ui
     thymeleaf:
         mode: LEGACYHTML5
         cache: false
@@ -9,10 +9,3 @@ server:
 eureka:
     instance:
       prefer-ip-address: true
-ht.config.ui:
-  baseUrl: http://172.16.200.120:32016/
-  gatewayUrl: http://172.16.200.110:30111/
-  changePwdUrl: http://172.16.200.110:30131/html/user/changePwdOther.html
-  userInfoUpdate: http://172.16.200.110:30131/html/user/userInfoOther.html
-  ruleServiceUrl: rule/config/
-  ruleDroolsUrl: rule/drools/
