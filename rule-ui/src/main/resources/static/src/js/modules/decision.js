@@ -664,7 +664,7 @@ layui.define(['layer','form','laytpl','ht_ajax','ht_config','code'], function (e
                 formType: 2,
                 value: JSON.stringify(sceneUtil.jsonResult),
                 area: ['500px', '350px'] //自定义文本域宽高
-                , maxlength: 300000, //可输入文本的最大长度，默认500
+                , maxlength: 999000000, //可输入文本的最大长度，默认500
             }, function(text, index){
                 sceneUtil.isEdit = false;
                 var data = JSON.parse(text);
